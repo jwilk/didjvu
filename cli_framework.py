@@ -44,9 +44,9 @@ class IntType(ArgType):
 
     def __call__(self, value):
         result = int(value)
-        if self._min is not None and result < self._min:
+        if self.min is not None and result < self.min:
             raise ValueError
-        if self._max is not None and result > self._max:
+        if self.max is not None and result > self.max:
             raise ValueError
 
 class StringType(ArgType):
