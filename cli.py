@@ -190,7 +190,7 @@ class OptionParser(cli.OptionParser):
     def set_verbose(self):
         self.verbosity += 1
 
-    @cli.option('-q', '--queiet')
+    @cli.option('-q', '--quiet')
     def set_quiet(self):
         self.verbosity = 0
 
