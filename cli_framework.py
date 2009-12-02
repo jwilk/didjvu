@@ -216,7 +216,7 @@ class OptionParser(object):
         print >>fp, 'Usage: %s\n' % self.usage_template % dict(argv0=self._argv0, options='')
         if not options:
             return
-        print 'Options: '
+        print >>fp, 'Options: '
         for option in sorted(option for option in self._options if self.show_all_options or not option.hidden):
             option_names = []
             for name in option.names:
@@ -226,7 +226,7 @@ class OptionParser(object):
                     else:
                         name = '%s %s' % (name, option.metavar.upper())
                 option_names.append(name)
-            print ' ', ', '.join(option_names)
+            print >>fp, ' ', ', '.join(option_names)
 
     @option('-h', '--help')
     def opt_help(self):
