@@ -48,6 +48,7 @@ class IntType(ArgType):
             raise ValueError
         if self.max is not None and result > self.max:
             raise ValueError
+        return result
 
 class StringType(ArgType):
 
