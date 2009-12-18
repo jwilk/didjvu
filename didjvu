@@ -46,19 +46,19 @@ def get_subsampled_dim(image, subsample):
 
 def subsample_fg(image, mask, options):
     dim = get_subsampled_dim(mask, options.subsample)
-    mask = mask.erode()
-    mask.invert()
     mask = mask.to_greyscale()
+    mask.invert()
     mask = mask.resize(dim, 0)
+    mask = mask.dilate()
     mask = mask.threshold(1)
     image = image.resize(dim, 1)
     return image, mask
 
 def subsample_bg(image, mask, options):
     dim = get_subsampled_dim(mask, options.subsample)
-    mask = mask.dilate().dilate()
     mask = mask.to_greyscale()
     mask = mask.resize(dim, 0)
+    mask = mask.dilate().dilate()
     mask = mask.threshold(254)
     image = image.resize(dim, 1)
     return image, mask
