@@ -14,7 +14,7 @@
 '''Bridge to the Gamera framework'''
 
 from gamera.core import load_image, init_gamera as _init_gamera
-from gamera.core import RGB, Dim
+from gamera.core import Image, RGB, ONEBIT, Dim, RGBPixel
 from gamera.plugins.pil_io import from_pil
 
 def _load_methods():

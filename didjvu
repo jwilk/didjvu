@@ -45,14 +45,50 @@ def get_subsampled_dim(image, subsample):
     return gamera.Dim(width, height)
 
 def subsample_fg(image, mask, options):
-    dim = get_subsampled_dim(mask, options.subsample)
+    ratio = options.subsample
+    subsampled_size = get_subsampled_dim(mask, ratio)
     mask = mask.to_greyscale()
-    mask.invert()
-    mask = mask.resize(dim, 0)
-    mask = mask.dilate()
-    mask = mask.threshold(1)
-    image = image.resize(dim, 1)
-    return image, mask
+    mask = mask.threshold(254)
+    mask = mask.erode()
+    subsampled_image = gamera.Image((0, 0), subsampled_size, pixel_type=gamera.RGB)
+    subsampled_mask = gamera.Image((0, 0), subsampled_size, pixel_type=gamera.ONEBIT)
+    y0 = 0
+    width, height = image.ncols, image.nrows
+    image_get = image.get
+    mask_get = mask.get
+    subsampled_image_set = subsampled_image.set
+    subsampled_mask_set = subsampled_mask.set
+    for sy in xrange(0, subsampled_image.nrows):
+        x0 = 0
+        for sx in xrange(0, subsampled_image.ncols):
+            n = r = g = b = 0
+            y = y0
+            for dy in xrange(ratio):
+                if y >= height:
+                    break
+                x = x0
+                for dx in xrange(ratio):
+                    if x >= width:
+                        break
+                    pt = (x, y)
+                    if mask_get(pt):
+                        n += 1
+                        pixel = image_get(pt)
+                        r += pixel.red
+                        g += pixel.green
+                        b += pixel.blue
+                    x += 1
+                y += 1
+            if n > 0:
+                r = (r + n // 2) // n
+                g = (g + n // 2) // n
+                b = (b + n // 2) // n
+                subsampled_image_set((sx, sy), gamera.RGBPixel(r, g , b))
+            else:
+                subsampled_mask_set((sx, sy), 1)
+            x0 += ratio
+        y0 += ratio
+    return subsampled_image, subsampled_mask
 
 def subsample_bg(image, mask, options):
     dim = get_subsampled_dim(mask, options.subsample)
