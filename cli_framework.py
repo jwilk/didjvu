@@ -78,7 +78,6 @@ class UnicodeType(ArgType):
     def __call__(self, value):
         return value.decode(value, errors=self._errors)
 
-
 class OptionGroup(object):
 
     def __init__(self, setter):
