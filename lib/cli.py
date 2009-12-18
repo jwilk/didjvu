@@ -15,8 +15,8 @@
 
 import sys
 
-import cli_framework as cli
-import djvu_extra as djvu
+from . import cli_framework as cli
+from . import djvu_extra as djvu
 
 class DpiType(cli.IntType):
 
