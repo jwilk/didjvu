@@ -101,7 +101,7 @@ class OptionParser(cli.OptionParser):
     def __init__(self, argv, version, methods, default_method):
         self.version = version
         self.jb2_loss_level = 1
-        self.fg_bg_defaults = False
+        self.fg_bg_defaults = True
         self.fg_options = IW44Options(slices=[100], crcb=djvu.CRCB_FULL, subsample=6)
         self.bg_options = IW44Options(slices=[72, 82, 88, 95])
         self.output = sys.stdout
@@ -152,27 +152,33 @@ class OptionParser(cli.OptionParser):
     @cli.option('--bg-slices', type=SlicesType)
     def opt_bg_slices(self, value):
         self.bg_options.slices = value
+        self.fg_bg_defaults = False
 
     @cli.option('--fg-subsample', type=SubsampleType)
     def opt_fg_subsample(self, value):
         self.fg_options.subsample = value
+        self.fg_bg_defaults = False
 
     @cli.option('--bg-subsample', type=SubsampleType)
     def opt_bg_subsample(self, value):
         self.bg_options.subsample = value
+        self.fg_bg_defaults = False
 
     @cli.option('--fg-crcb', type=CrcbType)
     def opt_fg_crcb(self, value):
         self.fg_options.crcb = value
+        self.fg_bg_defaults = False
 
     @cli.option('--bg-crcb', type=CrcbType)
     def opt_bg_crcb(self, value):
         self.bg.options.crcb = value
+        self.fg_bg_defaults = False
 
     @cli.option('--crcb', type=CrcbType)
     def opt_crcb(self, value):
         self.fg_options.crcb = value
         self.bg_options.crcb = value
+        self.fg_bg_defaults = False
 
     @cli.option('--fg-bg-defaults', hidden=True)
     def opt_fg_bg_defaults(self):

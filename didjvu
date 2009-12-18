@@ -113,7 +113,8 @@ def main():
     )
     djvu.DEBUG = options.verbosity >= 2
     log = tinylog.Log(options.verbosity)
-    check_tty()
+    if options.output is sys.stdout:
+        check_tty()
     gamera.init()
     image_filename = options.image_filename
     bytes_in = os.path.getsize(image_filename)
@@ -147,7 +148,7 @@ def main():
         fg44, bg44 = map(djvu.djvu_to_iw44, [fg_djvu, bg_djvu])
         djvu_file = djvu.assemble_djvu(width, height, dpi, fg44=fg44, bg44=bg44, sjbz=sjbz_file)
     try:
-        bytes_out = copy_file(djvu_file, sys.stdout)
+        bytes_out = copy_file(djvu_file, options.output)
     finally:
         djvu_file.close()
     bits_per_pixel = 8.0 * bytes_out / (width * height)
