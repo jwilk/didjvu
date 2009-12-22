@@ -21,8 +21,7 @@ from . import gamera_extra as gamera
 from . import djvu_extra as djvu
 from . import cli
 from . import tinylog
-
-__version__ = '0.1'
+from . import version
 
 def check_tty():
     if sys.stdout.isatty():
@@ -108,7 +107,7 @@ def make_layer(image, mask, subsampler, options):
 
 def main():
     options = cli.OptionParser(
-        argv=sys.argv, version=__version__,
+        argv=sys.argv, version=version.__version__,
         methods=gamera.methods, default_method=gamera.methods['djvu']
     )
     djvu.DEBUG = options.verbosity >= 2

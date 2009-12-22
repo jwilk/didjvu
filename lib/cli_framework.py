@@ -17,6 +17,7 @@ import collections
 import getopt
 import inspect
 import itertools
+import os.path
 import sys
 
 class ArgType(object):
@@ -160,12 +161,12 @@ class OptionParser(object):
     usage_template = '%(argv0)s [options] [arguments]'
     show_all_options = False
 
-    version_template = '%(argv0) %(version)'
+    version_template = '%(argv0)s %(version)s'
     version_fp = sys.stderr
     version_exitcode = 0
 
     def __init__(self, argv):
-        self._argv0 = argv[0]
+        self._argv0 = os.path.basename(argv[0])
         self._options = set()
         option_names = {}
         setter_to_options = collections.defaultdict(list)
@@ -233,7 +234,7 @@ class OptionParser(object):
         sys.exit(self.help_exitcode)
 
     def display_version(self, fp):
-        print >>fp, help_template % dict(argv0=self._argv0, version=self._version)
+        print >>fp, self.version_template % dict(argv0=self._argv0, version=self.version)
 
     @option('--version')
     def opt_version(self):
