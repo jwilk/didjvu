@@ -121,7 +121,7 @@ class OptionParser(cli.OptionParser):
 
     def handle_args(self, image_filename, mask_filename=None):
         self.image_filename = image_filename
-        self.mask_filename = None
+        self.mask_filename = mask_filename
 
     @cli.option('-o', '--output', type=cli.StringType, metavar='file')
     def set_output(self, value):
