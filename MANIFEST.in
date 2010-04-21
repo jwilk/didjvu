@@ -1,0 +1,4 @@
+include doc/changelog
+include *.py
+recursive-include lib/ *.py
+include didjvu
