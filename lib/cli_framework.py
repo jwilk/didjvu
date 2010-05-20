@@ -202,7 +202,7 @@ class OptionParser(object):
 
     def call_handle_args(self, *args):
         arg_names, var_arg_name, _, defaults = inspect.getargspec(self.handle_args)
-        if len(args) + len(defaults) + 1< len(arg_names):
+        if len(args) + len(defaults) + 1 < len(arg_names):
             raise NotEnoughArguments('missing argument')
         if var_arg_name is None:
             if len(args) > len(arg_names):
