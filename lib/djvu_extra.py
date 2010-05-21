@@ -122,7 +122,6 @@ def djvu_to_iw44(djvu_file):
 
 def assemble_djvu(width, height, dpi=300, sjbz=None, smmr=None, bg44=None, bg44_nchunks=None, bgjp=None, bg2k=None, fgbz=None, fg44=None, fgjp=None, fg2k=None, incl=None, djbz=None, image=None):
     args = ['djvumake', None, 'INFO=%d,%d,%d' % (width, height, dpi)]
-    temporaries = []
     if sjbz is not None:
         args += 'Sjbz=%s' % sjbz.name,
     if smmr is not None:
@@ -165,7 +164,6 @@ def assemble_djvu(width, height, dpi=300, sjbz=None, smmr=None, bg44=None, bg44_
         return tempfile._TemporaryFileWrapper(file(djvu_new_filename, mode='r+b'), djvu_new_filename)
     finally:
         shutil.rmtree(tmpdir)
-
 
 __all__ = 'bitonal_to_djvu photo_to_djvu djvu_to_iw44 assemble_djvu'.split()
 
