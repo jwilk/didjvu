@@ -164,7 +164,7 @@ def assemble_djvu(width, height, dpi=300, sjbz=None, smmr=None, bg44=None, bg44_
     if djbz is not None:
         args += 'Djbz=%s' % djbz.name,
     if image is not None:
-        ppm_file = temporary_file(prefix='didjvu', suffix='.ppm')
+        ppm_file = temporary_file(suffix='.ppm')
         image.save(ppm_file.name)
         args += 'PPM=%s' % ppm_file.name,
     tmpdir = temporary_directory()
