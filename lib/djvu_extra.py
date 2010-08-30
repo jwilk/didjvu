@@ -21,7 +21,19 @@ import tempfile
 
 DEBUG = False
 
-IW44_DEFAULT_SLICES = (74, 89, 99)
+DPI_MIN = 72
+DPI_DEFAULT = 300
+DPI_MAX = 6000
+
+LOSS_LEVEL_MIN = 0
+LOSS_LEVEL_DEFAULT = 100
+LOSS_LEVEL_MAX = 200
+
+SUBSAMPLE_MIN = 1
+SUBSAMPLE_DEFAULT = 3
+SUBSAMPLE_MAX = 12
+
+IW44_SLICES_DEFAULT = (74, 89, 99)
 
 CRCB_FULL = 3
 CRCB_NORMAL = 2
@@ -95,7 +107,7 @@ _crcb_map = {
     CRCB_NONE: 'none',
 }
 
-def photo_to_djvu(image, dpi=100, slices=IW44_DEFAULT_SLICES, gamma=2.2, mask_image=None, crcb=CRCB_NORMAL):
+def photo_to_djvu(image, dpi=100, slices=IW44_SLICES_DEFAULT, gamma=2.2, mask_image=None, crcb=CRCB_NORMAL):
     ppm_file = temporary_file(suffix='.ppm')
     temporaries = [ppm_file]
     image.save(ppm_file.name)

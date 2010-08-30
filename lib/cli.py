@@ -13,45 +13,25 @@
 
 '''Command line interface for *didjvu*'''
 
-import sys
+import argparse
 
-from . import cli_framework as cli
 from . import djvu_extra as djvu
 
-class DpiType(cli.IntType):
+def range_int(x, y, typename):
+    class rint(int):
+        def __new__(cls, n):
+            if not (x <= n <= y):
+                raise ValueError
+            return int.__new__(cls)
+    return type(typename, (rint,), {})
 
-    min = 72
-    max = 6000
+dpi_type = range_int(djvu.DPI_MIN, djvu.DPI_MAX, 'dpi')
+losslevel_type = range_int(djvu.LOSS_LEVEL_MIN, djvu.LOSS_LEVEL_MAX, 'loss level')
+subsample_type = range_int(djvu.SUBSAMPLE_MIN, djvu.SUBSAMPLE_MAX, 'subsample')
 
-class SubsampleType(cli.IntType):
+def slice_type(max_slices=99):
 
-    min = 1
-    max = 12
-
-class LossLevelType(cli.IntType):
-
-    min = 0
-    max = 200
-
-class CrcbType(cli.ChoiceType):
-
-    metavar = 'crcb'
-    choices = dict(
-        normal = djvu.CRCB_NORMAL,
-        half = djvu.CRCB_HALF,
-        full = djvu.CRCB_FULL,
-        none = djvu.CRCB_NONE
-    )
-
-class SlicesType(cli.ArgType):
-
-    metavar = 'n+...+n'
-    max_slices = None
-
-    def __init__(self, parser):
-        cli.ArgType.__init__(self, parser)
-
-    def __call__(self, value):
+    def slices(value):
         if ',' in value:
             result = map(int, value.split(','))
         elif '+' in value:
@@ -64,142 +44,92 @@ class SlicesType(cli.ArgType):
             result = [int(value)]
         if not result:
             raise cli.BadOption('invalid slice specification')
-        if self.max_slices is not None and len(result) > self.max_slices:
+        if len(result) > max_slices:
             raise cli.BadOption('too many slices')
         return result
+    return slices
 
-class SingleSliceType(SlicesType):
+class intact(object):
 
-    metavar = 'n'
-    max_slices = 1
+    def __init__(self, x):
+        self.x = x
 
-class MethodType(cli.ChoiceType):
+    def __call__(self):
+        return self.x
 
-    metavar = 'method'
+class ArgumentParser(argparse.ArgumentParser):
 
-    @property
-    def choices(self):
-        return self.parser.methods
+    def __init__(self, methods, default_method):
+        argparse.ArgumentParser.__init__(self)
+        p_separate = self.add_subparser('separate')
+        p_encode = self.add_subparser('encode')
+        p_bundle = self.add_subparser('bundle')
+        for p in p_encode, p_separate, p_bundle:
+            p.add_argument('-o', '--output')
+            if p is p_bundle:
+                p.add_argument('--pageid-template', metavar='TEMPLATE', default='{base}.djvu')
+            else:
+                p.add_argument('--output-template', metavar='TEMPLATE')
+            p.add_argument('--losslevel', dest='loss_level', type=losslevel_type, help=argparse.SUPPRESS)
+            p.add_argument('--loss-level', dest='loss_level', type=losslevel_type, metavar='N')
+            p.add_argument('--lossless', dest='loss_level', action='store_const', const=0)
+            p.add_argument('--clean', dest='loss_level', action='store_const', const=1)
+            p.add_argument('--lossy', dest='loss_level', action='store_const', const=100)
+            if p is not p_separate:
+                p.add_argument('--masks', nargs='+', metavar='MASK') 
+                p.add_argument('--mask', action='append', dest='masks', metavar='MASK')
+                for layer in 'fg', 'bg':
+                    p.add_argument('--%s-slices' % layer, type=slice_type(), metavar='N+...+N')
+                    p.add_argument('--%s-crcb' % layer, choices='normal half full none'.split())
+                    p.add_argument('--%s-subsample' % layer, type=subsample_type, metavar='N')
+                p.add_argument('--fg-bg-defaults', help=argparse.SUPPRESS, action='store_const', const=1)
+            if p is not p_encode:
+                p.add_argument('-d', '--dpi', type=dpi_type, metavar='N')
+            p.add_argument('-m', '--method', choices=methods, default=default_method)
+            p.add_argument('-v', '--verbose', dest='verbosity', action='append_const', const=None)
+            p.add_argument('-q', '--quiet', dest='verbosity', action='store_const', const=[])
+            p.add_argument('input', metavar='<input-image>', nargs='+')
+            p.set_defaults(
+                masks=[],
+                fg_bg_defaults=None,
+                loss_level=djvu.LOSS_LEVEL_DEFAULT,
+                dpi=djvu.DPI_DEFAULT,
+                fg_slices=intact([100]), fg_crcb=intact('full'), fg_subsample=intact(6),
+                bg_slices=intact([72, 82, 88, 95]), bg_crcb=intact('normal'), bg_subsample=intact(3),
+                verbosity=[None],
+            )
 
-class IW44Options(object):
-
-    subsample = 3
-    slices = djvu.IW44_DEFAULT_SLICES
-    crcb = djvu.CRCB_NORMAL
-
-    def __init__(self, **options):
-        self.__dict__.update(options)
-
-class OptionParser(cli.OptionParser):
-
-    usage_template = '''%(argv0)s [options] <input-image> [mask-image]'''
-
-    @property
-    def show_all_options(self):
-        return self.verbosity > 1
-
-    def __init__(self, argv, version, methods, default_method):
-        self.version = version
-        self.jb2_loss_level = 1
-        self.fg_bg_defaults = True
-        self.fg_options = IW44Options(slices=[100], crcb=djvu.CRCB_FULL, subsample=6)
-        self.bg_options = IW44Options(slices=[72, 82, 88, 95])
-        self.output = sys.stdout
-        self.method = default_method
-        self.dpi = None
-        self.verbosity = 1
+    def add_subparser(self, name):
         try:
-            cli.OptionParser.__init__(self, argv)
-        except cli.BadOption, ex:
-            print >>sys.stderr, 'Error: %s\n' % ex
-            self.display_help(sys.stderr, options=True)
-            sys.exit(1)
-        except cli.BadArguments, ex:
-            print >>sys.stderr, 'Error: %s\n' % ex
-            self.display_help(sys.stderr, options=False)
-            sys.exit(1)
+            self.__subparsers
+        except AttributeError:
+            self.__subparsers = self.add_subparsers(parser_class=argparse.ArgumentParser)
+        p = self.__subparsers.add_parser(name)
+        p.set_defaults(_action_=name)
+        return p
 
-    def handle_args(self, image_filename, mask_filename=None):
-        self.image_filename = image_filename
-        self.mask_filename = mask_filename
+    def parse_args(self, actions):
+        o = argparse.ArgumentParser.parse_args(self)
+        if o.fg_bg_defaults is None:
+            for layer in 'fg', 'bg':
+                namespace = argparse.Namespace()
+                setattr(o, '%s_options' % layer, namespace)
+                for facet in 'slices', 'crcb', 'subsample':
+                    attrname = '%s_%s' % (layer, facet)
+                    value = getattr(o, attrname)
+                    if isinstance(value, intact):
+                        value = value()
+                    else:
+                        o.fg_bg_defaults = False
+                    setattr(namespace, facet, value)
+                    delattr(o, attrname)
+                namespace.crcb = getattr(djvu,'CRCB_%s' % namespace.crcb.upper())
+        if o.fg_bg_defaults is not False:
+            o.fg_bg_defaults = True
+        o.verbosity = len(o.verbosity)
+        action = getattr(actions, vars(o).pop('_action_'))
+        return action(o)
 
-    @cli.option('-o', '--output', type=cli.StringType, metavar='file')
-    def set_output(self, value):
-        self.output = file(value, 'w+b')
-
-    @cli.option('--losslevel', type=LossLevelType, hidden=True)
-    @cli.option('--loss-level', type=LossLevelType)
-    def opt_loss_level(self, value):
-        self.jb2_loss_level = value
-
-    @cli.option('--lossless', hidden=True)
-    def opt_lossless(self):
-        self.jb2_loss_level = 0
-
-    @cli.option('--clean', hidden=True)
-    def opt_clean(self):
-        self.jb2_loss_level = 1
-
-    @cli.option('--lossy', hidden=True)
-    def opt_lossy(self):
-        self.jb2_loss_level = 100
-
-    @cli.option('--fg-slices', type=SingleSliceType)
-    def opt_fg_slices(self, value):
-        self.fg_options.slices = value
-        self.fg_bg_defaults = False
-
-    @cli.option('--bg-slices', type=SlicesType)
-    def opt_bg_slices(self, value):
-        self.bg_options.slices = value
-        self.fg_bg_defaults = False
-
-    @cli.option('--fg-subsample', type=SubsampleType)
-    def opt_fg_subsample(self, value):
-        self.fg_options.subsample = value
-        self.fg_bg_defaults = False
-
-    @cli.option('--bg-subsample', type=SubsampleType)
-    def opt_bg_subsample(self, value):
-        self.bg_options.subsample = value
-        self.fg_bg_defaults = False
-
-    @cli.option('--fg-crcb', type=CrcbType)
-    def opt_fg_crcb(self, value):
-        self.fg_options.crcb = value
-        self.fg_bg_defaults = False
-
-    @cli.option('--bg-crcb', type=CrcbType)
-    def opt_bg_crcb(self, value):
-        self.bg.options.crcb = value
-        self.fg_bg_defaults = False
-
-    @cli.option('--crcb', type=CrcbType)
-    def opt_crcb(self, value):
-        self.fg_options.crcb = value
-        self.bg_options.crcb = value
-        self.fg_bg_defaults = False
-
-    @cli.option('--fg-bg-defaults', hidden=True)
-    def opt_fg_bg_defaults(self):
-        self.fg_bg_defaults = True
-
-    @cli.option('-d', '--dpi', type=DpiType)
-    def opt_dpi(self, value):
-        self.dpi = value
-
-    @cli.option('-m', '--method', type=MethodType)
-    def set_method(self, value):
-        self.method = value
-
-    @cli.option('-v', '--verbose')
-    def set_verbose(self):
-        self.verbosity += 1
-
-    @cli.option('-q', '--quiet')
-    def set_quiet(self):
-        self.verbosity = 0
-
-__all__ = ['OptionParser']
+__all__ = ['ArgumentParser']
 
 # vim:ts=4 sw=4 et
