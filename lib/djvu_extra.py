@@ -43,17 +43,6 @@ CRCB_NONE = 0
 temporary_file = functools.partial(tempfile.NamedTemporaryFile, prefix='didjvu')
 temporary_directory = functools.partial(tempfile.mkdtemp, prefix='didjvu')
 
-try:
-    subprocess.CalledProcessError
-except AttributeError:
-    class CalledProcessError(Exception):
-        def __init__(self, return_code, command):
-            Exception.__init__(self, command, return_code)
-        def __str__(self):
-            return 'Command %r returned non-zero exit status %d' % self.args
-    subprocess.CalledProcessError = CalledProcessError
-    del CalledProcessError
-
 class Subprocess(subprocess.Popen):
 
     def __init__(self, *args, **kwargs):
