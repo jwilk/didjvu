@@ -20,9 +20,10 @@ from . import djvu_extra as djvu
 def range_int(x, y, typename):
     class rint(int):
         def __new__(cls, n):
+            n = int(n)
             if not (x <= n <= y):
                 raise ValueError
-            return int.__new__(cls)
+            return n
     return type(typename, (rint,), {})
 
 dpi_type = range_int(djvu.DPI_MIN, djvu.DPI_MAX, 'dpi')
