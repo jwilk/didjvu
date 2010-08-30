@@ -48,6 +48,7 @@ def get_subsampled_dim(image, subsample):
     return gamera.Dim(width, height)
 
 def subsample_fg(image, mask, options):
+    # TODO: optimize
     ratio = options.subsample
     subsampled_size = get_subsampled_dim(mask, ratio)
     mask = mask.to_greyscale()
@@ -57,6 +58,7 @@ def subsample_fg(image, mask, options):
     subsampled_mask = gamera.Image((0, 0), subsampled_size, pixel_type=gamera.ONEBIT)
     y0 = 0
     width, height = image.ncols, image.nrows
+    image = image.to_rgb()
     image_get = image.get
     mask_get = mask.get
     subsampled_image_set = subsampled_image.set
