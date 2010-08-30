@@ -44,9 +44,9 @@ def slice_type(max_slices=99):
         else:
             result = [int(value)]
         if not result:
-            raise cli.BadOption('invalid slice specification')
+            raise ValueError('invalid slice specification')
         if len(result) > max_slices:
-            raise cli.BadOption('too many slices')
+            raise ValueError('too many slices')
         return result
     return slices
 
@@ -80,7 +80,8 @@ class ArgumentParser(argparse.ArgumentParser):
                 p.add_argument('--masks', nargs='+', metavar='MASK') 
                 p.add_argument('--mask', action='append', dest='masks', metavar='MASK')
                 for layer in 'fg', 'bg':
-                    p.add_argument('--%s-slices' % layer, type=slice_type(), metavar='N+...+N')
+                    max_slices = 99 if layer == 'bg' else 1
+                    p.add_argument('--%s-slices' % layer, type=slice_type(max_slices), metavar='N+...+N')
                     p.add_argument('--%s-crcb' % layer, choices='normal half full none'.split())
                     p.add_argument('--%s-subsample' % layer, type=subsample_type, metavar='N')
                 p.add_argument('--fg-bg-defaults', help=argparse.SUPPRESS, action='store_const', const=1)
