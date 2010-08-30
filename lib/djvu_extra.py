@@ -177,6 +177,14 @@ def assemble_djvu(width, height, dpi=300, sjbz=None, smmr=None, bg44=None, bg44_
     finally:
         shutil.rmtree(tmpdir)
 
-__all__ = 'bitonal_to_djvu photo_to_djvu djvu_to_iw44 assemble_djvu'.split()
+__all__ = [
+    'bitonal_to_djvu', 'photo_to_djvu', 'djvu_to_iw44', 'assemble_djvu',
+    'DEBUG',
+    'DPI_MIN', 'DPI_DEFAULT', 'DPI_MAX',
+    'LOSS_LEVEL_MIN', 'LOSS_LEVEL_DEFAULT', 'LOSS_LEVEL_MAX',
+    'SUBSAMPLE_MIN', 'SUBSAMPLE_DEFAULT', 'SUBSAMPLE_MAX',
+    'IW44_SLICES_DEFAULT',
+    'CRCB_FULL', 'CRCB_NORMAL', 'CRCB_HALF', 'CRCB_NONE',
+]
 
 # vim:ts=4 sw=4 et
