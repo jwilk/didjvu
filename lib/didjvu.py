@@ -12,11 +12,14 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 # General Public License for more details.
 
-import os
-import sys
+from __future__ import with_statement
 
+import os
+import shutil
 import string
+import sys
 import tempfile
+
 import Image
 
 from . import gamera_extra as gamera
@@ -162,6 +165,8 @@ class main():
         if o.output is None:
             o.output = [sys.stdout]
             check_tty()
+        else:
+            o.output = [file(o.output, 'wb')]
         assert len(o.output) == 1
 
     def encode(self, o):
@@ -169,7 +174,7 @@ class main():
         for input, mask, output in zip(o.input, o.masks, o.output):
             self.encode_one(o, input, mask, output)
 
-    def encode_one(self, o, image_filename, mask_filename, output):
+    def encode_one(self, o, image_filename, mask_filename, output=None):
         gamera.init()
         bytes_in = os.path.getsize(image_filename)
         print >>self.log(1), '%s:' % image_filename
@@ -250,6 +255,23 @@ class main():
     def bundle(self, o):
         self.check_single_output(o)
         [output] = o.output
-        raise NotImplementedError
+        tmpdir = tempfile.mkdtemp(prefix='didjvu')
+        try:
+            component_filenames = []
+            for page, (input, mask) in enumerate(zip(o.input, o.masks)):
+                pageid = get_output_filename(o.pageid_template, input, page)
+                # TODO: more sanitization
+                pageid = os.path.basename(pageid)
+                component_filenames += os.path.join(tmpdir, pageid),
+                with open(component_filenames[-1], 'wb') as component:
+                    self.encode_one(o, input, mask, component)
+            print >>self.log(1), 'bundling'
+            djvu_file = djvu.bundle_djvu(*component_filenames)
+            try:
+                copy_file(djvu_file, output)
+            finally:
+                djvu_file.close()
+        finally:
+            shutil.rmtree(tmpdir)
 
 # vim:ts=4 sw=4 et

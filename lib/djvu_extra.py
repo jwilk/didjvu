@@ -177,6 +177,12 @@ def assemble_djvu(width, height, dpi=300, sjbz=None, smmr=None, bg44=None, bg44_
     finally:
         shutil.rmtree(tmpdir)
 
+def bundle_djvu(*component_filenames):
+    djvu_file = temporary_file(suffix='.djvu')
+    args = ['djvm', '-c', djvu_file.name]
+    args += component_filenames
+    return Proxy(djvu_file, Subprocess(args).wait, None)
+
 __all__ = [
     'bitonal_to_djvu', 'photo_to_djvu', 'djvu_to_iw44', 'assemble_djvu',
     'DEBUG',
