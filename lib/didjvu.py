@@ -21,9 +21,9 @@ import sys
 
 import Image
 
-from . import gamera_extra as gamera
-from . import djvu_extra as djvu
 from . import cli
+from . import djvu_extra as djvu
+from . import gamera_extra as gamera
 from . import temporary
 from . import tinylog
 
