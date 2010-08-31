@@ -13,6 +13,7 @@
 
 import os
 import re
+import sys
 import signal
 import subprocess
 
@@ -54,6 +55,11 @@ del get_signal_names
 PIPE = subprocess.PIPE
 from subprocess import CalledProcessError
 
+def shell_escape(s, safe=re.compile('^[a-zA-Z0-9_+/=.,-]+$').match):
+    if safe(s):
+        return s
+    return "'%s'" % s.replace("'", '\'"\'"\'')
+
 class Subprocess(subprocess.Popen):
 
     def __init__(self, *args, **kwargs):
@@ -73,11 +79,12 @@ class Subprocess(subprocess.Popen):
         if os.name == 'posix':
             kwargs.update(close_fds=True)
         try:
-            self.__command = kwargs['args'][0]
+            commandline = kwargs['args']
         except KeyError:
-            self.__command = args[0][0]
+            commandline = args[0]
         if DEBUG:
-            print >>sys.stderr, '+', ' '.join(commandline)
+            print >>sys.stderr, '+', ' '.join(shell_escape(s) for s in commandline)
+        self.__command = commandline[0]
         subprocess.Popen.__init__(self, *args, **kwargs)
 
     def wait(self):

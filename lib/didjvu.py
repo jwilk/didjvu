@@ -24,6 +24,7 @@ import Image
 from . import cli
 from . import djvu_extra as djvu
 from . import gamera_extra as gamera
+from . import ipc
 from . import temporary
 from . import tinylog
 
@@ -131,7 +132,7 @@ class main():
         parser.parse_args(actions=self)
 
     def check_common(self, o):
-        djvu.DEBUG = o.verbosity >= 2
+        ipc.DEBUG = o.verbosity >= 2
         if len(o.masks) == 0:
             o.masks = [None for x in o.input]
         elif len(o.masks) != len(o.input):
