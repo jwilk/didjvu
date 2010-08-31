@@ -93,6 +93,8 @@ class ArgumentParser(argparse.ArgumentParser):
                 p.add_argument('--fg-bg-defaults', help=argparse.SUPPRESS, action='store_const', const=1)
             if p is not p_encode:
                 p.add_argument('-d', '--dpi', type=dpi_type, metavar='N', help='image resolution')
+            if p is p_bundle:
+                p.add_argument('-p', '--pages-per-dict', type=int, metavar='N', help='how many pages to compress in one pass', default=1)
             p.add_argument('-m', '--method', choices=methods, default=default_method, help='binarization method')
             p.add_argument('-v', '--verbose', dest='verbosity', action='append_const', const=None, help='more informational messages')
             p.add_argument('-q', '--quiet', dest='verbosity', action='store_const', const=[], help='no informational messages')

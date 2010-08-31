@@ -251,8 +251,14 @@ class main():
 
     def bundle(self, o):
         self.check_single_output(o)
+        if o.pages_per_dict <= 1:
+            self.bundle_simple(o)
+        else:
+            self.bundle_complex(o)
+
+    def bundle_simple(self, o):
         [output] = o.output
-        tmpdir = temporary.directory(prefix='didjvu')
+        tmpdir = temporary.directory()
         try:
             component_filenames = []
             for page, (input, mask) in enumerate(zip(o.input, o.masks)):
@@ -270,5 +276,8 @@ class main():
                 djvu_file.close()
         finally:
             shutil.rmtree(tmpdir)
+
+    def bundle_complex(self, o):
+        raise NotImplementedError
 
 # vim:ts=4 sw=4 et
