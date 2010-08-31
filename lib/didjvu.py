@@ -26,7 +26,6 @@ from . import djvu_extra as djvu
 from . import cli
 from . import temporary
 from . import tinylog
-from . import version
 
 formatter = string.Formatter()
 
