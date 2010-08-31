@@ -66,30 +66,32 @@ class ArgumentParser(argparse.ArgumentParser):
         p_encode = self.add_subparser('encode')
         p_bundle = self.add_subparser('bundle')
         for p in p_encode, p_separate, p_bundle:
-            p.add_argument('-o', '--output')
+            p.add_argument('-o', '--output', metavar='FILE', help='output filename')
             if p is p_bundle:
-                p.add_argument('--pageid-template', metavar='TEMPLATE', default='{base}.djvu')
+                p.add_argument('--pageid-template', metavar='TEMPLATE', default='{base}.djvu', help='naming scheme for page identifiers')
             else:
-                p.add_argument('--output-template', metavar='TEMPLATE')
+                p.add_argument('--output-template', metavar='TEMPLATE', help='naming scheme for output file')
             p.add_argument('--losslevel', dest='loss_level', type=losslevel_type, help=argparse.SUPPRESS)
-            p.add_argument('--loss-level', dest='loss_level', type=losslevel_type, metavar='N')
-            p.add_argument('--lossless', dest='loss_level', action='store_const', const=0)
-            p.add_argument('--clean', dest='loss_level', action='store_const', const=1)
-            p.add_argument('--lossy', dest='loss_level', action='store_const', const=100)
+            p.add_argument('--loss-level', dest='loss_level', type=losslevel_type, metavar='N', help='aggressiveness of lossy compression')
+            p.add_argument('--lossless', dest='loss_level', action='store_const', const=0, help='lossless compression')
+            p.add_argument('--clean', dest='loss_level', action='store_const', const=1, help='lossy compression: remove flyspecks')
+            p.add_argument('--lossy', dest='loss_level', action='store_const', const=100, help='lossy compression: substitute patterns with small variations')
             if p is not p_separate:
-                p.add_argument('--masks', nargs='+', metavar='MASK') 
-                p.add_argument('--mask', action='append', dest='masks', metavar='MASK')
-                for layer in 'fg', 'bg':
-                    max_slices = 99 if layer == 'bg' else 1
-                    p.add_argument('--%s-slices' % layer, type=slice_type(max_slices), metavar='N+...+N')
-                    p.add_argument('--%s-crcb' % layer, choices='normal half full none'.split())
-                    p.add_argument('--%s-subsample' % layer, type=subsample_type, metavar='N')
+                p.add_argument('--masks', nargs='+', metavar='MASK', help='use pre-generated masks') 
+                p.add_argument('--mask', action='append', dest='masks', metavar='MASK', help='use a pre-generated mask')
+                for layer, layer_name in ('fg', 'foreground'), ('bg', 'background'):
+                    if layer == 'fg':
+                        p.add_argument('--fg-slices', type=slice_type(1), metavar='N', help='number of slices for background')
+                    else:
+                        p.add_argument('--bg-slices', type=slice_type(), metavar='N+...+N', help='number of slices in each forgeground chunk')
+                    p.add_argument('--%s-crcb' % layer, choices='normal half full none'.split(), help='chrominance encoding for %s' % layer_name)
+                    p.add_argument('--%s-subsample' % layer, type=subsample_type, metavar='N', help='subsample ratio for %s' % layer_name)
                 p.add_argument('--fg-bg-defaults', help=argparse.SUPPRESS, action='store_const', const=1)
             if p is not p_encode:
-                p.add_argument('-d', '--dpi', type=dpi_type, metavar='N')
-            p.add_argument('-m', '--method', choices=methods, default=default_method)
-            p.add_argument('-v', '--verbose', dest='verbosity', action='append_const', const=None)
-            p.add_argument('-q', '--quiet', dest='verbosity', action='store_const', const=[])
+                p.add_argument('-d', '--dpi', type=dpi_type, metavar='N', help='image resolution')
+            p.add_argument('-m', '--method', choices=methods, default=default_method, help='binarization method')
+            p.add_argument('-v', '--verbose', dest='verbosity', action='append_const', const=None, help='more informational messages')
+            p.add_argument('-q', '--quiet', dest='verbosity', action='store_const', const=[], help='no informational messages')
             p.add_argument('input', metavar='<input-image>', nargs='+')
             p.set_defaults(
                 masks=[],
