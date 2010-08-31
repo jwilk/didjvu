@@ -183,16 +183,7 @@ class main():
         width, height = image.ncols, image.nrows
         print >>self.log(2), '- image size: %d x %d' % (width, height)
         if mask_filename is None:
-            method = o.method
-            pixel_types = method.self_type.pixel_types
-            t_image = image
-            if image.data.pixel_type not in pixel_types:
-                if gamera.RGB in pixel_types:
-                    t_image = image.to_rgb()
-                elif gamera.GREYSCALE in pixel_types:
-                    t_image = image.to_greyscale()
-            print >>self.log(1), '- thresholding'
-            mask = method()(t_image)
+            mask = o.method(image)
         else:
             mask = gamera.load_image(mask_filename)
         print >>self.log(1), '- converting to DjVu'
@@ -223,16 +214,8 @@ class main():
         image = gamera.from_pil(Image.open(image_filename))
         width, height = image.ncols, image.nrows
         print >>self.log(2), '- image size: %d x %d' % (width, height)
-        method = o.method
-        pixel_types = method.self_type.pixel_types
-        t_image = image
-        if image.data.pixel_type not in pixel_types:
-            if gamera.RGB in pixel_types:
-                t_image = image.to_rgb()
-            elif gamera.GREYSCALE in pixel_types:
-                t_image = image.to_greyscale()
         print >>self.log(1), '- thresholding'
-        mask = method()(t_image)
+        mask = o.method(image)
         print >>self.log(1), '- saving'
         if output is not sys.stdout:
             # A real file

@@ -18,8 +18,25 @@ import re
 import sys
 
 from gamera.core import load_image, init_gamera as _init_gamera
-from gamera.core import Image, RGB, ONEBIT, Dim, RGBPixel
+from gamera.core import Image, RGB, GREYSCALE, ONEBIT, Dim, RGBPixel
 from gamera.plugins.pil_io import from_pil
+
+def colorspace_wrapper(plugin):
+
+    pixel_types = plugin.self_type.pixel_types
+
+    def new_plugin(image, method=[None]):
+        if image.data.pixel_type not in pixel_types:
+            if RGB in pixel_types:
+                image = image.to_rgb()
+            elif GREYSCALE in pixel_types:
+                image = image.to_greyscale()
+        if method[0] is None:
+            method[0] = plugin()
+        return method[0](image)
+
+    new_plugin.__name__ = plugin.__name__
+    return new_plugin
 
 def _load_methods():
     replace_suffix = re.compile('_threshold$').sub
@@ -38,7 +55,7 @@ def _load_methods():
         if name.startswith('_'):
             continue
         name = replace_suffix('', name)
-        methods[name] = plugin
+        methods[name] = colorspace_wrapper(plugin)
     return methods
 
 methods = _load_methods()
