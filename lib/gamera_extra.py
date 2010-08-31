@@ -13,12 +13,15 @@
 
 '''Bridge to the Gamera framework'''
 
+import os
+import re
+import sys
+
 from gamera.core import load_image, init_gamera as _init_gamera
 from gamera.core import Image, RGB, ONEBIT, Dim, RGBPixel
 from gamera.plugins.pil_io import from_pil
 
 def _load_methods():
-    import re
     replace_suffix = re.compile('_threshold$').sub
     class _methods:
         from gamera.plugins.threshold import abutaleb_threshold
@@ -44,8 +47,6 @@ def to_pil_1bpp(image):
     return image.to_greyscale().to_pil()
 
 def init():
-    import os
-    import sys
     _old_stdout = sys.stdout
     sys.stdout = file(os.devnull, 'w')
     _init_gamera()
