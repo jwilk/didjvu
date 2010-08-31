@@ -235,10 +235,9 @@ class main():
             tmp_output = temporary.file(suffix='.png')
             try:
                 mask.save_PNG(tmp_output.name)
-                copy_file(tmp_output.name, output)
+                copy_file(tmp_output, output)
             finally:
                 tmp_output.close()
-            mask = gamera.load_image(mask_filename)
 
     def separate(self, o):
         self.check_multi_output(o)
