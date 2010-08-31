@@ -16,6 +16,9 @@
 import argparse
 
 from . import djvu_extra as djvu
+from . import version
+
+__version__ = version.__version__
 
 def range_int(x, y, typename):
     class rint(int):
@@ -62,6 +65,7 @@ class ArgumentParser(argparse.ArgumentParser):
 
     def __init__(self, methods, default_method):
         argparse.ArgumentParser.__init__(self)
+        self.add_argument('-v', '--version', action='version', version='%(prog)s ' + __version__, help='show version information and exit')
         p_separate = self.add_subparser('separate')
         p_encode = self.add_subparser('encode')
         p_bundle = self.add_subparser('bundle')
