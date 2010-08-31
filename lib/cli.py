@@ -131,7 +131,7 @@ class ArgumentParser(argparse.ArgumentParser):
                         o.fg_bg_defaults = False
                     setattr(namespace, facet, value)
                     delattr(o, attrname)
-                namespace.crcb = getattr(djvu,'CRCB_%s' % namespace.crcb.upper())
+                namespace.crcb = getattr(djvu, 'CRCB_%s' % namespace.crcb.upper())
         if o.fg_bg_defaults is not False:
             o.fg_bg_defaults = True
         o.verbosity = len(o.verbosity)
