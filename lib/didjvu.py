@@ -23,6 +23,7 @@ import Image
 
 from . import cli
 from . import djvu_extra as djvu
+from . import filetype
 from . import gamera_extra as gamera
 from . import ipc
 from . import temporary
@@ -178,6 +179,16 @@ class main():
         gamera.init()
         bytes_in = os.path.getsize(image_filename)
         print >>self.log(1), '%s:' % image_filename
+        ftype = filetype.check(image_filename)
+        if ftype.like(filetype.djvu):
+            if ftype.like(filetype.djvu_single):
+                print >>self.log(1), '- copying DjVu as is'
+                with open(image_filename, 'rb') as djvu_file:
+                    copy_file(djvu_file, output)
+            else:
+                # TODO
+                raise NotImplementedError("I don't know what to do with this file")
+            return
         print >>self.log(1), '- reading image'
         image = gamera.from_pil(Image.open(image_filename))
         width, height = image.ncols, image.nrows
