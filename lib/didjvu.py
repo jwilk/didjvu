@@ -18,13 +18,13 @@ import os
 import shutil
 import string
 import sys
-import tempfile
 
 import Image
 
 from . import gamera_extra as gamera
 from . import djvu_extra as djvu
 from . import cli
+from . import temporary
 from . import tinylog
 from . import version
 
@@ -238,7 +238,7 @@ class main():
             # A real file
             mask.save_PNG(output.name)
         else:
-            tmp_output = tempfile.NamedTemporaryFile(prefix='didjvu', suffix='.png')
+            tmp_output = temporary.file(suffix='.png')
             try:
                 mask.save_PNG(tmp_output.name)
                 copy_file(tmp_output.name, output)
@@ -255,7 +255,7 @@ class main():
     def bundle(self, o):
         self.check_single_output(o)
         [output] = o.output
-        tmpdir = tempfile.mkdtemp(prefix='didjvu')
+        tmpdir = temporary.directory(prefix='didjvu')
         try:
             component_filenames = []
             for page, (input, mask) in enumerate(zip(o.input, o.masks)):
