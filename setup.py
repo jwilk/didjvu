@@ -42,7 +42,7 @@ setup(
     description = 'DjVu encoder with foreground/background separation',
     long_description = __doc__.strip(),
     classifiers = classifiers,
-    url = 'http://jwilk.net/software/didjvu.html',
+    url = 'http://jwilk.net/software/didjvu',
     author = 'Jakub Wilk',
     author_email = 'jwilk@jwilk.net',
     packages = ['didjvu'],
