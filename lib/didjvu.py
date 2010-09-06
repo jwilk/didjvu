@@ -229,7 +229,7 @@ class main():
         for input, mask, output in zip(o.input, o.masks, o.output):
             self.encode_one(o, input, mask, output)
 
-    def encode_one(self, o, image_filename, mask_filename, output=None):
+    def encode_one(self, o, image_filename, mask_filename, output):
         gamera.init()
         bytes_in = os.path.getsize(image_filename)
         print >>self.log(1), '%s:' % image_filename
