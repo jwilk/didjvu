@@ -15,6 +15,7 @@
 from __future__ import with_statement
 
 import os
+import re
 import shutil
 import string
 import sys
@@ -178,6 +179,21 @@ def expand_template(template, name, page):
         d[var] = d[base_var] + offset
     return formatter.format(template, **d)
 
+_pageid_chars = re.compile('^[A-Za-z0-9_+.-]+$').match
+
+def check_pageid_sanity(pageid):
+    if not _pageid_chars(pageid):
+        raise ValueError('Pageid must consist only of lowercase ASCII letters, digits, _, +, - and dot.')
+    if pageid[:1] in ('.', '+', '-'):
+        raise ValueError('Pageid cannot start with +, - or a dot.')
+    if '..' in pageid:
+        raise ValueError('Pageid cannot contain two consecutive dots.')
+    assert pageid == os.path.basename(pageid)
+    if pageid.endswith('.djvu') or pageid.endswith('.djv'):
+        return pageid
+    else:
+        raise ValueError('Pageid must end with the .djvu or the .djv extension.')
+
 class main():
 
     compression_info_template = \
@@ -316,12 +332,7 @@ class main():
             for page, (input, mask) in enumerate(zip(o.input, o.masks)):
                 bytes_in += os.path.getsize(input)
                 pageid = expand_template(o.pageid_template, input, page)
-                # TODO: Do the same sanity checks as pdf2djvu does, i.e: page identifiers:
-                # · must consist only of lowercase ASCII letters, digits, ‘_’, ‘+’, ‘-’ and dot,
-                # · cannot start with a dot,
-                # · cannot contain two consecutive dots,
-                # · must end with the ‘.djvu’ or the ‘.djv’ extension.
-                pageid = os.path.basename(pageid)
+                check_pageid_sanity(pageid)
                 component_filenames += os.path.join(tmpdir, pageid),
                 with open(component_filenames[-1], 'wb') as component:
                     self.encode_one(o, input, mask, component)
