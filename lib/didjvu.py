@@ -193,6 +193,7 @@ class main():
         elif len(o.masks) != len(o.input):
             raise ValueError('%d input images != %d masks' % (len(o.input), len(o.masks)))
         self.log = tinylog.Log(o.verbosity)
+        gamera.init()
 
     def check_multi_output(self, o):
         self.check_common(o)
@@ -230,7 +231,6 @@ class main():
             self.encode_one(o, input, mask, output)
 
     def encode_one(self, o, image_filename, mask_filename, output):
-        gamera.init()
         bytes_in = os.path.getsize(image_filename)
         print >>self.log(1), '%s:' % image_filename
         ftype = filetype.check(image_filename)
@@ -266,7 +266,6 @@ class main():
         print >>self.log(2), '- %(bits_per_pixel).3f bits/pixel; %(ratio).3f:1, %(percent_saved).2f%% saved, %(bytes_in)d bytes in, %(bytes_out)d bytes out' % locals()
 
     def separate_one(self, o, image_filename, output):
-        gamera.init()
         bytes_in = os.path.getsize(image_filename)
         print >>self.log(1), '%s:' % image_filename
         ftype = filetype.check(image_filename)
