@@ -215,7 +215,6 @@ def bundle_djvu(*component_filenames):
 __all__ = [
     'bitonal_to_djvu', 'photo_to_djvu', 'djvu_to_iw44',
     'Multichunk',
-    'DEBUG',
     'DPI_MIN', 'DPI_DEFAULT', 'DPI_MAX',
     'LOSS_LEVEL_MIN', 'LOSS_LEVEL_DEFAULT', 'LOSS_LEVEL_MAX',
     'SUBSAMPLE_MIN', 'SUBSAMPLE_DEFAULT', 'SUBSAMPLE_MAX',
