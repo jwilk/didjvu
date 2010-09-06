@@ -246,12 +246,13 @@ class main():
         sjbz_file = djvu.bitonal_to_djvu(gamera.to_pil_1bpp(mask), loss_level=o.loss_level)
         if o.fg_bg_defaults:
             image = image.to_pil()
-            djvu_file = djvu.assemble_djvu(width, height, dpi, sjbz=sjbz_file, image=image)
+            djvu_doc = djvu.Multichunk(width, height, dpi, sjbz=sjbz_file, image=image)
         else:
             fg_djvu = make_layer(image, mask, subsample_fg, o.fg_options)
             bg_djvu = make_layer(image, mask, subsample_bg, o.bg_options)
             fg44, bg44 = map(djvu.djvu_to_iw44, [fg_djvu, bg_djvu])
-            djvu_file = djvu.assemble_djvu(width, height, dpi, fg44=fg44, bg44=bg44, sjbz=sjbz_file)
+            djvu_doc = djvu.Multichunk(width, height, dpi, fg44=fg44, bg44=bg44, sjbz=sjbz_file)
+        djvu_file = djvu_doc.save()
         try:
             bytes_out = copy_file(djvu_file, output)
         finally:

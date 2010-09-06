@@ -14,8 +14,8 @@
 '''Wrappers for the DjVuLibre utilities'''
 
 import os
+import re
 import shutil
-import tempfile
 
 from . import ipc
 from . import temporary
@@ -78,50 +78,106 @@ def djvu_to_iw44(djvu_file):
     args = ['djvuextract', djvu_file.name, 'BG44=%s' % iw44_file.name]
     return ipc.Proxy(iw44_file, ipc.Subprocess(args).wait, [djvu_file])
 
-def assemble_djvu(width, height, dpi=300, sjbz=None, smmr=None, bg44=None, bg44_nchunks=None, bgjp=None, bg2k=None, fgbz=None, fg44=None, fgjp=None, fg2k=None, incl=None, djbz=None, image=None):
-    args = ['djvumake', None, 'INFO=%d,%d,%d' % (width, height, dpi)]
-    if sjbz is not None:
-        args += 'Sjbz=%s' % sjbz.name,
-    if smmr is not None:
-        args += 'Smmr=%s' % smrr.name,
-    if bg44 is not None:
-        arg = 'BG44=%s' % bg44.name
-        if bg44_nchunks is not None:
-            arg += ':%d' % bg44_nchunks
-        args += arg,
-    if bgjp is not None:
-        args += 'BGjp=%s' % bgjp.name,
-    if bg2k is not None:
-        args += 'BG2k=%s' % bg2k.name,
-    if fgbz is not None:
-        if isinstance(fgbz, str):
-            arg = fbgz
+def _int_or_none(x):
+    if x is None:
+        return
+    if isinstance(x, int):
+        return x
+    raise ValueError
+
+class Multichunk(object):
+
+    _chunk_names = 'Sjbz Smmr BG44 BGjp BG2k FGbz FG44 FGjp FG2k INCL Djbz'
+    _chunk_names = dict((x.lower(), x) for x in _chunk_names.split())
+    _info_re = re.compile(' ([0-9]+)x([0-9]+),.* ([0-9]+) dpi,').search
+
+    def __init__(self, width=None, height=None, dpi=None, **chunks):
+        self.width = _int_or_none(width)
+        self.height = _int_or_none(height)
+        self.dpi = _int_or_none(dpi)
+        self._chunks = {}
+        for (k, v) in chunks.iteritems():
+            self.set(k, v)
+
+    @classmethod
+    def from_file(cls, djvu_file):
+        self = cls()
+        args = ['djvudump', djvu_file.name]
+        dump = Subprocess(args, stdout=subprocess.PIPE)
+        width = height = dpi = None
+        keys = set()
+        try:
+            header = dump.stdout.readline()
+            if not header.startswith('  FORM:DJVU '):
+                raise ValueError
+            for line in dump.stdout:
+                if line[:4] == '    ' and line[8:9] == ' ':
+                    key = line[4:8]
+                    if key == 'INFO':
+                        m = cls._info_re(line[8:])
+                        self.width, self.height, self.dpi = m.groups()
+                    else:
+                        keys.add(key)
+                else:
+                    ValueError
+        finally:
+            dump.wait()
+        args = ['djvuextract', djvu_file.name]
+        chunk_files = {}
+        for key in keys:
+            chunk_file = temporary.file(suffix='.%s-chunk' % key.lower())
+            args += ['%s=%s' % (key, chunk_file.name)]
+            chunk_files[key] = chunk_file
+        djvuextract = Subprocess(args, stderr=open(os.devnull, 'w'))
+        for key in keys:
+            self.set(key, Proxy(chunk_files[key], djvuextract.wait, [djvu_file]))
+        return self
+
+    def set(self, key, value):
+        if key == 'image':
+            ppm_file = temporary.file(prefix='didjvu', suffix='.ppm')
+            value.save(ppm_file.name)
+            key = 'PPM'
+            value = ppm_file
         else:
-            arg = fgbz.name
-        args += 'FGbz=%s' % arg,
-    if fg44 is not None:
-        args += 'FG44=%s' % fg44.name,
-    if fgjp is not None:
-        args += 'FGjp=%s' % fgjp.name,
-    if fg2k is not None:
-        args += 'FG2k=%s' % fg2k.name,
-    if incl is not None:
-        args += 'INCL=%s' % incl,
-    if djbz is not None:
-        args += 'Djbz=%s' % djbz.name,
-    if image is not None:
-        ppm_file = temporary.file(suffix='.ppm')
-        image.save(ppm_file.name)
-        args += 'PPM=%s' % ppm_file.name,
-    tmpdir = temporary.directory()
-    try:
-        djvu_filename = args[1] = os.path.join(tmpdir, 'result.djvu')
-        ipc.Subprocess(args).wait()
-        djvu_new_filename = tempfile.mktemp(prefix='didjvu', suffix='.djvu')
-        os.link(djvu_filename, djvu_new_filename)
-        return tempfile._TemporaryFileWrapper(file(djvu_new_filename, mode='r+b'), djvu_new_filename)
-    finally:
-        shutil.rmtree(tmpdir)
+            key = key.lower()
+            if key not in self._chunk_names:
+                raise ValueError
+        self._chunks[key] = value
+
+    def get(self, key):
+        key = key.lower()
+        return self._chunks[key]
+
+    def save(self):
+        if self.width is None:
+            raise ValueError
+        if self.height is None:
+            raise ValueError
+        if self.dpi is None:
+            raise ValueError
+        if len(self._chunks) == 0:
+            raise ValueError
+        args = ['djvumake', None, 'INFO=%d,%d,%d' % (self.width, self.height, self.dpi)]
+        for key, value in sorted(self._chunks.iteritems(), key=lambda (x, y): x != 'sjbz'):
+            try:
+                key = self._chunk_names[key]
+            except KeyError:
+                pass
+            if not isinstance(value, str):
+                value = value.name
+            if key == 'BG44':
+                value += ':999'
+            args += ['%s=%s' % (key, value)]
+        tmpdir = temporary.directory()
+        try:
+            djvu_filename = args[1] = os.path.join(tmpdir, 'result.djvu')
+            ipc.Subprocess(args).wait()
+            djvu_new_filename = temporary.name(suffix='.djvu')
+            os.link(djvu_filename, djvu_new_filename)
+            return temporary.wrapper(file(djvu_new_filename, mode='r+b'), djvu_new_filename)
+        finally:
+            shutil.rmtree(tmpdir)
 
 def bundle_djvu(*component_filenames):
     djvu_file = temporary.file(suffix='.djvu')
@@ -130,7 +186,8 @@ def bundle_djvu(*component_filenames):
     return ipc.Proxy(djvu_file, ipc.Subprocess(args).wait, None)
 
 __all__ = [
-    'bitonal_to_djvu', 'photo_to_djvu', 'djvu_to_iw44', 'assemble_djvu',
+    'bitonal_to_djvu', 'photo_to_djvu', 'djvu_to_iw44',
+    'Multichunk',
     'DEBUG',
     'DPI_MIN', 'DPI_DEFAULT', 'DPI_MAX',
     'LOSS_LEVEL_MIN', 'LOSS_LEVEL_DEFAULT', 'LOSS_LEVEL_MAX',
