@@ -52,7 +52,7 @@ def get_subsampled_dim(image, subsample):
     return gamera.Dim(width, height)
 
 def subsample_fg(image, mask, options):
-    # TODO: optimize
+    # TODO: Optimize, perhaps using Cython.
     ratio = options.subsample
     subsampled_size = get_subsampled_dim(mask, ratio)
     mask = mask.to_greyscale()
@@ -229,7 +229,8 @@ class main():
                 with open(image_filename, 'rb') as djvu_file:
                     copy_file(djvu_file, output)
             else:
-                # TODO
+                # TODO: Figure out if how many page the multi-page document
+                # consist of. If it's only one, continue.
                 raise NotImplementedError("I don't know what to do with this file")
             return
         print >>self.log(1), '- reading image'
@@ -266,7 +267,8 @@ class main():
         print >>self.log(1), '%s:' % image_filename
         ftype = filetype.check(image_filename)
         if ftype.like(filetype.djvu):
-            # TODO
+            # TODO: Figure out if how many page the document consist of.
+            # If it's only one, extract the existing mask.
             raise NotImplementedError("I don't know what to do with this file")
         print >>self.log(1), '- reading image'
         image = gamera.from_pil(Image.open(image_filename))
@@ -306,7 +308,11 @@ class main():
             component_filenames = []
             for page, (input, mask) in enumerate(zip(o.input, o.masks)):
                 pageid = expand_template(o.pageid_template, input, page)
-                # TODO: more sanitization
+                # TODO: Do the same sanity checks as pdf2djvu does, i.e: page identifiers:
+                # · must consist only of lowercase ASCII letters, digits, ‘_’, ‘+’, ‘-’ and dot,
+                # · cannot start with a dot,
+                # · cannot contain two consecutive dots,
+                # · must end with the ‘.djvu’ or the ‘.djv’ extension.
                 pageid = os.path.basename(pageid)
                 component_filenames += os.path.join(tmpdir, pageid),
                 with open(component_filenames[-1], 'wb') as component:
