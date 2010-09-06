@@ -115,6 +115,17 @@ def make_layer(image, mask, subsampler, options):
         slices=options.slices, crcb=options.crcb
     )
 
+def image_to_djvu(width, height, image, sjbz, options):
+    dpi = options.dpi
+    if options.fg_bg_defaults:
+        image = image.to_pil()
+        return djvu.Multichunk(width, height, dpi, image=image, sjbz=sjbz)
+    else:
+        fg_djvu = make_layer(image, mask, subsample_fg, o.fg_options)
+        bg_djvu = make_layer(image, mask, subsample_bg, o.bg_options)
+        fg44, bg44 = map(djvu.djvu_to_iw44, [fg_djvu, bg_djvu])
+        return djvu.Multichunk(width, height, dpi, fg44=fg44, bg44=bg44, sjbz=sjbz_file)
+
 def expand_template(template, name, page):
     '''
     >>> path = '/path/to/eggs.png'
@@ -242,16 +253,8 @@ class main():
         else:
             mask = gamera.load_image(mask_filename)
         print >>self.log(1), '- converting to DjVu'
-        dpi = o.dpi
         sjbz_file = djvu.bitonal_to_djvu(gamera.to_pil_1bpp(mask), loss_level=o.loss_level)
-        if o.fg_bg_defaults:
-            image = image.to_pil()
-            djvu_doc = djvu.Multichunk(width, height, dpi, sjbz=sjbz_file, image=image)
-        else:
-            fg_djvu = make_layer(image, mask, subsample_fg, o.fg_options)
-            bg_djvu = make_layer(image, mask, subsample_bg, o.bg_options)
-            fg44, bg44 = map(djvu.djvu_to_iw44, [fg_djvu, bg_djvu])
-            djvu_doc = djvu.Multichunk(width, height, dpi, fg44=fg44, bg44=bg44, sjbz=sjbz_file)
+        djvu_doc = image_to_djvu(width, height, image, sjbz_file, options=o)
         djvu_file = djvu_doc.save()
         try:
             bytes_out = copy_file(djvu_file, output)
