@@ -229,7 +229,7 @@ class main():
                 with open(image_filename, 'rb') as djvu_file:
                     copy_file(djvu_file, output)
             else:
-                # TODO: Figure out if how many page the multi-page document
+                # TODO: Figure out if how many pages the multi-page document
                 # consist of. If it's only one, continue.
                 raise NotImplementedError("I don't know what to do with this file")
             return
@@ -267,7 +267,7 @@ class main():
         print >>self.log(1), '%s:' % image_filename
         ftype = filetype.check(image_filename)
         if ftype.like(filetype.djvu):
-            # TODO: Figure out if how many page the document consist of.
+            # TODO: Figure out if how many pages the document consist of.
             # If it's only one, extract the existing mask.
             raise NotImplementedError("I don't know what to do with this file")
         print >>self.log(1), '- reading image'
