@@ -137,7 +137,6 @@ def expand_template(template, name, page):
     >>> expand_template('{page-26}', path, 42)
     '17'
     '''
-    variables = [v for _, v, _, _ in formatter.parse(template)]
     base = os.path.basename(name)
     name_ext, _ = os.path.splitext(name)
     base_ext, _ = os.path.splitext(base)
