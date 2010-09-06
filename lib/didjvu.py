@@ -115,15 +115,59 @@ def make_layer(image, mask, subsampler, options):
         slices=options.slices, crcb=options.crcb
     )
 
-def get_output_filename(template, name, page):
+def expand_template(template, name, page):
+    '''
+    >>> path = '/path/to/eggs.png'
+    >>> expand_template('{name}', path, 0)
+    '/path/to/eggs.png'
+    >>> expand_template('{base}', path, 0)
+    'eggs.png'
+    >>> expand_template('{name-ext}.djvu', path, 0)
+    '/path/to/eggs.djvu'
+    >>> expand_template('{base-ext}.djvu', path, 0)
+    'eggs.djvu'
+    >>> expand_template('{page}', path, 0)
+    '1'
+    >>> expand_template('{page:04}', path, 0)
+    '0001'
+    >>> expand_template('{page}', path, 42)
+    '43'
+    >>> expand_template('{page+26}', path, 42)
+    '69'
+    >>> expand_template('{page-26}', path, 42)
+    '17'
+    '''
+    variables = [v for _, v, _, _ in formatter.parse(template)]
     base = os.path.basename(name)
     name_ext, _ = os.path.splitext(name)
     base_ext, _ = os.path.splitext(base)
     d = {
         'name': name, 'name-ext': name_ext,
         'base': base, 'base-ext': base_ext,
-        'page': page,
+        'page': page + 1,
     }
+    for _, var, _, _ in formatter.parse(template):
+        if v is None:
+            continue
+        if '+' in v:
+            sign = +1
+            base_var, offset = var.split('+')
+        elif '-' in v:
+            sign = -1
+            base_var, offset = var.split('-')
+        else:
+            continue
+        try:
+            offset = sign * int(offset, 10)
+        except ValueError:
+            continue
+        try:
+            base_value = d[base_var]
+        except LookupError:
+            continue
+        if not isinstance(base_value, int):
+            continue
+        d[var] = d[base_var] + offset
     return formatter.format(template, **d)
 
 class main():
@@ -144,7 +188,7 @@ class main():
         self.check_common(o)
         if o.output is None:
             if o.output_template is not None:
-                o.output = [get_output_filename(o.output_template, f, n) for n, f in enumerate(o.input)]
+                o.output = [expand_template(o.output_template, f, n) for n, f in enumerate(o.input)]
             elif len(o.input) == 1:
                 o.output = [sys.stdout]
                 check_tty()
@@ -262,7 +306,7 @@ class main():
         try:
             component_filenames = []
             for page, (input, mask) in enumerate(zip(o.input, o.masks)):
-                pageid = get_output_filename(o.pageid_template, input, page)
+                pageid = expand_template(o.pageid_template, input, page)
                 # TODO: more sanitization
                 pageid = os.path.basename(pageid)
                 component_filenames += os.path.join(tmpdir, pageid),
