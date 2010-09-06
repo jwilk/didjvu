@@ -180,6 +180,11 @@ def expand_template(template, name, page):
 
 class main():
 
+    compression_info_template = \
+        '%(bits_per_pixel).3f bits/pixel; ' \
+        '%(ratio).3f:1, %(percent_saved).2f%% saved, ' \
+        '%(bytes_in)d bytes in, %(bytes_out)d bytes out'
+
     def __init__(self):
         parser = cli.ArgumentParser(gamera.methods, default_method=gamera.methods['djvu'])
         parser.parse_args(actions=self)
@@ -261,7 +266,7 @@ class main():
         bits_per_pixel = 8.0 * bytes_out / (width * height)
         ratio = 1.0 * bytes_in / bytes_out
         percent_saved = (1.0 * bytes_in - bytes_out) * 100 / bytes_in;
-        print >>self.log(2), '- %(bits_per_pixel).3f bits/pixel; %(ratio).3f:1, %(percent_saved).2f%% saved, %(bytes_in)d bytes in, %(bytes_out)d bytes out' % locals()
+        print >>self.log(2), ('- %s' % self.compression_info_template) % locals()
 
     def separate_one(self, o, image_filename, output):
         bytes_in = os.path.getsize(image_filename)
@@ -306,8 +311,10 @@ class main():
         [output] = o.output
         tmpdir = temporary.directory()
         try:
+            bytes_in = 0
             component_filenames = []
             for page, (input, mask) in enumerate(zip(o.input, o.masks)):
+                bytes_in += os.path.getsize(input)
                 pageid = expand_template(o.pageid_template, input, page)
                 # TODO: Do the same sanity checks as pdf2djvu does, i.e: page identifiers:
                 # · must consist only of lowercase ASCII letters, digits, ‘_’, ‘+’, ‘-’ and dot,
@@ -321,11 +328,15 @@ class main():
             print >>self.log(1), 'bundling'
             djvu_file = djvu.bundle_djvu(*component_filenames)
             try:
-                copy_file(djvu_file, output)
+                bytes_out = copy_file(djvu_file, output)
             finally:
                 djvu_file.close()
         finally:
             shutil.rmtree(tmpdir)
+        bits_per_pixel = float('nan') # FIXME!
+        ratio = 1.0 * bytes_in / bytes_out
+        percent_saved = (1.0 * bytes_in - bytes_out) * 100 / bytes_in;
+        print >>self.log(2), self.compression_info_template % locals()
 
     def bundle_complex(self, o):
         raise NotImplementedError
