@@ -100,14 +100,13 @@ class Multichunk(object):
         self.height = _int_or_none(height)
         self.dpi = _int_or_none(dpi)
         self._chunks = {}
+        self._file = None
         for (k, v) in chunks.iteritems():
-            self.set(k, v)
+            self[k] = v
 
-    @classmethod
-    def from_file(cls, djvu_file):
-        self = cls()
-        args = ['djvudump', djvu_file.name]
-        dump = Subprocess(args, stdout=subprocess.PIPE)
+    def _load_file(self):
+        args = ['djvudump', self._file.name]
+        dump = ipc.Subprocess(args, stdout=ipc.PIPE)
         width = height = dpi = None
         keys = set()
         try:
@@ -118,26 +117,28 @@ class Multichunk(object):
                 if line[:4] == '    ' and line[8:9] == ' ':
                     key = line[4:8]
                     if key == 'INFO':
-                        m = cls._info_re(line[8:])
+                        m = self._info_re(line[8:])
                         self.width, self.height, self.dpi = m.groups()
                     else:
-                        keys.add(key)
+                        keys.add(key.lower())
                 else:
                     ValueError
         finally:
             dump.wait()
-        args = ['djvuextract', djvu_file.name]
-        chunk_files = {}
-        for key in keys:
-            chunk_file = temporary.file(suffix='.%s-chunk' % key.lower())
-            args += ['%s=%s' % (key, chunk_file.name)]
-            chunk_files[key] = chunk_file
-        djvuextract = Subprocess(args, stderr=open(os.devnull, 'w'))
-        for key in keys:
-            self.set(key, Proxy(chunk_files[key], djvuextract.wait, [djvu_file]))
+        self._chunks = dict((key, '') for key in keys)
+
+    @classmethod
+    def from_file(cls, djvu_file):
+        self = cls()
+        self._file = djvu_file
+        self._load_file()
         return self
 
-    def set(self, key, value):
+    def __contains__(self, key):
+        key = key.lower()
+        return key in self._chunks
+
+    def __setitem__(self, key, value):
         if key == 'image':
             ppm_file = temporary.file(prefix='didjvu', suffix='.ppm')
             value.save(ppm_file.name)
@@ -149,11 +150,32 @@ class Multichunk(object):
                 raise ValueError
         self._chunks[key] = value
 
-    def get(self, key):
+    def __getitem__(self, key):
         key = key.lower()
-        return self._chunks[key]
+        value = self._chunks[key]
+        if isinstance(value, basestring):
+            self.save()
+            self._load_file()
+            self._update_chunks()
+            value = self._chunks[key]
+        return value
+
+    def _update_chunks(self):
+        assert self._file is not None
+        args = ['djvuextract', self._file.name]
+        chunk_files = {}
+        for key in self._chunks:
+            chunk_file = temporary.file(suffix='.%s-chunk' % key)
+            args += ['%s=%s' % (self._chunk_names[key], chunk_file.name)]
+            chunk_files[key] = chunk_file
+        djvuextract = ipc.Subprocess(args, stderr=open(os.devnull, 'w'))
+        for key in self._chunks:
+            self[key] = ipc.Proxy(chunk_files[key], djvuextract.wait, [self._file])
+        return self
 
     def save(self):
+        if self._file is not None:
+            return self._file
         if self.width is None:
             raise ValueError
         if self.height is None:
@@ -168,7 +190,7 @@ class Multichunk(object):
                 key = self._chunk_names[key]
             except KeyError:
                 pass
-            if not isinstance(value, str):
+            if not isinstance(value, basestring):
                 value = value.name
             if key == 'BG44':
                 value += ':999'
@@ -179,7 +201,8 @@ class Multichunk(object):
             ipc.Subprocess(args).wait()
             djvu_new_filename = temporary.name(suffix='.djvu')
             os.link(djvu_filename, djvu_new_filename)
-            return temporary.wrapper(file(djvu_new_filename, mode='r+b'), djvu_new_filename)
+            self._file = temporary.wrapper(file(djvu_new_filename, mode='r+b'), djvu_new_filename)
+            return self._file
         finally:
             shutil.rmtree(tmpdir)
 
