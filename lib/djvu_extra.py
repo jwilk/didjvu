@@ -85,6 +85,10 @@ def _int_or_none(x):
         return x
     raise ValueError
 
+def _sjbz_first(key):
+    # djvuextract expects Sjbz=… before PPM=…
+    return key[0] != 'sjbz'
+
 class Multichunk(object):
 
     _chunk_names = 'Sjbz Smmr BG44 BGjp BG2k FGbz FG44 FGjp FG2k INCL Djbz'
@@ -159,7 +163,7 @@ class Multichunk(object):
         if len(self._chunks) == 0:
             raise ValueError
         args = ['djvumake', None, 'INFO=%d,%d,%d' % (self.width, self.height, self.dpi)]
-        for key, value in sorted(self._chunks.iteritems(), key=lambda (x, y): x != 'sjbz'):
+        for key, value in sorted(self._chunks.iteritems(), key=_sjbz_first):
             try:
                 key = self._chunk_names[key]
             except KeyError:
