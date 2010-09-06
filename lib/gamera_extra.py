@@ -17,9 +17,23 @@ import os
 import re
 import sys
 
-from gamera.core import load_image, init_gamera as _init_gamera
+from gamera.core import load_image as _load_image
+from gamera.core import init_gamera as _init_gamera
 from gamera.core import Image, RGB, GREYSCALE, ONEBIT, Dim, RGBPixel
-from gamera.plugins.pil_io import from_pil
+from gamera.plugins.pil_io import from_pil as _from_pil
+
+try:
+    import Image as PIL
+except ImportError:
+    load_image = _load_image
+else:
+    def load_image(filename):
+        pil_image = PIL.open(filename)
+        if pil_image.mode == '1':
+            # Gamera supports importing only 8-bit and RGB from PIL:
+            pil_image = pil_image.convert('L')
+        # TODO: Try to load image without PIL, even if it is imported.
+        return _from_pil(pil_image)
 
 def colorspace_wrapper(plugin):
 

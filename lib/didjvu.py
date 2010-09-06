@@ -19,8 +19,6 @@ import shutil
 import string
 import sys
 
-import Image
-
 from . import cli
 from . import djvu_extra as djvu
 from . import filetype
@@ -245,7 +243,7 @@ class main():
                 raise NotImplementedError("I don't know what to do with this file")
             return
         print >>self.log(1), '- reading image'
-        image = gamera.from_pil(Image.open(image_filename))
+        image = gamera.load_image(image_filename)
         width, height = image.ncols, image.nrows
         print >>self.log(2), '- image size: %d x %d' % (width, height)
         if mask_filename is None:
@@ -274,7 +272,7 @@ class main():
             # If it's only one, extract the existing mask.
             raise NotImplementedError("I don't know what to do with this file")
         print >>self.log(1), '- reading image'
-        image = gamera.from_pil(Image.open(image_filename))
+        image = gamera.load_image(image_filename)
         width, height = image.ncols, image.nrows
         print >>self.log(2), '- image size: %d x %d' % (width, height)
         print >>self.log(1), '- thresholding'
