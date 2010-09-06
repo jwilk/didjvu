@@ -146,12 +146,12 @@ def expand_template(template, name, page):
         'page': page + 1,
     }
     for _, var, _, _ in formatter.parse(template):
-        if v is None:
+        if var is None:
             continue
-        if '+' in v:
+        if '+' in var:
             sign = +1
             base_var, offset = var.split('+')
-        elif '-' in v:
+        elif '-' in var:
             sign = -1
             base_var, offset = var.split('-')
         else:
