@@ -17,7 +17,8 @@ import tempfile
 file = functools.partial(tempfile.NamedTemporaryFile, prefix='didjvu')
 directory = functools.partial(tempfile.mkdtemp, prefix='didjvu')
 name = functools.partial(tempfile.mktemp, prefix='didjvu')
+wrapper = tempfile._TemporaryFileWrapper
 
-__all__ = ['file', 'directory', 'name']
+__all__ = ['file', 'directory', 'name', 'wrapper']
 
 # vim:ts=4 sw=4 et
