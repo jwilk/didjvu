@@ -66,9 +66,9 @@ class ArgumentParser(argparse.ArgumentParser):
     def __init__(self, methods, default_method):
         argparse.ArgumentParser.__init__(self)
         self.add_argument('--version', action='version', version='%(prog)s ' + __version__, help='show version information and exit')
-        p_separate = self.add_subparser('separate')
-        p_encode = self.add_subparser('encode')
-        p_bundle = self.add_subparser('bundle')
+        p_separate = self.add_subparser('separate', help='generate masks for images')
+        p_encode = self.add_subparser('encode', help='convert images to single-page DjVu documents')
+        p_bundle = self.add_subparser('bundle', help='convert images to bundled multi-page DjVu document')
         for p in p_encode, p_separate, p_bundle:
             p.add_argument('-o', '--output', metavar='FILE', help='output filename')
             if p is p_bundle:
@@ -109,12 +109,12 @@ class ArgumentParser(argparse.ArgumentParser):
                 verbosity=[None],
             )
 
-    def add_subparser(self, name):
+    def add_subparser(self, name, **kwargs):
         try:
             self.__subparsers
         except AttributeError:
             self.__subparsers = self.add_subparsers(parser_class=argparse.ArgumentParser)
-        p = self.__subparsers.add_parser(name)
+        p = self.__subparsers.add_parser(name, **kwargs)
         p.set_defaults(_action_=name)
         return p
 
