@@ -100,6 +100,7 @@ class Multichunk(object):
         self.height = _int_or_none(height)
         self.dpi = _int_or_none(dpi)
         self._chunks = {}
+        self._dirty = set()
         self._file = None
         for (k, v) in chunks.iteritems():
             self[k] = v
@@ -125,7 +126,8 @@ class Multichunk(object):
                     ValueError
         finally:
             dump.wait()
-        self._chunks = dict((key, '') for key in keys)
+        self._chunks = dict((key, None) for key in keys)
+        self._dirty.clear()
 
     @classmethod
     def from_file(cls, djvu_file):
@@ -136,7 +138,8 @@ class Multichunk(object):
 
     def __contains__(self, key):
         key = key.lower()
-        return key in self._chunks
+        if key in self._chunks:
+            return True
 
     def __setitem__(self, key, value):
         if key == 'image':
@@ -149,19 +152,22 @@ class Multichunk(object):
             if key not in self._chunk_names:
                 raise ValueError
         self._chunks[key] = value
+        self._dirty.add(key)
 
     def __getitem__(self, key):
         key = key.lower()
         value = self._chunks[key]
-        if isinstance(value, basestring):
+        if value is None or key in self._dirty:
             self.save()
             self._load_file()
             self._update_chunks()
             value = self._chunks[key]
+            assert value is not None
         return value
 
     def _update_chunks(self):
         assert self._file is not None
+        assert len(self._chunk_updates) == 0
         args = ['djvuextract', self._file.name]
         chunk_files = {}
         for key in self._chunks:
