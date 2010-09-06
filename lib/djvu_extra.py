@@ -171,7 +171,6 @@ class Multichunk(object):
         djvuextract = ipc.Subprocess(args, stderr=open(os.devnull, 'w'))
         for key in self._chunks:
             self[key] = ipc.Proxy(chunk_files[key], djvuextract.wait, [self._file])
-        return self
 
     def save(self):
         if self._file is not None:
