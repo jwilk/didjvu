@@ -1,8 +1,11 @@
 didjvu (0.2) UNRELEASED; urgency=low
 
-  * 
+  * Implement a new command-line interface. Three subcommands are available:
+    + separate — generate masks for images;
+    + encode — convert images to single-page DjVu documents;
+    + bundle — convert images to bundled multi-page DjVu document.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Fri, 12 Feb 2010 15:41:20 +0100
+ -- Jakub Wilk <jwilk@jwilk.net>  Tue, 07 Sep 2010 23:11:04 +0200
 
 didjvu (0.1) unstable; urgency=low
 
