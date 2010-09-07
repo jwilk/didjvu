@@ -382,7 +382,7 @@ class main():
                 mask = generate_mask(mask_filename, image, o.method)
                 print >>self.log(1), '- converting to DjVu'
                 page.djvu = image_to_djvu(width, height, image, mask, options=o)
-                image = mask = sjbz_file = None
+                image = mask = None
                 page.sjbz = djvu.Multichunk(width, height, o.dpi, sjbz=page.djvu['sjbz'])
                 page.sjbz_symlink = os.path.join(minidjvu_in_dir, page.pageid)
                 os.symlink(page.sjbz.save().name, page.sjbz_symlink)
