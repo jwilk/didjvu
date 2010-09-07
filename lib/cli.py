@@ -72,7 +72,7 @@ class ArgumentParser(argparse.ArgumentParser):
         for p in p_encode, p_separate, p_bundle:
             p.add_argument('-o', '--output', metavar='FILE', help='output filename')
             if p is p_bundle:
-                p.add_argument('--pageid-template', metavar='TEMPLATE', default='{base}.djvu', help='naming scheme for page identifiers')
+                p.add_argument('--pageid-template', metavar='TEMPLATE', default='{base-ext}.djvu', help='naming scheme for page identifiers')
             else:
                 p.add_argument('--output-template', metavar='TEMPLATE', help='naming scheme for output file')
             p.add_argument('--losslevel', dest='loss_level', type=losslevel_type, help=argparse.SUPPRESS)
