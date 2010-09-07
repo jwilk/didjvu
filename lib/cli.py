@@ -94,7 +94,7 @@ class ArgumentParser(argparse.ArgumentParser):
             if p is not p_encode:
                 p.add_argument('-d', '--dpi', type=dpi_type, metavar='N', help='image resolution')
             if p is p_bundle:
-                p.add_argument('-p', '--pages-per-dict', type=int, metavar='N', help='how many pages to compress in one pass', default=1)
+                p.add_argument('-p', '--pages-per-dict', type=int, metavar='N', help='how many pages to compress in one pass')
             p.add_argument('-m', '--method', choices=methods, default=default_method, help='binarization method')
             p.add_argument('-v', '--verbose', dest='verbosity', action='append_const', const=None, help='more informational messages')
             p.add_argument('-q', '--quiet', dest='verbosity', action='store_const', const=[], help='no informational messages')
@@ -103,6 +103,7 @@ class ArgumentParser(argparse.ArgumentParser):
                 masks=[],
                 fg_bg_defaults=None,
                 loss_level=djvu.LOSS_LEVEL_MIN,
+                pages_per_dict=1,
                 dpi=djvu.DPI_DEFAULT,
                 fg_slices=intact([100]), fg_crcb=intact('full'), fg_subsample=intact(6),
                 bg_slices=intact([72, 82, 88, 95]), bg_crcb=intact('normal'), bg_subsample=intact(3),
@@ -137,6 +138,12 @@ class ArgumentParser(argparse.ArgumentParser):
         if o.fg_bg_defaults is not False:
             o.fg_bg_defaults = True
         o.verbosity = len(o.verbosity)
+        if o.pages_per_dict > 1:
+            # TODO: Display a warning if this happens.
+            # TODO: Support --pages-per-dict and lossy compression at the same time.
+            loss_level=djvu.LOSS_LEVEL_MIN
+        else:
+            o.pages_per_dict = 1
         action = getattr(actions, vars(o).pop('_action_'))
         return action(o)
 
