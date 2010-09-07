@@ -125,6 +125,16 @@ def image_to_djvu(width, height, image, mask, options):
         fg44, bg44 = map(djvu.djvu_to_iw44, [fg_djvu, bg_djvu])
         return djvu.Multichunk(width, height, dpi, fg44=fg44, bg44=bg44, sjbz=sjbz)
 
+def generate_mask(filename, image, method):
+    '''
+    Generate mask using the provided method (if filename is not None);
+    or simply load it from file (if filename is not None).
+    '''
+    if filename is None:
+        return method(image)
+    else:
+        return gamera.load_image(filename)
+
 def expand_template(template, name, page):
     '''
     >>> path = '/path/to/eggs.png'
@@ -270,10 +280,7 @@ class main():
         image = gamera.load_image(image_filename)
         width, height = image.ncols, image.nrows
         print >>self.log(2), '- image size: %d x %d' % (width, height)
-        if mask_filename is None:
-            mask = o.method(image)
-        else:
-            mask = gamera.load_image(mask_filename)
+        mask = generate_mask(mask_filename, image, o.method)
         print >>self.log(1), '- converting to DjVu'
         djvu_doc = image_to_djvu(width, height, image, mask, options=o)
         djvu_file = djvu_doc.save()
@@ -299,7 +306,7 @@ class main():
         width, height = image.ncols, image.nrows
         print >>self.log(2), '- image size: %d x %d' % (width, height)
         print >>self.log(1), '- thresholding'
-        mask = o.method(image)
+        mask = generate_mask(None, image, o.method)
         print >>self.log(1), '- saving'
         if output is not sys.stdout:
             # A real file
@@ -372,10 +379,7 @@ class main():
                 width, height = image.ncols, image.nrows
                 pixels += width * height
                 print >>self.log(2), '- image size: %d x %d' % (width, height)
-                if mask_filename is None:
-                    mask = o.method(image)
-                else:
-                    mask = gamera.load_image(mask_filename)
+                mask = generate_mask(mask_filename, image, o.method)
                 print >>self.log(1), '- converting to DjVu'
                 page.djvu = image_to_djvu(width, height, image, mask, options=o)
                 image = mask = sjbz_file = None
