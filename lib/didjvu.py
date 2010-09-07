@@ -395,8 +395,8 @@ class main():
                 os.remove(os.path.join(minidjvu_out_dir, index_filename))
                 component_filenames = []
                 for pageno, page in enumerate(page_info):
-                    if pageno % 10 == 0:
-                        iff_name = '%s.iff' % os.path.splitext(page_info[pageno//10*10].pageid)[:1]
+                    if pageno % o.pages_per_dict == 0:
+                        iff_name = '%s.iff' % os.path.splitext(page_info[pageno].pageid)[:1]
                         iff_name = os.path.join(minidjvu_out_dir, iff_name)
                     sjbz_name = os.path.join(minidjvu_out_dir, page.pageid)
                     component_filenames += [sjbz_name]
