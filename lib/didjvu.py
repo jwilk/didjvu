@@ -16,7 +16,6 @@ from __future__ import with_statement
 
 import os
 import re
-import shutil
 import string
 import sys
 
@@ -325,8 +324,7 @@ class main():
 
     def bundle_simple(self, o):
         [output] = o.output
-        tmpdir = temporary.directory()
-        try:
+        with temporary.directory() as tmpdir:
             bytes_in = 0
             component_filenames = []
             for page, (input, mask) in enumerate(zip(o.input, o.masks)):
@@ -342,8 +340,6 @@ class main():
                 bytes_out = copy_file(djvu_file, output)
             finally:
                 djvu_file.close()
-        finally:
-            shutil.rmtree(tmpdir)
         bits_per_pixel = float('nan') # FIXME!
         ratio = 1.0 * bytes_in / bytes_out
         percent_saved = (1.0 * bytes_in - bytes_out) * 100 / bytes_in;

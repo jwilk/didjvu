@@ -11,13 +11,24 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 # General Public License for more details.
 
+import contextlib
 import functools
+import shutil
 import tempfile
 
 file = functools.partial(tempfile.NamedTemporaryFile, prefix='didjvu')
-directory = functools.partial(tempfile.mkdtemp, prefix='didjvu')
 name = functools.partial(tempfile.mktemp, prefix='didjvu')
 wrapper = tempfile._TemporaryFileWrapper
+
+@contextlib.contextmanager
+def directory(*args, **kwargs):
+    kwargs = dict(kwargs)
+    kwargs.setdefault('prefix', 'didjvu')
+    tmpdir = tempfile.mkdtemp(*args, **kwargs)
+    try:
+        yield tmpdir
+    finally:
+        shutil.rmtree(tmpdir)
 
 __all__ = ['file', 'directory', 'name', 'wrapper']
 

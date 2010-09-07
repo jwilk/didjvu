@@ -15,7 +15,6 @@
 
 import os
 import re
-import shutil
 
 from . import ipc
 from . import temporary
@@ -200,16 +199,13 @@ class Multichunk(object):
             if key == 'BG44':
                 value += ':999'
             args += ['%s=%s' % (key, value)]
-        tmpdir = temporary.directory()
-        try:
+        with temporary.directory() as tmpdir:
             djvu_filename = args[1] = os.path.join(tmpdir, 'result.djvu')
             ipc.Subprocess(args).wait()
             djvu_new_filename = temporary.name(suffix='.djvu')
             os.link(djvu_filename, djvu_new_filename)
             self._file = temporary.wrapper(file(djvu_new_filename, mode='r+b'), djvu_new_filename)
             return self._file
-        finally:
-            shutil.rmtree(tmpdir)
 
 def bundle_djvu(*component_filenames):
     djvu_file = temporary.file(suffix='.djvu')
