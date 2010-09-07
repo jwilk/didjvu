@@ -388,7 +388,7 @@ class main():
                     os.chdir(minidjvu_out_dir)
                 arguments = ['minidjvu', '--indirect', '--pages-per-dict', str(o.pages_per_dict)]
                 arguments += [page.sjbz_symlink for page in page_info]
-                index_filename = temporary.name(prefix='__index__', suffix='.djvu', dir=minidjvu_out_dir)
+                index_filename = temporary.name(prefix='__index__.', suffix='.djvu', dir=minidjvu_out_dir)
                 index_filename = os.path.basename(index_filename) # FIXME: Name conflicts are still possible!
                 arguments += [index_filename]
                 ipc.Subprocess(arguments, preexec_fn=chdir).wait()

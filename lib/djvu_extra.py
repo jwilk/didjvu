@@ -151,7 +151,7 @@ class Multichunk(object):
 
     def __setitem__(self, key, value):
         if key == 'image':
-            ppm_file = temporary.file(prefix='didjvu', suffix='.ppm')
+            ppm_file = temporary.file(suffix='.ppm')
             value.save(ppm_file.name)
             key = 'PPM'
             value = ppm_file

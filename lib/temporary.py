@@ -16,8 +16,8 @@ import functools
 import shutil
 import tempfile
 
-file = functools.partial(tempfile.NamedTemporaryFile, prefix='didjvu')
-name = functools.partial(tempfile.mktemp, prefix='didjvu')
+file = functools.partial(tempfile.NamedTemporaryFile, prefix='didjvu.')
+name = functools.partial(tempfile.mktemp, prefix='didjvu.')
 wrapper = tempfile._TemporaryFileWrapper
 
 @contextlib.contextmanager
