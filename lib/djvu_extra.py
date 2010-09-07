@@ -73,6 +73,7 @@ def photo_to_djvu(image, dpi=100, slices=IW44_SLICES_DEFAULT, gamma=2.2, mask_im
     return ipc.Proxy(djvu_file, ipc.Subprocess(args).wait, temporaries)
 
 def djvu_to_iw44(djvu_file):
+    # TODO: Use Multichunk.
     iw44_file = temporary.file(suffix='.iw44')
     args = ['djvuextract', djvu_file.name, 'BG44=%s' % iw44_file.name]
     return ipc.Proxy(iw44_file, ipc.Subprocess(args).wait, [djvu_file])
