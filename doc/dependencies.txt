@@ -1,0 +1,29 @@
+Dependencies
+============
+
+* Python ≥ 2.6
+
+* Gamera_ ≥ 3.2.3 —
+  a toolkit for building document image recognition systems
+
+* Python Imaging Library (PIL_) —
+  http://www.pythonware.com/products/pil/
+
+* DjVuLibre_ ≥ 3.5.21 —
+  library for the DjVu_ file format
+
+* argparse_ —
+  Python command line parser
+
+.. _Gamera:
+   http://gamera.informatik.hsnr.de/
+.. _PIL:
+   http://www.pythonware.com/products/pil/
+.. _DjVuLibre:
+   http://djvu.sourceforge.net/
+.. _DjVu:
+   http://djvu.org/
+.. _argparse:
+   http://code.google.com/p/argparse/
+
+.. vim:ft=rst ts=3 sw=3 et tw=72
