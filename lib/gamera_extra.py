@@ -18,7 +18,7 @@ import re
 import sys
 
 from gamera.core import load_image as _load_image
-from gamera.core import init_gamera as _init_gamera
+from gamera.core import init_gamera as init
 from gamera.core import Image, RGB, GREYSCALE, ONEBIT, Dim, RGBPixel
 from gamera.plugins.pil_io import from_pil as _from_pil
 
@@ -76,11 +76,5 @@ methods = _load_methods()
 
 def to_pil_1bpp(image):
     return image.to_greyscale().to_pil()
-
-def init():
-    _old_stdout = sys.stdout
-    sys.stdout = file(os.devnull, 'w')
-    _init_gamera()
-    sys.stdout = _old_stdout
 
 # vim:ts=4 sw=4 et
