@@ -85,9 +85,14 @@ def _int_or_none(x):
         return x
     raise ValueError
 
-def _sjbz_first(key):
-    # djvuextract expects Sjbz=… before PPM=…
-    return key[0] != 'sjbz'
+def _chunk_order(key):
+    # INCL must go before Sjbz.
+    if key[0] == 'incl':
+        return -2
+    # djvuextract expects Sjbz before PPM.
+    if key[0] == 'sjbz':
+        return -1
+    return 0
 
 class Multichunk(object):
 
@@ -100,7 +105,8 @@ class Multichunk(object):
         self.height = _int_or_none(height)
         self.dpi = _int_or_none(dpi)
         self._chunks = {}
-        self._dirty = set()
+        self._dirty = set() # Chunks that need to be re-read from the file.
+        self._pristine = False # Should save() be a no-op?
         self._file = None
         for (k, v) in chunks.iteritems():
             self[k] = v
@@ -127,7 +133,8 @@ class Multichunk(object):
         finally:
             dump.wait()
         self._chunks = dict((key, None) for key in keys)
-        self._dirty.clear()
+        self._dirty.add(self._chunks)
+        self._pristine = True
 
     @classmethod
     def from_file(cls, djvu_file):
@@ -152,12 +159,13 @@ class Multichunk(object):
             if key not in self._chunk_names:
                 raise ValueError
         self._chunks[key] = value
-        self._dirty.add(key)
+        self._dirty.discard(key)
+        self._pristine = False
 
     def __getitem__(self, key):
         key = key.lower()
         value = self._chunks[key]
-        if value is None or key in self._dirty:
+        if key in self._dirty:
             self.save()
             self._load_file()
             self._update_chunks()
@@ -167,19 +175,22 @@ class Multichunk(object):
 
     def _update_chunks(self):
         assert self._file is not None
-        assert len(self._chunk_updates) == 0
         args = ['djvuextract', self._file.name]
         chunk_files = {}
-        for key in self._chunks:
+        for key in self._dirty:
             chunk_file = temporary.file(suffix='.%s-chunk' % key)
             args += ['%s=%s' % (self._chunk_names[key], chunk_file.name)]
             chunk_files[key] = chunk_file
         djvuextract = ipc.Subprocess(args, stderr=open(os.devnull, 'w'))
         for key in self._chunks:
-            self[key] = ipc.Proxy(chunk_files[key], djvuextract.wait, [self._file])
+            self._chunks[key] = ipc.Proxy(chunk_files[key], djvuextract.wait, [self._file])
+            self._dirty.discard(key)
+        assert not self._dirty
+        # The file reference is not needed anymore.
+        self._file = None
 
     def save(self):
-        if self._file is not None:
+        if (self._file is not None) and self._pristine:
             return self._file
         if self.width is None:
             raise ValueError
@@ -190,7 +201,7 @@ class Multichunk(object):
         if len(self._chunks) == 0:
             raise ValueError
         args = ['djvumake', None, 'INFO=%d,%d,%d' % (self.width, self.height, self.dpi)]
-        for key, value in sorted(self._chunks.iteritems(), key=_sjbz_first):
+        for key, value in sorted(self._chunks.iteritems(), key=_chunk_order):
             try:
                 key = self._chunk_names[key]
             except KeyError:
@@ -203,9 +214,12 @@ class Multichunk(object):
         with temporary.directory() as tmpdir:
             djvu_filename = args[1] = os.path.join(tmpdir, 'result.djvu')
             ipc.Subprocess(args).wait()
+            self._chunks.pop('PPM', None)
+            assert 'PPM' not in self._dirty
             djvu_new_filename = temporary.name(suffix='.djvu')
             os.link(djvu_filename, djvu_new_filename)
             self._file = temporary.wrapper(file(djvu_new_filename, mode='r+b'), djvu_new_filename)
+            self._pristine = True
             return self._file
 
 def bundle_djvu(*component_filenames):

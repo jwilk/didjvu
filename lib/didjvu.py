@@ -193,6 +193,9 @@ def check_pageid_sanity(pageid):
     else:
         raise ValueError('Pageid must end with the .djvu or the .djv extension.')
 
+class namespace():
+    pass
+
 class main():
 
     compression_info_template = \
@@ -346,6 +349,71 @@ class main():
         print >>self.log(2), self.compression_info_template % locals()
 
     def bundle_complex(self, o):
-        raise NotImplementedError
+        [output] = o.output
+        with temporary.directory() as minidjvu_in_dir:
+            bytes_in = 0
+            pixels = 0
+            page_info = []
+            for pageno, (image_filename, mask_filename) in enumerate(zip(o.input, o.masks)):
+                page = namespace()
+                page_info += page,
+                bytes_in += os.path.getsize(image_filename)
+                page.pageid = expand_template(o.pageid_template, image_filename, pageno)
+                check_pageid_sanity(page.pageid)
+                print >>self.log(1), '%s:' % image_filename
+                ftype = filetype.check(image_filename)
+                if ftype.like(filetype.djvu):
+                    # TODO: Allow to merge existing documents (even multi-page ones).
+                    raise NotImplementedError("I don't know what to do with this file")
+                print >>self.log(1), '- reading image'
+                image = gamera.load_image(image_filename)
+                width, height = image.ncols, image.nrows
+                pixels += width * height
+                print >>self.log(2), '- image size: %d x %d' % (width, height)
+                if mask_filename is None:
+                    mask = o.method(image)
+                else:
+                    mask = gamera.load_image(mask_filename)
+                print >>self.log(1), '- converting to DjVu'
+                sjbz_file = djvu.bitonal_to_djvu(gamera.to_pil_1bpp(mask), loss_level=o.loss_level)
+                page.djvu = image_to_djvu(width, height, image, sjbz_file, options=o)
+                image = mask = sjbz_file = None
+                page.sjbz = djvu.Multichunk(width, height, o.dpi, sjbz=page.djvu['sjbz'])
+                page.sjbz_symlink = os.path.join(minidjvu_in_dir, page.pageid)
+                os.symlink(page.sjbz.save().name, page.sjbz_symlink)
+            with temporary.directory() as minidjvu_out_dir:
+                print >>self.log(1), 'creating shared dictionaries'
+                def chdir():
+                    os.chdir(minidjvu_out_dir)
+                arguments = ['minidjvu', '--indirect', '--pages-per-dict', str(o.pages_per_dict)]
+                arguments += [page.sjbz_symlink for page in page_info]
+                index_filename = temporary.name(prefix='__index__', suffix='.djvu', dir=minidjvu_out_dir)
+                index_filename = os.path.basename(index_filename) # FIXME: Name conflicts are still possible!
+                arguments += [index_filename]
+                ipc.Subprocess(arguments, preexec_fn=chdir).wait()
+                os.remove(os.path.join(minidjvu_out_dir, index_filename))
+                component_filenames = []
+                for pageno, page in enumerate(page_info):
+                    if pageno % 10 == 0:
+                        iff_name = '%s.iff' % os.path.splitext(page_info[pageno//10*10].pageid)[:1]
+                        iff_name = os.path.join(minidjvu_out_dir, iff_name)
+                    sjbz_name = os.path.join(minidjvu_out_dir, page.pageid)
+                    component_filenames += [sjbz_name]
+                    page.djvu['sjbz'] = sjbz_name
+                    page.djvu['incl'] = iff_name
+                    page.djvu = page.djvu.save()
+                    page.djvu_symlink = os.path.join(minidjvu_out_dir, page.pageid)
+                    os.unlink(page.djvu_symlink)
+                    os.symlink(page.djvu.name, page.djvu_symlink)
+                print >>self.log(1), 'bundling'
+                djvu_file = djvu.bundle_djvu(*component_filenames)
+                try:
+                    bytes_out = copy_file(djvu_file, output)
+                finally:
+                    djvu_file.close()
+        bits_per_pixel = 8.0 * bytes_out / pixels
+        ratio = 1.0 * bytes_in / bytes_out
+        percent_saved = (1.0 * bytes_in - bytes_out) * 100 / bytes_in;
+        print >>self.log(2), self.compression_info_template % locals()
 
 # vim:ts=4 sw=4 et
