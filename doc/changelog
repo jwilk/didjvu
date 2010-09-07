@@ -1,11 +1,12 @@
-didjvu (0.2) UNRELEASED; urgency=low
+didjvu (0.2) unstable; urgency=low
 
+  * Python ≥ 2.6 in now required.
   * Implement a new command-line interface. Three subcommands are available:
     + separate — generate masks for images;
     + encode — convert images to single-page DjVu documents;
     + bundle — convert images to bundled multi-page DjVu document.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Tue, 07 Sep 2010 23:11:04 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Wed, 08 Sep 2010 00:10:17 +0200
 
 didjvu (0.1) unstable; urgency=low
 
