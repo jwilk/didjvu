@@ -12,6 +12,9 @@ Dependencies
 * DjVuLibre_ ≥ 3.5.21 —
   library for the DjVu_ file format
 
+* minidjvu_ ≥ 0.8 (needed for the ``--pages-per-dict``/``-p`` option) —
+  bitonal DjVu_ encoder/decoder
+
 * argparse_ —
   Python command line parser
 
@@ -21,6 +24,8 @@ Dependencies
    http://www.pythonware.com/products/pil/
 .. _DjVuLibre:
    http://djvu.sourceforge.net/
+.. _minidjvu:
+   http://minidjvu.sourceforge.net/
 .. _DjVu:
    http://djvu.org/
 .. _argparse:
