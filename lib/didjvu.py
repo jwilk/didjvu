@@ -115,7 +115,12 @@ def make_layer(image, mask, subsampler, options):
 
 def image_to_djvu(width, height, image, mask, options):
     dpi = options.dpi
-    sjbz = djvu.bitonal_to_djvu(gamera.to_pil_1bpp(mask), loss_level=options.loss_level)
+    loss_level = options.loss_level
+    if options.pages_per_dict > 1:
+        # XXX This should probably go the other way round: we run minidjvu
+        # first, and then reuse its masks.
+        loss_level = 0
+    sjbz = djvu.bitonal_to_djvu(gamera.to_pil_1bpp(mask), loss_level=loss_level)
     if options.fg_bg_defaults:
         image = image.to_pil()
         return djvu.Multichunk(width, height, dpi, image=image, sjbz=sjbz)
@@ -393,7 +398,11 @@ class main():
                 print >>self.log(1), 'creating shared dictionaries'
                 def chdir():
                     os.chdir(minidjvu_out_dir)
-                arguments = ['minidjvu', '--indirect', '--pages-per-dict', str(o.pages_per_dict)]
+                arguments = ['minidjvu',
+                    '--indirect',
+                    '--aggression', str(o.loss_level),
+                    '--pages-per-dict', str(o.pages_per_dict),
+                ]
                 arguments += [page.sjbz_symlink for page in page_info]
                 index_filename = temporary.name(prefix='__index__.', suffix='.djvu', dir=minidjvu_out_dir)
                 index_filename = os.path.basename(index_filename) # FIXME: Name conflicts are still possible!

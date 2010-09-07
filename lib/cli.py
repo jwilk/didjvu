@@ -138,11 +138,7 @@ class ArgumentParser(argparse.ArgumentParser):
         if o.fg_bg_defaults is not False:
             o.fg_bg_defaults = True
         o.verbosity = len(o.verbosity)
-        if o.pages_per_dict > 1:
-            # TODO: Display a warning if this happens.
-            # TODO: Support --pages-per-dict and lossy compression at the same time.
-            loss_level=djvu.LOSS_LEVEL_MIN
-        else:
+        if o.pages_per_dict <= 1:
             o.pages_per_dict = 1
         action = getattr(actions, vars(o).pop('_action_'))
         return action(o)
