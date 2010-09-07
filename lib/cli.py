@@ -77,9 +77,9 @@ class ArgumentParser(argparse.ArgumentParser):
                 p.add_argument('--output-template', metavar='TEMPLATE', help='naming scheme for output file')
             p.add_argument('--losslevel', dest='loss_level', type=losslevel_type, help=argparse.SUPPRESS)
             p.add_argument('--loss-level', dest='loss_level', type=losslevel_type, metavar='N', help='aggressiveness of lossy compression')
-            p.add_argument('--lossless', dest='loss_level', action='store_const', const=0, help='lossless compression')
-            p.add_argument('--clean', dest='loss_level', action='store_const', const=1, help='lossy compression: remove flyspecks')
-            p.add_argument('--lossy', dest='loss_level', action='store_const', const=100, help='lossy compression: substitute patterns with small variations')
+            p.add_argument('--lossless', dest='loss_level', action='store_const', const=djvu.LOSS_LEVEL_MIN, help='lossless compression')
+            p.add_argument('--clean', dest='loss_level', action='store_const', const=djvu.LOSS_LEVEL_CLEAN, help='lossy compression: remove flyspecks')
+            p.add_argument('--lossy', dest='loss_level', action='store_const', const=djvu.LOSS_LEVEL_LOSSY, help='lossy compression: substitute patterns with small variations')
             if p is not p_separate:
                 p.add_argument('--masks', nargs='+', metavar='MASK', help='use pre-generated masks') 
                 p.add_argument('--mask', action='append', dest='masks', metavar='MASK', help='use a pre-generated mask')
@@ -102,7 +102,7 @@ class ArgumentParser(argparse.ArgumentParser):
             p.set_defaults(
                 masks=[],
                 fg_bg_defaults=None,
-                loss_level=djvu.LOSS_LEVEL_DEFAULT,
+                loss_level=djvu.LOSS_LEVEL_MIN,
                 dpi=djvu.DPI_DEFAULT,
                 fg_slices=intact([100]), fg_crcb=intact('full'), fg_subsample=intact(6),
                 bg_slices=intact([72, 82, 88, 95]), bg_crcb=intact('normal'), bg_subsample=intact(3),
