@@ -333,6 +333,7 @@ class main():
             for page, (input, mask) in enumerate(zip(o.input, o.masks)):
                 bytes_in += os.path.getsize(input)
                 pageid = expand_template(o.pageid_template, input, page)
+                # TODO: Check for filename conflicts.
                 check_pageid_sanity(pageid)
                 component_filenames += os.path.join(tmpdir, pageid),
                 with open(component_filenames[-1], 'wb') as component:
@@ -360,6 +361,7 @@ class main():
                 bytes_in += os.path.getsize(image_filename)
                 page.pageid = expand_template(o.pageid_template, image_filename, pageno)
                 check_pageid_sanity(page.pageid)
+                # TODO: Check for filename conflicts.
                 print >>self.log(1), '%s:' % image_filename
                 ftype = filetype.check(image_filename)
                 if ftype.like(filetype.djvu):
