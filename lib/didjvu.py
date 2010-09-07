@@ -113,16 +113,17 @@ def make_layer(image, mask, subsampler, options):
         slices=options.slices, crcb=options.crcb
     )
 
-def image_to_djvu(width, height, image, sjbz, options):
+def image_to_djvu(width, height, image, mask, options):
     dpi = options.dpi
+    sjbz = djvu.bitonal_to_djvu(gamera.to_pil_1bpp(mask), loss_level=options.loss_level)
     if options.fg_bg_defaults:
         image = image.to_pil()
         return djvu.Multichunk(width, height, dpi, image=image, sjbz=sjbz)
     else:
-        fg_djvu = make_layer(image, mask, subsample_fg, o.fg_options)
-        bg_djvu = make_layer(image, mask, subsample_bg, o.bg_options)
+        fg_djvu = make_layer(image, mask, subsample_fg, options.fg_options)
+        bg_djvu = make_layer(image, mask, subsample_bg, options.bg_options)
         fg44, bg44 = map(djvu.djvu_to_iw44, [fg_djvu, bg_djvu])
-        return djvu.Multichunk(width, height, dpi, fg44=fg44, bg44=bg44, sjbz=sjbz_file)
+        return djvu.Multichunk(width, height, dpi, fg44=fg44, bg44=bg44, sjbz=sjbz)
 
 def expand_template(template, name, page):
     '''
@@ -274,8 +275,7 @@ class main():
         else:
             mask = gamera.load_image(mask_filename)
         print >>self.log(1), '- converting to DjVu'
-        sjbz_file = djvu.bitonal_to_djvu(gamera.to_pil_1bpp(mask), loss_level=o.loss_level)
-        djvu_doc = image_to_djvu(width, height, image, sjbz_file, options=o)
+        djvu_doc = image_to_djvu(width, height, image, mask, options=o)
         djvu_file = djvu_doc.save()
         try:
             bytes_out = copy_file(djvu_file, output)
@@ -377,8 +377,7 @@ class main():
                 else:
                     mask = gamera.load_image(mask_filename)
                 print >>self.log(1), '- converting to DjVu'
-                sjbz_file = djvu.bitonal_to_djvu(gamera.to_pil_1bpp(mask), loss_level=o.loss_level)
-                page.djvu = image_to_djvu(width, height, image, sjbz_file, options=o)
+                page.djvu = image_to_djvu(width, height, image, mask, options=o)
                 image = mask = sjbz_file = None
                 page.sjbz = djvu.Multichunk(width, height, o.dpi, sjbz=page.djvu['sjbz'])
                 page.sjbz_symlink = os.path.join(minidjvu_in_dir, page.pageid)

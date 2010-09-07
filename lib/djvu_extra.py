@@ -209,7 +209,7 @@ class Multichunk(object):
             if not isinstance(value, basestring):
                 value = value.name
             if key == 'BG44':
-                value += ':999'
+                value += ':99'
             args += ['%s=%s' % (key, value)]
         with temporary.directory() as tmpdir:
             djvu_filename = args[1] = os.path.join(tmpdir, 'result.djvu')
