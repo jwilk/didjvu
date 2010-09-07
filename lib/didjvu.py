@@ -204,6 +204,9 @@ def check_pageid_sanity(pageid):
     else:
         raise ValueError('Pageid must end with the .djvu or the .djv extension.')
 
+def replace_ext(filename, ext):
+    return '%s.%s' % (os.path.splitext(filename)[0], ext)
+
 class namespace():
     pass
 
@@ -400,7 +403,7 @@ class main():
                 component_filenames = []
                 for pageno, page in enumerate(page_info):
                     if pageno % o.pages_per_dict == 0:
-                        iff_name = '%s.iff' % os.path.splitext(page_info[pageno].pageid)[:1]
+                        iff_name = replace_ext(page_info[pageno].pageid, 'iff')
                         iff_name = os.path.join(minidjvu_out_dir, iff_name)
                     sjbz_name = os.path.join(minidjvu_out_dir, page.pageid)
                     component_filenames += [sjbz_name]
