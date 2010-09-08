@@ -1,3 +1,4 @@
+include MANIFEST.in
 include doc/changelog
 include doc/*.txt
 include *.py
