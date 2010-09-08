@@ -21,6 +21,8 @@ from subprocess import CalledProcessError
 
 DEBUG = False
 
+signal.signal(signal.SIGCHLD, signal.SIG_DFL)
+
 def get_signal_names():
     _signame_pattern = re.compile('^SIG[A-Z0-9]*$')
     data = dict(
