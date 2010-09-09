@@ -67,20 +67,26 @@ def shell_escape(s, safe=re.compile('^[a-zA-Z0-9_+/=.,:-]+$').match):
 
 class Subprocess(subprocess.Popen):
 
-    def __init__(self, *args, **kwargs):
-        env_override = kwargs.pop('env', {})
-        if env_override.get('LC_ALL', '') is None:
-            # Reset all locale variables
-            env = dict(
+    @classmethod
+    def override_env(cls, override):
+        env = os.environ
+        # We'd like to:
+        # - preserve LC_CTYPE (which is required by some DjVuLibre tools),
+        # - but reset all other locale settings (which tend to break things).
+        lc_ctype = env.get('LC_ALL') or env.get('LC_CTYPE') or env.get('LANG')
+        env = dict(
                 (k, v)
-                for k, v in os.environ.iteritems()
+                for k, v in env.iteritems()
                 if not (k.startswith('LC_') or k in ('LANG', 'LANGUAGES'))
-            )
-            del env_override['LC_ALL']
-        else:
-            env = dict(os.environ)
-        env.update(env_override)
-        kwargs['env'] = env
+        )
+        if lc_ctype:
+            env['LC_CTYPE'] = lc_ctype
+        if override:
+            env.update(override)
+        return env
+
+    def __init__(self, *args, **kwargs):
+        kwargs['env'] = self.override_env(kwargs.get('env'))
         if os.name == 'posix':
             kwargs.update(close_fds=True)
         try:
