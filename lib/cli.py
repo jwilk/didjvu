@@ -91,7 +91,7 @@ class ArgumentParser(argparse.ArgumentParser):
                     p.add_argument('--%s-crcb' % layer, choices='normal half full none'.split(), help='chrominance encoding for %s' % layer_name)
                     p.add_argument('--%s-subsample' % layer, type=subsample_type, metavar='N', help='subsample ratio for %s' % layer_name)
                 p.add_argument('--fg-bg-defaults', help=argparse.SUPPRESS, action='store_const', const=1)
-            if p is not p_encode:
+            if p is not p_separate:
                 p.add_argument('-d', '--dpi', type=dpi_type, metavar='N', help='image resolution')
             if p is p_bundle:
                 p.add_argument('-p', '--pages-per-dict', type=int, metavar='N', help='how many pages to compress in one pass')
