@@ -60,7 +60,7 @@ del get_signal_names
 PIPE = subprocess.PIPE
 from subprocess import CalledProcessError
 
-def shell_escape(s, safe=re.compile('^[a-zA-Z0-9_+/=.,-]+$').match):
+def shell_escape(s, safe=re.compile('^[a-zA-Z0-9_+/=.,:-]+$').match):
     if safe(s):
         return s
     return "'%s'" % s.replace("'", r"'\''")
