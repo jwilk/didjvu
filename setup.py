@@ -17,9 +17,6 @@ separate foreground/background layers, which are then encoded into a `DjVu
 <http://djvu.org/>`_ file."
 '''
 
-import os
-os.putenv('TAR_OPTIONS', '--owner root --group root --mode a+rX')
-
 classifiers = '''\
 Development Status :: 4 - Beta
 Environment :: Console
@@ -32,10 +29,13 @@ Topic :: Text Processing
 Topic :: Multimedia :: Graphics\
 '''.split('\n')
 
-from distutils.core import setup
+import os
+import distutils.core
+
 from lib.version import __version__
 
-setup(
+os.putenv('TAR_OPTIONS', '--owner root --group root --mode a+rX')
+distutils.core.setup(
     name = 'didjvu',
     version = __version__,
     license = 'GNU GPL 2',
