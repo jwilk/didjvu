@@ -204,10 +204,10 @@ def check_pageid_sanity(pageid):
     if '..' in pageid:
         raise ValueError('Pageid cannot contain two consecutive dots.')
     assert pageid == os.path.basename(pageid)
-    if pageid.endswith('.djvu') or pageid.endswith('.djv'):
+    if pageid.endswith('.djvu'):
         return pageid
     else:
-        raise ValueError('Pageid must end with the .djvu or the .djv extension.')
+        raise ValueError('Pageid must end with the .djvu extension.')
 
 def replace_ext(filename, ext):
     return '%s.%s' % (os.path.splitext(filename)[0], ext)
