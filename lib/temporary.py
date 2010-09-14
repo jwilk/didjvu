@@ -23,7 +23,7 @@ wrapper = tempfile._TemporaryFileWrapper
 @contextlib.contextmanager
 def directory(*args, **kwargs):
     kwargs = dict(kwargs)
-    kwargs.setdefault('prefix', 'didjvu')
+    kwargs.setdefault('prefix', 'didjvu.')
     tmpdir = tempfile.mkdtemp(*args, **kwargs)
     try:
         yield tmpdir
