@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # encoding=UTF-8
-# Copyright © 2009 Jakub Wilk <jwilk@jwilk.net>
+# Copyright © 2009, 2010 Jakub Wilk <jwilk@jwilk.net>
 #
 # This package is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,8 +12,8 @@
 # General Public License for more details.
 
 '''
-"*didjvu* uses the `Gamera <http://gamera.informatik.hsnr.de>`_ framework to
-separate foreground/background layers, which are then encoded into a `DjVu
+"*didjvu* uses the `Gamera <http://gamera.informatik.hsnr.de/>`_ framework to
+separate foreground/background layers, which it can then encode into a `DjVu
 <http://djvu.org/>`_ file."
 '''
 
