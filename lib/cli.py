@@ -106,7 +106,7 @@ class ArgumentParser(argparse.ArgumentParser):
                 pages_per_dict=1,
                 dpi=djvu.DPI_DEFAULT,
                 fg_slices=intact([100]), fg_crcb=intact('full'), fg_subsample=intact(6),
-                bg_slices=intact([72, 82, 88, 95]), bg_crcb=intact('normal'), bg_subsample=intact(3),
+                bg_slices=intact([74, 84, 90, 97]), bg_crcb=intact('normal'), bg_subsample=intact(3),
                 verbosity=[None],
             )
 
