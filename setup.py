@@ -31,6 +31,7 @@ Topic :: Multimedia :: Graphics\
 
 import os
 import distutils.core
+import glob
 
 from lib.version import __version__
 
@@ -48,6 +49,7 @@ distutils.core.setup(
     packages = ['didjvu'],
     package_dir = dict(didjvu='lib'),
     scripts = ['didjvu'],
+    data_files = [('share/man/man1', glob.glob('doc/*.1'))],
 )
 
 # vim:ts=4 sw=4 et

@@ -1,3 +1,4 @@
 syntax: glob
 MANIFEST
 *.py[co]
+doc/*.1

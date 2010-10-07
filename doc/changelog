@@ -1,8 +1,8 @@
 didjvu (0.2.1) UNRELEASED; urgency=low
 
-  * 
+  * Add the manual page.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Wed, 08 Sep 2010 22:44:44 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Thu, 07 Oct 2010 23:13:27 +0200
 
 didjvu (0.2) unstable; urgency=low
 
