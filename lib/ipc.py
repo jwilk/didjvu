@@ -13,9 +13,9 @@
 
 import os
 import re
-import sys
 import signal
 import subprocess
+import sys
 
 from subprocess import CalledProcessError
 

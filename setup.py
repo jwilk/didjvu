@@ -29,9 +29,9 @@ Topic :: Text Processing
 Topic :: Multimedia :: Graphics\
 '''.split('\n')
 
-import os
 import distutils.core
 import glob
+import os
 
 from lib.version import __version__
 
