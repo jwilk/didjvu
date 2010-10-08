@@ -107,6 +107,15 @@
         <command>&p;</command> uses the <ulink url='http://gamera.informatik.hsnr.de/'>Gamera</ulink> framework to
         separate foreground/background layers, which can be then encoded into a DjVu file.
     </para>
+    <para>
+        <command>&p; separate</command> generates images mask(s) for the supplied input image(s).
+    </para>
+    <para>
+        <command>&p; encode</command> converts the supplied input image(s) to single-page DjVu documents(s).
+    </para>
+    <para>
+        <command>&p; bundle</command> converts the supplied input image(s) to a bundled multi-page DjVu document.
+    </para>
 </refsection>
 
 <refsection>
