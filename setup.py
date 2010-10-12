@@ -17,7 +17,7 @@ separate foreground/background layers, which it can then encode into a `DjVu
 <http://djvu.org/>`_ file."
 '''
 
-classifiers = '''\
+classifiers = '''
 Development Status :: 4 - Beta
 Environment :: Console
 Intended Audience :: End Users/Desktop
@@ -26,8 +26,8 @@ Operating System :: OS Independent
 Programming Language :: Python
 Programming Language :: Python :: 2
 Topic :: Text Processing
-Topic :: Multimedia :: Graphics\
-'''.split('\n')
+Topic :: Multimedia :: Graphics
+'''.strip().split('\n')
 
 import distutils.core
 import glob
