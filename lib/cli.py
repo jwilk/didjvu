@@ -64,12 +64,14 @@ class intact(object):
 class ArgumentParser(argparse.ArgumentParser):
 
     def __init__(self, methods, default_method):
-        argparse.ArgumentParser.__init__(self)
+        argparse.ArgumentParser.__init__(self, formatter_class=argparse.RawDescriptionHelpFormatter)
         self.add_argument('--version', action='version', version='%(prog)s ' + __version__, help='show version information and exit')
         p_separate = self.add_subparser('separate', help='generate masks for images')
         p_encode = self.add_subparser('encode', help='convert images to single-page DjVu documents')
         p_bundle = self.add_subparser('bundle', help='convert images to bundled multi-page DjVu document')
-        for p in p_encode, p_separate, p_bundle:
+        epilog = []
+        for p in p_separate, p_encode, p_bundle:
+            epilog += ['%s --help' % p.prog]
             p.add_argument('-o', '--output', metavar='FILE', help='output filename')
             if p is p_bundle:
                 p.add_argument('--pageid-template', metavar='TEMPLATE', default='{base-ext}.djvu', help='naming scheme for page identifiers')
@@ -109,6 +111,7 @@ class ArgumentParser(argparse.ArgumentParser):
                 bg_slices=intact([74, 84, 90, 97]), bg_crcb=intact('normal'), bg_subsample=intact(3),
                 verbosity=[None],
             )
+        self.epilog = 'more help:\n  ' + '\n  '.join(epilog)
 
     def add_subparser(self, name, **kwargs):
         try:
