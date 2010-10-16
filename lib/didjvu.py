@@ -27,7 +27,80 @@ from . import ipc
 from . import temporary
 from . import tinylog
 
-formatter = string.Formatter()
+try:
+    from string import Formatter
+except ImportError:
+    # This is very rough, incomplete backport of string.Formatter class.
+    # It's provided here to allow basic functionality of didjvu even with
+    # Python 2.5.
+
+    import warnings
+    warnings.warn(UserWarning('Python %d.%d is not supported, please use Python >= 2.6' % sys.version_info[:2]), stacklevel=999)
+
+    class Formatter():
+
+        _split = re.compile('''
+            ( [{][{] | [}][}] | [{][^}]*[}] )
+        ''', re.VERBOSE).split
+
+        @staticmethod
+        def _not_implemented():
+            raise NotImplementedError('Please use Python >= 2.6')
+
+        def format(self, format_string, *args, **kwargs):
+            return self.vformat(format_string, args, kwargs)
+
+        def vformat(self, format_string, args, kwargs):
+            result = []
+            for literal_text, field_name, format_spec, conversion in self.parse(format_string):
+                if conversion is not None:
+                    self._not_implemented()
+                if literal_text:
+                    result += [literal_text]
+                if field_name is not None:
+                    obj, _ = self.get_field(field_name, args, kwargs)
+                    obj = self.convert_field(obj, conversion)
+                    result += [self.format_field(obj, format_spec)]
+            return ''.join(result)
+
+        def convert_field(self, value, conversion):
+            if conversion is None:
+                return value
+            else:
+                self._not_implemented()
+
+        def get_value(self, field_name, args, kwargs):
+            if args:
+                self._not_implemented()
+            return kwargs[field_name]
+
+        def get_field(self, field_name, args, kwargs):
+            return self.get_value(field_name, args, kwargs), field_name
+
+        def format_field(self, value, format_spec):
+            if format_spec is not None:
+                self._not_implemented()
+            return str(value)
+
+        def parse(self, format_string):
+            for token in self._split(format_string):
+                if token in ('{{', '}}'):
+                    yield token[0], None, None, None
+                elif token[:1] + token[-1:] == '{}':
+                    if (':' in token) or ('!' in token) or ('.' in token):
+                        self._not_implemented()
+                    yield '', token[1:-1], None, None
+                elif token:
+                    yield token, None, None, None
+
+        def get_value(self, key, args, kwargs):
+            if isinstance(key, (int, long)):
+                return args[key]
+            else:
+                return kwargs[key]
+
+formatter = Formatter()
+del Formatter
 
 def check_tty():
     if sys.stdout.isatty():
