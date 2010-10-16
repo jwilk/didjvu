@@ -192,7 +192,7 @@ def expand_template(template, name, page):
         if not isinstance(base_value, int):
             continue
         d[var] = d[base_var] + offset
-    return formatter.format(template, **d)
+    return formatter.vformat(template, (), d)
 
 _pageid_chars = re.compile('^[A-Za-z0-9_+.-]+$').match
 
