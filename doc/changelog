@@ -2,8 +2,9 @@ didjvu (0.2.1) UNRELEASED; urgency=low
 
   * Add the manual page.
   * Allow basic functionality of didjvu even with Python 2.5.
+  * Implement a work-around for memory leak in the Gamera library.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Sat, 16 Oct 2010 15:43:58 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Sun, 17 Oct 2010 12:11:02 +0200
 
 didjvu (0.2) unstable; urgency=low
 
