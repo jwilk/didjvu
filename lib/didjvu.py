@@ -35,7 +35,7 @@ except ImportError:
     # Python 2.5.
 
     import warnings
-    warnings.warn(UserWarning('Python %d.%d is not supported, please use Python >= 2.6' % sys.version_info[:2]), stacklevel=999)
+    warnings.warn(RuntimeWarning('Python %d.%d is not supported, please use Python >= 2.6' % sys.version_info[:2]), stacklevel=999)
 
     class Formatter():
 
