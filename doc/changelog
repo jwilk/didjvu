@@ -3,8 +3,10 @@ didjvu (0.2.1) UNRELEASED; urgency=low
   * Add the manual page.
   * Allow basic functionality of didjvu even with Python 2.5.
   * Implement a work-around for memory leak in the Gamera library.
+  * Add support for reading palette-based images. Thanks to Janusz S. Bień for
+    the bug report.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Sun, 17 Oct 2010 12:11:02 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Wed, 20 Oct 2010 19:45:11 +0200
 
 didjvu (0.2) unstable; urgency=low
 
