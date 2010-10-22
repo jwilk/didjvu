@@ -112,6 +112,7 @@ class ArgumentParser(argparse.ArgumentParser):
                 verbosity=[None],
             )
         self.epilog = 'more help:\n  ' + '\n  '.join(epilog)
+        self.__methods = methods
 
     def add_subparser(self, name, **kwargs):
         try:
@@ -144,6 +145,7 @@ class ArgumentParser(argparse.ArgumentParser):
         if o.pages_per_dict <= 1:
             o.pages_per_dict = 1
         action = getattr(actions, vars(o).pop('_action_'))
+        o.method = self.__methods[o.method]
         return action(o)
 
 __all__ = ['ArgumentParser']

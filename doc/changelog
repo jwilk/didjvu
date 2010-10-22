@@ -5,8 +5,9 @@ didjvu (0.2.1) UNRELEASED; urgency=low
   * Implement a work-around for memory leak in the Gamera library.
   * Add support for reading palette-based images. Thanks to Janusz S. Bień for
     the bug report.
+  * Make -m/--method work again.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Wed, 20 Oct 2010 19:45:11 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Fri, 22 Oct 2010 19:03:21 +0200
 
 didjvu (0.2) unstable; urgency=low
 

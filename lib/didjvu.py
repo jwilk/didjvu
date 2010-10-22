@@ -296,7 +296,7 @@ class main():
         '%(bytes_in)d bytes in, %(bytes_out)d bytes out'
 
     def __init__(self):
-        parser = cli.ArgumentParser(gamera.methods, default_method=gamera.methods['djvu'])
+        parser = cli.ArgumentParser(gamera.methods, default_method='djvu')
         parser.parse_args(actions=self)
 
     def check_common(self, o):
