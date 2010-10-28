@@ -267,7 +267,6 @@ def bundle_djvu_via_indirect(*component_filenames):
                 index_file.write(struct.pack('>I', index_file_size - i - 4))
                 i += 4
             index_file.flush()
-            os.system('djvudump ' + index_file.name)
             djvu_file = temporary.file(suffix='.djvu')
             ipc.Subprocess(['djvmcvt', '-b', index_file.name, djvu_file.name]).wait()
     return djvu_file
