@@ -6,6 +6,7 @@ didjvu (0.2.1) UNRELEASED; urgency=low
   * Add support for reading palette-based images. Thanks to Janusz S. Bień for
     the bug report.
   * Make -m/--method work again.
+  * Fix -p/--pages-per-dict.
 
  -- Jakub Wilk <jwilk@jwilk.net>  Thu, 28 Oct 2010 20:53:46 +0200
 

@@ -17,6 +17,7 @@ from __future__ import with_statement
 
 import os
 import re
+import struct
 
 from . import ipc
 from . import temporary
@@ -225,11 +226,63 @@ class Multichunk(object):
             self._pristine = True
             return self._file
 
+_djvu_header = 'AT&TFORM\0\0\0\0DJVMDIRM\0\0\0\0\1'
+
+def bundle_djvu_via_indirect(*component_filenames):
+    with temporary.directory() as tmpdir:
+        pageids = []
+        page_sizes = []
+        for filename in component_filenames:
+            pageid = os.path.basename(filename)
+            os.symlink(filename, os.path.join(tmpdir, pageid))
+            pageids += [pageid]
+            page_size = os.path.getsize(filename)
+            if page_size >= 1 << 24:
+                # Would overflow; but 0 is fine, too.
+                page_size = 0
+            page_sizes += [page_size]
+        with temporary.file(dir=tmpdir, suffix='djvu') as index_file:
+            index_file.write(_djvu_header)
+            index_file.write(struct.pack('>H', len(pageids)))
+            index_file.flush()
+            bzz = ipc.Subprocess(['bzz', '-e', '-', '-'], stdin=ipc.PIPE, stdout=index_file)
+            try:
+                for page_size in page_sizes:
+                    bzz.stdin.write(struct.pack('>I', page_size)[1:])
+                for pageid in pageids:
+                    bzz.stdin.write(struct.pack('B', not pageid.endswith('.iff')))
+                for pageid in pageids:
+                    bzz.stdin.write(pageid)
+                    bzz.stdin.write('\0')
+            finally:
+                bzz.stdin.close()
+                bzz.wait()
+            index_file_size = index_file.tell()
+            i = 0
+            while True:
+                i = _djvu_header.find('\0' * 4, i)
+                if i < 0:
+                    break
+                index_file.seek(i)
+                index_file.write(struct.pack('>I', index_file_size - i - 4))
+                i += 4
+            index_file.flush()
+            os.system('djvudump ' + index_file.name)
+            djvu_file = temporary.file(suffix='.djvu')
+            ipc.Subprocess(['djvmcvt', '-b', index_file.name, djvu_file.name]).wait()
+    return djvu_file
+
 def bundle_djvu(*component_filenames):
-    djvu_file = temporary.file(suffix='.djvu')
-    args = ['djvm', '-c', djvu_file.name]
-    args += component_filenames
-    return ipc.Proxy(djvu_file, ipc.Subprocess(args).wait, None)
+    assert len(component_filenames) > 0
+    if any(c.endswith('.iff') for c in component_filenames):
+        # We can't use ``djvm -c``.
+        return bundle_djvu_via_indirect(*component_filenames)
+        raise NotImplementedError
+    else:
+        djvu_file = temporary.file(suffix='.djvu')
+        args = ['djvm', '-c', djvu_file.name]
+        args += component_filenames
+        return ipc.Proxy(djvu_file, ipc.Subprocess(args).wait, None)
 
 __all__ = [
     'bitonal_to_djvu', 'photo_to_djvu', 'djvu_to_iw44',

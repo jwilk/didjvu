@@ -516,6 +516,7 @@ class main():
                     if pageno % o.pages_per_dict == 0:
                         iff_name = replace_ext(page_info[pageno].pageid, 'iff')
                         iff_name = os.path.join(minidjvu_out_dir, iff_name)
+                        component_filenames += [iff_name]
                     sjbz_name = os.path.join(minidjvu_out_dir, page.pageid)
                     component_filenames += [sjbz_name]
                     page.djvu['sjbz'] = sjbz_name
