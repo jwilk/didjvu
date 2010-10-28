@@ -295,6 +295,17 @@
             </listitem>
         </varlistentry>
         <varlistentry>
+            <term><option>-p</option></term>
+            <term><option>--pages-per-dict=<replaceable>n</replaceable></option></term>
+            <listitem>
+                <para>
+                    For <command>bundle</command> command: if <replaceable>n</replaceable> > 1, compress mask using
+                    <command>minidjvu</command> using <replaceable>n</replaceable> pages in one pass.
+                    The default is 1.
+                </para>
+            </listitem>
+        </varlistentry>
+        <varlistentry>
             <term><option>--masks</option></term>
             <term><option>--mask=<replaceable>input-mask</replaceable></option></term>
             <listitem>
