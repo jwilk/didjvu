@@ -1,0 +1,33 @@
+Things to do
+============
+
+ * Make sure that very small images are subsampled correctly.
+   See the DjVuLibre bug report for details:
+   http://sf.net/tracker/?func=detail&aid=1972089&group_id=32953&atid=406583
+   for details.
+
+ * Allow to run *didjvu* in parallel (``-j``/``--jobs``).
+
+ * Allow to specify page titles (``--page-title-template``).
+
+ * Allow to customize gamma value (``--gamma``).
+
+ * Allow to use other than PIL imaging libraries (e.g. GraphicsMagick,
+   ExactImage). Or not to use any (apart from Gamera) library at all.
+
+ * Optimize the ``subsample_fg()`` function, which is called if
+   non-standard image quality options are used.
+
+ * Allow to run ``didjvu encode`` and ``didjvu separate`` on
+   a single-page DjVu files.
+
+ * Allow to run ``didjvu bundle`` on DjVu files.
+
+ * Make sure that ``--pageid-template`` never provokes page-id
+   conflicts.
+
+ * Make ``didjvu bundle`` display correct “bits-per-pixel” information.
+
+ * Add support for ``--fg-slices 0``.
+
+.. vim:ft=rst ts=3 sw=3 et tw=72
