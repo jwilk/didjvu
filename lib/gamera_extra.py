@@ -118,7 +118,6 @@ def init():
         warnings.warn(RuntimeWarning('Working around memory leak in the Gamera library'), stacklevel=2)
         _monkeypatch_to_raw_string()
         fixed_test_string = test_image._to_raw_string()
-        test_image.to_pil()
         assert sys.getrefcount(fixed_test_string) == 2
         assert test_string == fixed_test_string
     else:
