@@ -2,6 +2,7 @@ include MANIFEST.in
 include COPYING
 include doc/changelog
 include doc/*.txt
+include doc/*.1
 include *.py
 recursive-include lib/ *.py
 include didjvu
