@@ -533,6 +533,6 @@ class main():
         bits_per_pixel = 8.0 * bytes_out / pixels
         ratio = 1.0 * bytes_in / bytes_out
         percent_saved = (1.0 * bytes_in - bytes_out) * 100 / bytes_in;
-        logger.nosy(self.compression_info_template, **locals())
+        logger.nosy('%s', self.compression_info_template % locals())
 
 # vim:ts=4 sw=4 et
