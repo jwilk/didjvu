@@ -1,4 +1,4 @@
-didjvu (0.2.1) UNRELEASED; urgency=low
+didjvu (0.2.1) unstable; urgency=low
 
   * Add the manual page.
   * Allow basic functionality of didjvu even with Python 2.5.
@@ -8,7 +8,7 @@ didjvu (0.2.1) UNRELEASED; urgency=low
   * Make -m/--method work again.
   * Fix -p/--pages-per-dict.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Thu, 28 Oct 2010 20:53:46 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Fri, 29 Oct 2010 01:05:03 +0200
 
 didjvu (0.2) unstable; urgency=low
 
