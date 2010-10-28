@@ -109,6 +109,7 @@
     </para>
     <para>
         <command>&p; separate</command> generates images mask(s) for the supplied input image(s).
+        Masks are saved in the PNG format.
     </para>
     <para>
         <command>&p; encode</command> converts the supplied input image(s) to single-page DjVu documents(s).
