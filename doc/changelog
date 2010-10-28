@@ -7,7 +7,7 @@ didjvu (0.2.1) UNRELEASED; urgency=low
     the bug report.
   * Make -m/--method work again.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Fri, 22 Oct 2010 19:03:21 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Thu, 28 Oct 2010 20:53:46 +0200
 
 didjvu (0.2) unstable; urgency=low
 
