@@ -16,6 +16,7 @@ from __future__ import with_statement
 
 import os
 import re
+import logging
 import string
 import sys
 
@@ -25,7 +26,8 @@ from . import filetype
 from . import gamera_extra as gamera
 from . import ipc
 from . import temporary
-from . import tinylog
+
+logger = None
 
 try:
     from string import Formatter
@@ -101,6 +103,25 @@ except ImportError:
 
 formatter = Formatter()
 del Formatter
+
+def setup_logging():
+    global logger
+    logger = logging.getLogger('didjvu.main')
+    ipc_logger = logging.getLogger('didjvu.ipc')
+    logging.NOSY = (logging.INFO + logging.DEBUG) // 2
+    def nosy(msg, *args, **kwargs):
+        logger.log(logging.NOSY, msg, *args, **kwargs)
+    logger.nosy = nosy
+    # Main handler:
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter('%(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    # IPC handler:
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter('+ %(message)s')
+    handler.setFormatter(formatter)
+    ipc_logger.addHandler(handler)
 
 def check_tty():
     if sys.stdout.isatty():
@@ -296,16 +317,24 @@ class main():
         '%(bytes_in)d bytes in, %(bytes_out)d bytes out'
 
     def __init__(self):
+        setup_logging()
         parser = cli.ArgumentParser(gamera.methods, default_method='djvu')
         parser.parse_args(actions=self)
 
     def check_common(self, o):
-        ipc.DEBUG = o.verbosity >= 2
         if len(o.masks) == 0:
             o.masks = [None for x in o.input]
         elif len(o.masks) != len(o.input):
             raise ValueError('%d input images != %d masks' % (len(o.input), len(o.masks)))
-        self.log = tinylog.Log(o.verbosity)
+        ipc_logger = logging.getLogger('didjvu.ipc')
+        assert logger is not None
+        log_level = {
+            0: logging.WARNING,
+            1: logging.INFO,
+            2: logging.NOSY,
+        }.get(o.verbosity, logging.DEBUG)
+        logger.setLevel(log_level)
+        ipc_logger.setLevel(log_level)
         gamera.init()
 
     def check_multi_output(self, o):
@@ -345,11 +374,11 @@ class main():
 
     def encode_one(self, o, image_filename, mask_filename, output):
         bytes_in = os.path.getsize(image_filename)
-        print >>self.log(1), '%s:' % image_filename
+        logger.info('%s:' % image_filename)
         ftype = filetype.check(image_filename)
         if ftype.like(filetype.djvu):
             if ftype.like(filetype.djvu_single):
-                print >>self.log(1), '- copying DjVu as is'
+                logger.info('- copying DjVu as is')
                 with open(image_filename, 'rb') as djvu_file:
                     copy_file(djvu_file, output)
             else:
@@ -357,12 +386,12 @@ class main():
                 # consist of. If it's only one, continue.
                 raise NotImplementedError("I don't know what to do with this file")
             return
-        print >>self.log(1), '- reading image'
+        logger.info('- reading image')
         image = gamera.load_image(image_filename)
         width, height = image.ncols, image.nrows
-        print >>self.log(2), '- image size: %d x %d' % (width, height)
+        logger.nosy('- image size: %d x %d', width, height)
         mask = generate_mask(mask_filename, image, o.method)
-        print >>self.log(1), '- converting to DjVu'
+        logger.info('- converting to DjVu')
         djvu_doc = image_to_djvu(width, height, image, mask, options=o)
         djvu_file = djvu_doc.save()
         try:
@@ -372,23 +401,23 @@ class main():
         bits_per_pixel = 8.0 * bytes_out / (width * height)
         ratio = 1.0 * bytes_in / bytes_out
         percent_saved = (1.0 * bytes_in - bytes_out) * 100 / bytes_in;
-        print >>self.log(2), ('- %s' % self.compression_info_template) % locals()
+        logger.info('- %s', self.compression_info_template % locals())
 
     def separate_one(self, o, image_filename, output):
         bytes_in = os.path.getsize(image_filename)
-        print >>self.log(1), '%s:' % image_filename
+        logger.info('%s:', image_filename)
         ftype = filetype.check(image_filename)
         if ftype.like(filetype.djvu):
             # TODO: Figure out if how many pages the document consist of.
             # If it's only one, extract the existing mask.
             raise NotImplementedError("I don't know what to do with this file")
-        print >>self.log(1), '- reading image'
+        logger.info('- reading image')
         image = gamera.load_image(image_filename)
         width, height = image.ncols, image.nrows
-        print >>self.log(2), '- image size: %d x %d' % (width, height)
-        print >>self.log(1), '- thresholding'
+        logger.nosy('- image size: %d x %d' % (width, height))
+        logger.info('- thresholding')
         mask = generate_mask(None, image, o.method)
-        print >>self.log(1), '- saving'
+        logger.info('- saving')
         if output is not sys.stdout:
             # A real file
             mask.save_PNG(output.name)
@@ -426,7 +455,7 @@ class main():
                 component_filenames += os.path.join(tmpdir, pageid),
                 with open(component_filenames[-1], 'wb') as component:
                     self.encode_one(o, input, mask, component)
-            print >>self.log(1), 'bundling'
+            logger.info('bundling')
             djvu_file = djvu.bundle_djvu(*component_filenames)
             try:
                 bytes_out = copy_file(djvu_file, output)
@@ -435,7 +464,7 @@ class main():
         bits_per_pixel = float('nan') # FIXME!
         ratio = 1.0 * bytes_in / bytes_out
         percent_saved = (1.0 * bytes_in - bytes_out) * 100 / bytes_in;
-        print >>self.log(2), self.compression_info_template % locals()
+        logger.nosy(self.compression_info_template % locals())
 
     def bundle_complex(self, o):
         [output] = o.output
@@ -450,25 +479,25 @@ class main():
                 page.pageid = expand_template(o.pageid_template, image_filename, pageno)
                 check_pageid_sanity(page.pageid)
                 # TODO: Check for filename conflicts.
-                print >>self.log(1), '%s:' % image_filename
+                logger.info('%s:', image_filename)
                 ftype = filetype.check(image_filename)
                 if ftype.like(filetype.djvu):
                     # TODO: Allow to merge existing documents (even multi-page ones).
                     raise NotImplementedError("I don't know what to do with this file")
-                print >>self.log(1), '- reading image'
+                logger.info('- reading image')
                 image = gamera.load_image(image_filename)
                 width, height = image.ncols, image.nrows
                 pixels += width * height
-                print >>self.log(2), '- image size: %d x %d' % (width, height)
+                logger.nosy('- image size: %d x %d', width, height)
                 mask = generate_mask(mask_filename, image, o.method)
-                print >>self.log(1), '- converting to DjVu'
+                logger.info('- converting to DjVu')
                 page.djvu = image_to_djvu(width, height, image, mask, options=o)
                 image = mask = None
                 page.sjbz = djvu.Multichunk(width, height, o.dpi, sjbz=page.djvu['sjbz'])
                 page.sjbz_symlink = os.path.join(minidjvu_in_dir, page.pageid)
                 os.symlink(page.sjbz.save().name, page.sjbz_symlink)
             with temporary.directory() as minidjvu_out_dir:
-                print >>self.log(1), 'creating shared dictionaries'
+                logger.info('creating shared dictionaries')
                 def chdir():
                     os.chdir(minidjvu_out_dir)
                 arguments = ['minidjvu',
@@ -495,7 +524,7 @@ class main():
                     page.djvu_symlink = os.path.join(minidjvu_out_dir, page.pageid)
                     os.unlink(page.djvu_symlink)
                     os.symlink(page.djvu.name, page.djvu_symlink)
-                print >>self.log(1), 'bundling'
+                logger.info('bundling')
                 djvu_file = djvu.bundle_djvu(*component_filenames)
                 try:
                     bytes_out = copy_file(djvu_file, output)
@@ -504,6 +533,6 @@ class main():
         bits_per_pixel = 8.0 * bytes_out / pixels
         ratio = 1.0 * bytes_in / bytes_out
         percent_saved = (1.0 * bytes_in - bytes_out) * 100 / bytes_in;
-        print >>self.log(2), self.compression_info_template % locals()
+        logger.nosy(self.compression_info_template, **locals())
 
 # vim:ts=4 sw=4 et

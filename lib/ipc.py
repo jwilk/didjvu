@@ -11,6 +11,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 # General Public License for more details.
 
+import logging
 import os
 import re
 import signal
@@ -19,7 +20,7 @@ import sys
 
 from subprocess import CalledProcessError
 
-DEBUG = False
+logger = logging.getLogger('didjvu.ipc')
 
 # Protect from scanadf[0] and possibly other brain-dead software that set
 # SIGCHLD to SIG_IGN.
@@ -93,8 +94,8 @@ class Subprocess(subprocess.Popen):
             commandline = kwargs['args']
         except KeyError:
             commandline = args[0]
-        if DEBUG:
-            print >>sys.stderr, '+', ' '.join(shell_escape(s) for s in commandline)
+        if logger.isEnabledFor(logging.DEBUG):
+            logger.debug(' '.join(shell_escape(s) for s in commandline))
         self.__command = commandline[0]
         subprocess.Popen.__init__(self, *args, **kwargs)
 
