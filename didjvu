@@ -15,11 +15,6 @@
 if __name__ != '__main__':
     raise ImportError('This module is not intended for import')
 
-try:
-    import didjvu_importer
-except ImportError:
-    pass
-
 from didjvu import didjvu
 
 didjvu.main()
