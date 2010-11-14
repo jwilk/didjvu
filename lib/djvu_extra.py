@@ -118,7 +118,7 @@ class Multichunk(object):
     def _load_file(self):
         args = ['djvudump', self._file.name]
         dump = ipc.Subprocess(args, stdout=ipc.PIPE)
-        width = height = dpi = None
+        self.width = self.height = self.dpi = None
         keys = set()
         try:
             header = dump.stdout.readline()
