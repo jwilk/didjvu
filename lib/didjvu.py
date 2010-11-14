@@ -17,7 +17,6 @@ from __future__ import with_statement
 import os
 import re
 import logging
-import string
 import sys
 
 from . import cli
