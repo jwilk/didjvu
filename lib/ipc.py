@@ -127,7 +127,6 @@ class Proxy(object):
         setattr(self._object, name, value)
 
 __all__ = [
-    'DEBUG',
     'PIPE', 'Subprocess', 'Proxy',
 ]
 
