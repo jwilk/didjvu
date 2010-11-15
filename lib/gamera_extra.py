@@ -109,6 +109,7 @@ def _monkeypatch_to_raw_string():
     Image._to_raw_string = fixed_to_raw_string
 
 def init():
+    sys.modules['numpy'] = None
     result = _init()
     test_image = Image((0, 0), (5, 5), RGB)
     test_string = test_image._to_raw_string()
