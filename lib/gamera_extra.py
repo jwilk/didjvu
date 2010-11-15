@@ -23,21 +23,18 @@ from gamera.core import init_gamera as _init
 from gamera.core import Image, RGB, GREYSCALE, ONEBIT, Dim, RGBPixel
 from gamera.plugins.pil_io import from_pil as _from_pil
 
-try:
-    import Image as PIL
-except ImportError:
-    load_image = _load_image
-else:
-    def load_image(filename):
-        # TODO: Try to load image without PIL, even if it is imported.
-        pil_image = PIL.open(filename)
-        # Gamera supports importing only 8-bit and RGB from PIL:
-        if pil_image.mode == '1':
-            pil_image = pil_image.convert('L')
-        elif pil_image.mode not in ('RGB', 'L'):
-            pil_image = pil_image.convert('RGB')
-        assert pil_image.mode in ('RGB', 'L')
-        return _from_pil(pil_image)
+import Image as PIL
+
+def load_image(filename):
+    # TODO: Try to load image without PIL, even if it is imported.
+    pil_image = PIL.open(filename)
+    # Gamera supports importing only 8-bit and RGB from PIL:
+    if pil_image.mode == '1':
+        pil_image = pil_image.convert('L')
+    elif pil_image.mode not in ('RGB', 'L'):
+        pil_image = pil_image.convert('RGB')
+    assert pil_image.mode in ('RGB', 'L')
+    return _from_pil(pil_image)
 
 def colorspace_wrapper(plugin):
 
