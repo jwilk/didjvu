@@ -202,7 +202,7 @@ def subsample_bg(image, mask, options):
 def make_layer(image, mask, subsampler, options):
     image, mask = subsampler(image, mask, options)
     return djvu.photo_to_djvu(
-        image=image.to_pil(), mask_image=gamera.to_pil_1bpp(mask),
+        image=gamera.to_pil_rgb(image), mask_image=gamera.to_pil_1bpp(mask),
         slices=options.slices, crcb=options.crcb
     )
 
@@ -215,7 +215,7 @@ def image_to_djvu(width, height, image, mask, options):
         loss_level = 0
     sjbz = djvu.bitonal_to_djvu(gamera.to_pil_1bpp(mask), loss_level=loss_level)
     if options.fg_bg_defaults:
-        image = image.to_pil()
+        image = gamera.to_pil_rgb(image)
         return djvu.Multichunk(width, height, dpi, image=image, sjbz=sjbz)
     else:
         fg_djvu = make_layer(image, mask, subsample_fg, options.fg_options)

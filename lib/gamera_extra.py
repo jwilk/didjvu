@@ -13,6 +13,7 @@
 
 '''Bridge to the Gamera framework'''
 
+import ctypes
 import os
 import re
 import sys
@@ -75,6 +76,12 @@ def _load_methods():
 
 methods = _load_methods()
 
+def to_pil_rgb(image):
+    # About 20% faster than the standard .to_pil() method of Gamera 3.2.6.
+    buffer = ctypes.create_string_buffer(3 * image.ncols * image.nrows)
+    image.to_buffer(buffer)
+    return PIL.frombuffer('RGB', (image.ncols, image.nrows), buffer, 'raw', 'RGB', 0, 1)
+
 def to_pil_1bpp(image):
     return image.to_greyscale().to_pil()
 
@@ -82,7 +89,6 @@ def _decref(o):
     '''
     Forcibly set refcount of the object to 1.
     '''
-    import ctypes
     libc = ctypes.cdll.LoadLibrary(None)
     memmove = libc.memmove
     memmove.argtypes = [ctypes.py_object, ctypes.py_object, ctypes.c_size_t]
