@@ -17,9 +17,8 @@ import re
 import signal
 import subprocess
 
-from subprocess import CalledProcessError
-
-logger = logging.getLogger('didjvu.ipc')
+# CalledProcessError, CalledProcessInterrupted
+# ============================================
 
 # Protect from scanadf[0] and possibly other brain-dead software that set
 # SIGCHLD to SIG_IGN.
@@ -46,20 +45,23 @@ def get_signal_names():
         pass
     return dict((no, name) for name, no in data.iteritems())
 
+CalledProcessError = subprocess.CalledProcessError
+
 class CalledProcessInterrupted(CalledProcessError):
 
     _signal_names = get_signal_names()
 
     def __init__(self, signal_id, command):
         Exception.__init__(self, command, signal_id)
+
     def __str__(self):
         signal_name = self._signal_names.get(self.args[1], self.args[1])
         return 'Command %r was interrupted by signal %s' % (self.args[0], signal_name)
 
 del get_signal_names
 
-PIPE = subprocess.PIPE
-from subprocess import CalledProcessError
+# Subprocess
+# ==========
 
 def shell_escape(s, safe=re.compile('^[a-zA-Z0-9_+/=.,:-]+$').match):
     if safe(s):
@@ -106,6 +108,14 @@ class Subprocess(subprocess.Popen):
         if return_code < 0:
             raise CalledProcessInterrupted(-return_code, self.__command)
 
+# PIPE
+# ====
+
+PIPE = subprocess.PIPE
+
+# Proxy
+# =====
+
 class Proxy(object):
 
     def __init__(self, object, wait_fn, temporaries):
@@ -127,8 +137,18 @@ class Proxy(object):
         self._wait_fn = int
         setattr(self._object, name, value)
 
+# logging support
+# ===============
+
+logger = logging.getLogger('didjvu.ipc')
+
+# __all__
+# =======
+
 __all__ = [
-    'PIPE', 'Subprocess', 'Proxy',
+    'CalledProcessError', 'CalledProcessInterrupted',
+    'Subprocess', 'PIPE',
+    'Proxy',
 ]
 
 # vim:ts=4 sw=4 et
