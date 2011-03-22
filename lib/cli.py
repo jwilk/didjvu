@@ -83,7 +83,7 @@ class ArgumentParser(argparse.ArgumentParser):
             p.add_argument('--clean', dest='loss_level', action='store_const', const=djvu.LOSS_LEVEL_CLEAN, help='lossy compression: remove flyspecks')
             p.add_argument('--lossy', dest='loss_level', action='store_const', const=djvu.LOSS_LEVEL_LOSSY, help='lossy compression: substitute patterns with small variations')
             if p is not p_separate:
-                p.add_argument('--masks', nargs='+', metavar='MASK', help='use pre-generated masks') 
+                p.add_argument('--masks', nargs='+', metavar='MASK', help='use pre-generated masks')
                 p.add_argument('--mask', action='append', dest='masks', metavar='MASK', help='use a pre-generated mask')
                 for layer, layer_name in ('fg', 'foreground'), ('bg', 'background'):
                     if layer == 'fg':
