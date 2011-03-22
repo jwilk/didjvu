@@ -24,84 +24,10 @@ from . import djvu_extra as djvu
 from . import filetype
 from . import gamera_extra as gamera
 from . import ipc
+from . import templates
 from . import temporary
 
 logger = None
-
-try:
-    from string import Formatter
-except ImportError:
-    # This is very rough, incomplete backport of string.Formatter class.
-    # It's provided here to allow basic functionality of didjvu even with
-    # Python 2.5.
-
-    import warnings
-    warnings.warn(RuntimeWarning('Python %d.%d is not supported, please use Python >= 2.6' % sys.version_info[:2]), stacklevel=999)
-
-    class Formatter():
-
-        _split = re.compile('''
-            ( [{][{] | [}][}] | [{][^}]*[}] )
-        ''', re.VERBOSE).split
-
-        @staticmethod
-        def _not_implemented():
-            raise NotImplementedError('Please use Python >= 2.6')
-
-        def format(self, format_string, *args, **kwargs):
-            return self.vformat(format_string, args, kwargs)
-
-        def vformat(self, format_string, args, kwargs):
-            result = []
-            for literal_text, field_name, format_spec, conversion in self.parse(format_string):
-                if conversion is not None:
-                    self._not_implemented()
-                if literal_text:
-                    result += [literal_text]
-                if field_name is not None:
-                    obj, _ = self.get_field(field_name, args, kwargs)
-                    obj = self.convert_field(obj, conversion)
-                    result += [self.format_field(obj, format_spec)]
-            return ''.join(result)
-
-        def convert_field(self, value, conversion):
-            if conversion is None:
-                return value
-            else:
-                self._not_implemented()
-
-        def get_value(self, field_name, args, kwargs):
-            if args:
-                self._not_implemented()
-            return kwargs[field_name]
-
-        def get_field(self, field_name, args, kwargs):
-            return self.get_value(field_name, args, kwargs), field_name
-
-        def format_field(self, value, format_spec):
-            if format_spec is not None:
-                self._not_implemented()
-            return str(value)
-
-        def parse(self, format_string):
-            for token in self._split(format_string):
-                if token in ('{{', '}}'):
-                    yield token[0], None, None, None
-                elif token[:1] + token[-1:] == '{}':
-                    if (':' in token) or ('!' in token) or ('.' in token):
-                        self._not_implemented()
-                    yield '', token[1:-1], None, None
-                elif token:
-                    yield token, None, None, None
-
-        def get_value(self, key, args, kwargs):
-            if isinstance(key, (int, long)):
-                return args[key]
-            else:
-                return kwargs[key]
-
-formatter = Formatter()
-del Formatter
 
 def setup_logging():
     global logger
@@ -233,60 +159,6 @@ def generate_mask(filename, image, method):
     else:
         return gamera.load_image(filename)
 
-def expand_template(template, name, page):
-    '''
-    >>> path = '/path/to/eggs.png'
-    >>> expand_template('{name}', path, 0)
-    '/path/to/eggs.png'
-    >>> expand_template('{base}', path, 0)
-    'eggs.png'
-    >>> expand_template('{name-ext}.djvu', path, 0)
-    '/path/to/eggs.djvu'
-    >>> expand_template('{base-ext}.djvu', path, 0)
-    'eggs.djvu'
-    >>> expand_template('{page}', path, 0)
-    '1'
-    >>> expand_template('{page:04}', path, 0)
-    '0001'
-    >>> expand_template('{page}', path, 42)
-    '43'
-    >>> expand_template('{page+26}', path, 42)
-    '69'
-    >>> expand_template('{page-26}', path, 42)
-    '17'
-    '''
-    base = os.path.basename(name)
-    name_ext, _ = os.path.splitext(name)
-    base_ext, _ = os.path.splitext(base)
-    d = {
-        'name': name, 'name-ext': name_ext,
-        'base': base, 'base-ext': base_ext,
-        'page': page + 1,
-    }
-    for _, var, _, _ in formatter.parse(template):
-        if var is None:
-            continue
-        if '+' in var:
-            sign = +1
-            base_var, offset = var.split('+')
-        elif '-' in var:
-            sign = -1
-            base_var, offset = var.split('-')
-        else:
-            continue
-        try:
-            offset = sign * int(offset, 10)
-        except ValueError:
-            continue
-        try:
-            base_value = d[base_var]
-        except LookupError:
-            continue
-        if not isinstance(base_value, int):
-            continue
-        d[var] = d[base_var] + offset
-    return formatter.vformat(template, (), d)
-
 _pageid_chars = re.compile('^[A-Za-z0-9_+.-]+$').match
 
 def check_pageid_sanity(pageid):
@@ -340,7 +212,7 @@ class main():
         self.check_common(o)
         if o.output is None:
             if o.output_template is not None:
-                o.output = [expand_template(o.output_template, f, n) for n, f in enumerate(o.input)]
+                o.output = [templates.expand(o.output_template, f, n) for n, f in enumerate(o.input)]
             elif len(o.input) == 1:
                 o.output = [sys.stdout]
                 check_tty()
@@ -448,7 +320,7 @@ class main():
             component_filenames = []
             for page, (input, mask) in enumerate(zip(o.input, o.masks)):
                 bytes_in += os.path.getsize(input)
-                pageid = expand_template(o.pageid_template, input, page)
+                pageid = templates.expand(o.pageid_template, input, page)
                 # TODO: Check for filename conflicts.
                 check_pageid_sanity(pageid)
                 component_filenames += os.path.join(tmpdir, pageid),
@@ -475,7 +347,7 @@ class main():
                 page = namespace()
                 page_info += page,
                 bytes_in += os.path.getsize(image_filename)
-                page.pageid = expand_template(o.pageid_template, image_filename, pageno)
+                page.pageid = templates.expand(o.pageid_template, image_filename, pageno)
                 check_pageid_sanity(page.pageid)
                 # TODO: Check for filename conflicts.
                 logger.info('%s:', image_filename)
