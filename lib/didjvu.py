@@ -14,6 +14,7 @@
 
 from __future__ import with_statement
 
+import itertools
 import os
 import re
 import logging
@@ -47,6 +48,10 @@ def setup_logging():
     formatter = logging.Formatter('+ %(message)s')
     handler.setFormatter(formatter)
     ipc_logger.addHandler(handler)
+
+def parallel_for(o, f, *iterables):
+    for args in zip(*iterables):
+        f(o, *args)
 
 def check_tty():
     if sys.stdout.isatty():
@@ -240,8 +245,7 @@ class main():
 
     def encode(self, o):
         self.check_multi_output(o)
-        for input, mask, output in zip(o.input, o.masks, o.output):
-            self.encode_one(o, input, mask, output)
+        parallel_for(o, self.encode_one, o.input, o.masks, o.output)
 
     def encode_one(self, o, image_filename, mask_filename, output):
         bytes_in = os.path.getsize(image_filename)
@@ -304,7 +308,7 @@ class main():
         self.check_multi_output(o)
         for input, mask, output in zip(o.input, o.masks, o.output):
             assert mask is None
-            self.separate_one(o, input, output)
+        parallel_for(o, self.separate_one, o.input, o.output)
 
     def bundle(self, o):
         self.check_single_output(o)
@@ -312,6 +316,10 @@ class main():
             self.bundle_simple(o)
         else:
             self.bundle_complex(o)
+
+    def _bundle_simple_page(self, o, input, mask, component_name):
+        with open(component_name, 'wb') as component:
+            self.encode_one(o, input, mask, component)
 
     def bundle_simple(self, o):
         [output] = o.output
@@ -324,8 +332,7 @@ class main():
                 # TODO: Check for filename conflicts.
                 check_pageid_sanity(pageid)
                 component_filenames += os.path.join(tmpdir, pageid),
-                with open(component_filenames[-1], 'wb') as component:
-                    self.encode_one(o, input, mask, component)
+            parallel_for(o, self._bundle_simple_page, o.input, o.masks, component_filenames)
             logger.info('bundling')
             djvu_file = djvu.bundle_djvu(*component_filenames)
             try:
@@ -337,11 +344,30 @@ class main():
         percent_saved = (1.0 * bytes_in - bytes_out) * 100 / bytes_in;
         logger.nosy(self.compression_info_template % locals())
 
+    def _bundle_complex_page(self, o, page, minidjvu_in_dir, image_filename, mask_filename, pixels):
+        logger.info('%s:', image_filename)
+        ftype = filetype.check(image_filename)
+        if ftype.like(filetype.djvu):
+            # TODO: Allow to merge existing documents (even multi-page ones).
+            raise NotImplementedError("I don't know what to do with this file")
+        logger.info('- reading image')
+        image = gamera.load_image(image_filename)
+        width, height = image.ncols, image.nrows
+        pixels[0] += width * height
+        logger.nosy('- image size: %d x %d', width, height)
+        mask = generate_mask(mask_filename, image, o.method)
+        logger.info('- converting to DjVu')
+        page.djvu = image_to_djvu(width, height, image, mask, options=o)
+        image = mask = None
+        page.sjbz = djvu.Multichunk(width, height, o.dpi, sjbz=page.djvu['sjbz'])
+        page.sjbz_symlink = os.path.join(minidjvu_in_dir, page.pageid)
+        os.symlink(page.sjbz.save().name, page.sjbz_symlink)
+
     def bundle_complex(self, o):
         [output] = o.output
         with temporary.directory() as minidjvu_in_dir:
             bytes_in = 0
-            pixels = 0
+            pixels = [0]
             page_info = []
             for pageno, (image_filename, mask_filename) in enumerate(zip(o.input, o.masks)):
                 page = namespace()
@@ -350,23 +376,14 @@ class main():
                 page.pageid = templates.expand(o.pageid_template, image_filename, pageno)
                 check_pageid_sanity(page.pageid)
                 # TODO: Check for filename conflicts.
-                logger.info('%s:', image_filename)
-                ftype = filetype.check(image_filename)
-                if ftype.like(filetype.djvu):
-                    # TODO: Allow to merge existing documents (even multi-page ones).
-                    raise NotImplementedError("I don't know what to do with this file")
-                logger.info('- reading image')
-                image = gamera.load_image(image_filename)
-                width, height = image.ncols, image.nrows
-                pixels += width * height
-                logger.nosy('- image size: %d x %d', width, height)
-                mask = generate_mask(mask_filename, image, o.method)
-                logger.info('- converting to DjVu')
-                page.djvu = image_to_djvu(width, height, image, mask, options=o)
-                image = mask = None
-                page.sjbz = djvu.Multichunk(width, height, o.dpi, sjbz=page.djvu['sjbz'])
-                page.sjbz_symlink = os.path.join(minidjvu_in_dir, page.pageid)
-                os.symlink(page.sjbz.save().name, page.sjbz_symlink)
+            parallel_for(o, self._bundle_complex_page,
+                page_info,
+                itertools.repeat(minidjvu_in_dir),
+                o.input,
+                o.masks,
+                itertools.repeat(pixels)
+            )
+            [pixels] = pixels
             with temporary.directory() as minidjvu_out_dir:
                 logger.info('creating shared dictionaries')
                 def chdir():
