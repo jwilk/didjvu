@@ -306,7 +306,7 @@ class main():
 
     def separate(self, o):
         self.check_multi_output(o)
-        for input, mask, output in zip(o.input, o.masks, o.output):
+        for mask in o.masks:
             assert mask is None
         parallel_for(o, self.separate_one, o.input, o.output)
 
