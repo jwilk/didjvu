@@ -283,7 +283,7 @@ class main():
         logger.info('%s:', image_filename)
         ftype = filetype.check(image_filename)
         if ftype.like(filetype.djvu):
-            # TODO: Figure out if how many pages the document consist of.
+            # TODO: Figure out how many pages the document consist of.
             # If it's only one, extract the existing mask.
             raise NotImplementedError("I don't know what to do with this file")
         logger.info('- reading image')
