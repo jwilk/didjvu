@@ -1,8 +1,11 @@
 didjvu (0.2.2) UNRELEASED; urgency=low
 
   * Make ‘didjvu --help’ print also Gamera version number.
+  * Try loading images with Gamera, and only fall back to Python Imaging
+    Library. This should be both faster and allow to load wider variety of
+    TIFF images.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Mon, 11 Jul 2011 19:34:34 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Mon, 11 Jul 2011 22:08:10 +0200
 
 didjvu (0.2.1) unstable; urgency=low
 

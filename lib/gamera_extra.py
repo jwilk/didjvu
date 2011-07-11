@@ -1,6 +1,6 @@
 # encoding=UTF-8
 
-# Copyright © 2009, 2010 Jakub Wilk <jwilk@jwilk.net>
+# Copyright © 2009, 2010, 2011 Jakub Wilk <jwilk@jwilk.net>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,15 +27,19 @@ from gamera.plugins.pil_io import from_pil as _from_pil
 import Image as PIL
 
 def load_image(filename):
-    # TODO: Try to load image without PIL, even if it is imported.
-    pil_image = PIL.open(filename)
-    # Gamera supports importing only 8-bit and RGB from PIL:
-    if pil_image.mode == '1':
-        pil_image = pil_image.convert('L')
-    elif pil_image.mode not in ('RGB', 'L'):
-        pil_image = pil_image.convert('RGB')
-    assert pil_image.mode in ('RGB', 'L')
-    return _from_pil(pil_image)
+    try:
+        # Natively, Gamera supports only TIFF and PNG formats. However, it
+        # supports wider variety of TIFFs than PIL.
+        return _load_image(filename)
+    except IOError:
+        pil_image = PIL.open(filename)
+        # Gamera supports importing only 8-bit and RGB from PIL:
+        if pil_image.mode == '1':
+            pil_image = pil_image.convert('L')
+        elif pil_image.mode not in ('RGB', 'L'):
+            pil_image = pil_image.convert('RGB')
+        assert pil_image.mode in ('RGB', 'L')
+        return _from_pil(pil_image)
 
 def colorspace_wrapper(plugin):
 
