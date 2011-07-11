@@ -1,8 +1,8 @@
 didjvu (0.2.2) UNRELEASED; urgency=low
 
-  * 
+  * Make ‘didjvu --help’ print also Gamera version number.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Wed, 01 Dec 2010 21:21:26 +0100
+ -- Jakub Wilk <jwilk@jwilk.net>  Mon, 11 Jul 2011 19:34:34 +0200
 
 didjvu (0.2.1) unstable; urgency=low
 

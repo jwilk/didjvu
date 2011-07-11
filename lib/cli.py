@@ -15,6 +15,11 @@
 
 import argparse
 
+try:
+    import gamera
+except ImportError:
+    gamera = None
+
 from . import djvu_extra as djvu
 from . import version
 
@@ -65,7 +70,12 @@ class ArgumentParser(argparse.ArgumentParser):
 
     def __init__(self, methods, default_method):
         argparse.ArgumentParser.__init__(self, formatter_class=argparse.RawDescriptionHelpFormatter)
-        self.add_argument('--version', action='version', version='%(prog)s ' + __version__, help='show version information and exit')
+        version = '%(prog)s ' + __version__
+        try:
+            version += ' (Gamera %s)' % gamera.__version__
+        except (AttributeError, TypeError, ValueError):
+            pass
+        self.add_argument('--version', action='version', version=version, help='show version information and exit')
         p_separate = self.add_subparser('separate', help='generate masks for images')
         p_encode = self.add_subparser('encode', help='convert images to single-page DjVu documents')
         p_bundle = self.add_subparser('bundle', help='convert images to bundled multi-page DjVu document')
