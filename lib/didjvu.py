@@ -257,7 +257,7 @@ class main():
                 with open(image_filename, 'rb') as djvu_file:
                     copy_file(djvu_file, output)
             else:
-                # TODO: Figure out if how many pages the multi-page document
+                # TODO: Figure out how many pages the multi-page document
                 # consist of. If it's only one, continue.
                 raise NotImplementedError("I don't know what to do with this file")
             return
