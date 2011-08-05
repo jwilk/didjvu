@@ -6,8 +6,7 @@ Dependencies
 * Gamera_ ≥ 3.2.3 —
   a toolkit for building document image recognition systems
 
-* Python Imaging Library (PIL_) —
-  http://www.pythonware.com/products/pil/
+* Python Imaging Library (PIL_)
 
 * DjVuLibre_ ≥ 3.5.21 —
   library for the DjVu_ file format
