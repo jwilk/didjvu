@@ -4,7 +4,7 @@ Dependencies
 * Python_ ≥ 2.6
 
 * Gamera_ ≥ 3.2.3 —
-  a toolkit for building document image recognition systems
+  toolkit for building document image recognition systems
 
 * Python Imaging Library (PIL_)
 
