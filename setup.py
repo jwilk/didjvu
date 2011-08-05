@@ -1,6 +1,6 @@
 #!/usr/bin/python
-
 # encoding=UTF-8
+
 # Copyright © 2009, 2010 Jakub Wilk <jwilk@jwilk.net>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -33,8 +33,16 @@ Topic :: Multimedia :: Graphics
 import distutils.core
 import glob
 import os
+import sys
 
 from lib.version import __version__
+
+if sys.version_info < (2, 5):
+    # Only Python ≥ 2.6 is officially supported, but the software is not completely
+    # unusable with Python 2.5:
+    raise RuntimeError('didjvu requires Python >= 2.6')
+if sys.version_info >= (3, 0):
+    raise RuntimeError('didjvu is not compatible with Python 3.X')
 
 os.putenv('TAR_OPTIONS', '--owner root --group root --mode a+rX')
 distutils.core.setup(

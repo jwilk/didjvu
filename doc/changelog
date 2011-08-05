@@ -4,8 +4,9 @@ didjvu (0.2.2) UNRELEASED; urgency=low
   * Try loading images with Gamera, and only fall back to Python Imaging
     Library. This should be both faster and allow to load wider variety of
     TIFF images.
+  * Check Python version in setup.py.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Mon, 11 Jul 2011 22:08:10 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Fri, 05 Aug 2011 23:33:42 +0200
 
 didjvu (0.2.1) unstable; urgency=low
 
