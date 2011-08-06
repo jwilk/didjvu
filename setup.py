@@ -30,10 +30,13 @@ Topic :: Text Processing
 Topic :: Multimedia :: Graphics
 '''.strip().split('\n')
 
-import distutils.core
 import glob
 import os
 import sys
+
+import distutils.core
+from distutils.command.build import build as distutils_build
+from distutils.command.sdist import sdist as distutils_sdist
 
 from lib.version import __version__
 
@@ -43,6 +46,39 @@ if sys.version_info < (2, 5):
     raise RuntimeError('didjvu requires Python >= 2.6')
 if sys.version_info >= (3, 0):
     raise RuntimeError('didjvu is not compatible with Python 3.X')
+
+class build_doc(distutils_build):
+
+    description = 'build documentation'
+
+    def run(self):
+        for xmlname in glob.glob(os.path.join('doc', '*.xml')):
+            manname = os.path.splitext(xmlname)[0] + '.1'
+            command = [
+                'xsltproc', '--nonet',
+                '--param', 'man.charmap.use.subset', '0',
+                '--param', 'man.font.links', '"I"',
+                '--output', 'doc/',
+                'http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl',
+                xmlname,
+            ]
+            self.make_file([xmlname], manname, self.spawn, [command])
+            if not self.dry_run:
+                self.spawn(['./tools/manpage-fixup', manname])
+
+class sdist(distutils_sdist):
+
+    def initialize_options(self):
+        # Python 2.7 doesn't use tar(1) anymore, so setting TAR_OPTIONS is not
+        # effective.
+        distutils_sdist.initialize_options(self)
+        self.owner = self.group = 'root'
+
+    def run(self):
+        self.run_command('build_doc')
+        return distutils_sdist.run(self)
+
+distutils_build.sub_commands[:0] = [('build_doc', None)]
 
 os.putenv('TAR_OPTIONS', '--owner root --group root --mode a+rX')
 distutils.core.setup(
@@ -59,6 +95,7 @@ distutils.core.setup(
     package_dir = dict(didjvu='lib'),
     scripts = ['didjvu'],
     data_files = [('share/man/man1', glob.glob('doc/*.1'))],
+    cmdclass = dict(sdist=sdist, build_doc=build_doc),
 )
 
 # vim:ts=4 sw=4 et

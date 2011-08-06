@@ -7,3 +7,4 @@ include doc/*.1
 include *.py
 recursive-include lib/ *.py
 include didjvu
+include tools/manpage-fixup
