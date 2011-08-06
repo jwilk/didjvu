@@ -262,10 +262,6 @@
                         <listitem><para>DjVu thresholding algorithm</para></listitem>
                     </varlistentry>
                     <varlistentry>
-                        <term><literal>gatos</literal></term>
-                        <listitem><para>Gatos et al. thresholding algorithm</para></listitem>
-                    </varlistentry>
-                    <varlistentry>
                         <term><literal>niblack</literal></term>
                         <listitem><para>Niblack adaptive thresholding algorithm</para></listitem>
                     </varlistentry>

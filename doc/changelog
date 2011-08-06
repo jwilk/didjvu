@@ -6,8 +6,10 @@ didjvu (0.2.2) UNRELEASED; urgency=low
     TIFF images.
   * Check Python version in setup.py.
   * Let the setup.py script build the manual page.
+  * Disable the Gatos et. al thresholding algorithm for the time being, as it
+    didn't work anyway.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Sat, 06 Aug 2011 22:25:27 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Sat, 06 Aug 2011 22:48:22 +0200
 
 didjvu (0.2.1) unstable; urgency=low
 

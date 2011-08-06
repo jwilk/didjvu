@@ -66,7 +66,7 @@ def _load_methods():
         from gamera.plugins.threshold import djvu_threshold
         from gamera.plugins.threshold import otsu_threshold
         from gamera.plugins.threshold import tsai_moment_preserving_threshold as tsai
-        from gamera.plugins.binarization import gatos_threshold
+        # TODO: from gamera.plugins.binarization import gatos_threshold
         from gamera.plugins.binarization import niblack_threshold
         from gamera.plugins.binarization import sauvola_threshold
         from gamera.plugins.binarization import white_rohrer_threshold
