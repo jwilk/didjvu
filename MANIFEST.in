@@ -1,10 +1,10 @@
-include MANIFEST.in
+include *.py
 include COPYING
-include doc/changelog
+include MANIFEST.in
+include didjvu
+include doc/*.1
 include doc/*.txt
 include doc/*.xml
-include doc/*.1
-include *.py
-recursive-include lib/ *.py
-include didjvu
+include doc/changelog
 include tools/manpage-fixup
+recursive-include lib/ *.py
