@@ -265,7 +265,7 @@
                         <listitem><para>Sauvola adaptive thresholding algorithm</para></listitem>
                     </varlistentry>
                     <varlistentry>
-                        <term><literal>shading_subtraction</literal></term>
+                        <term><literal>shading-subtraction</literal></term>
                         <listitem><para>thresholds an image after subtracting a possibly shaded background</para>
                             <note><para>this method requires Gamera ≥ 3.3.1</para></note>
                         </listitem>
@@ -275,7 +275,7 @@
                         <listitem><para>splitting along a threshold value determined using the Tsai Moment Preserving Threshold algorithm</para></listitem>
                     </varlistentry>
                     <varlistentry>
-                        <term><literal>white_rohrer</literal></term>
+                        <term><literal>white-rohrer</literal></term>
                         <listitem><para>White and Rohrer dynamic thresholding algorithm</para></listitem>
                     </varlistentry>
                     </variablelist>

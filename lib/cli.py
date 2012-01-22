@@ -66,6 +66,9 @@ class intact(object):
     def __call__(self):
         return self.x
 
+def replace_underscores(s):
+    return s.replace('_', '-')
+
 class ArgumentParser(argparse.ArgumentParser):
 
     def __init__(self, methods, default_method):
@@ -107,7 +110,7 @@ class ArgumentParser(argparse.ArgumentParser):
                 p.add_argument('-d', '--dpi', type=dpi_type, metavar='N', help='image resolution')
             if p is p_bundle:
                 p.add_argument('-p', '--pages-per-dict', type=int, metavar='N', help='how many pages to compress in one pass')
-            p.add_argument('-m', '--method', choices=methods, default=default_method, help='binarization method')
+            p.add_argument('-m', '--method', choices=methods, type=replace_underscores, default=default_method, help='binarization method')
             p.add_argument('-v', '--verbose', dest='verbosity', action='append_const', const=None, help='more informational messages')
             p.add_argument('-q', '--quiet', dest='verbosity', action='store_const', const=[], help='no informational messages')
             p.add_argument('input', metavar='<input-image>', nargs='+')

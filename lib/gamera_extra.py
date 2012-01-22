@@ -82,6 +82,7 @@ def _load_methods():
         if name.startswith('_'):
             continue
         name = replace_suffix('', name)
+        name = name.replace('_', '-')
         methods[name] = colorspace_wrapper(plugin)
     return methods
 
