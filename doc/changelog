@@ -1,4 +1,4 @@
-didjvu (0.2.2) UNRELEASED; urgency=low
+didjvu (0.2.2) unstable; urgency=low
 
   * Make ‘didjvu --help’ print also Gamera version number.
   * Try loading images with Gamera, and only fall back to Python Imaging
@@ -16,7 +16,7 @@ didjvu (0.2.2) UNRELEASED; urgency=low
   * Add support for the “shading subtraction” algorithm.
   * Allow (and prefer) hyphens instead of underscores in method names.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Mon, 23 Jan 2012 00:09:56 +0100
+ -- Jakub Wilk <jwilk@jwilk.net>  Mon, 23 Jan 2012 00:10:37 +0100
 
 didjvu (0.2.1) unstable; urgency=low
 
