@@ -8,8 +8,9 @@ didjvu (0.2.2) UNRELEASED; urgency=low
   * Let the setup.py script build the manual page.
   * Disable the Gatos et. al thresholding algorithm for the time being, as it
     didn't work anyway.
+  * Add support for the “shading subtraction” algorithm.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Sat, 06 Aug 2011 22:48:22 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Sun, 22 Jan 2012 23:17:10 +0100
 
 didjvu (0.2.1) unstable; urgency=low
 
