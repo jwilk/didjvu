@@ -19,12 +19,17 @@ import re
 import sys
 import warnings
 
+from gamera import __version__ as version
 from gamera.core import load_image as _load_image
 from gamera.core import init_gamera as _init
 from gamera.core import Image, RGB, GREYSCALE, ONEBIT, Dim, RGBPixel
 from gamera.plugins.pil_io import from_pil as _from_pil
 
 import Image as PIL
+
+def has_version(*req_version):
+    print req_version, tuple(map(int, version.split('.')))
+    return tuple(map(int, version.split('.'))) >= req_version
 
 def load_image(filename):
     try:
