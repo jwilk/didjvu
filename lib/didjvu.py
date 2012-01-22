@@ -54,7 +54,7 @@ def parallel_for(o, f, *iterables):
 
 def check_tty():
     if sys.stdout.isatty():
-        print >>sys.stderr, 'I won\'t write DjVu data to a terminal.'
+        print >>sys.stderr, 'I won\'t write binary data to a terminal.'
         sys.exit(1)
 
 def copy_file(input_file, output_file):
