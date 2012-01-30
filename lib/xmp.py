@@ -18,7 +18,7 @@ import libxmp
 
 from libxmp.consts import XMP_NS_DC as ns_dc
 from libxmp.consts import XMP_NS_XMP as ns_xmp
-ns_didjvu = 'http://jwilk.net/software/didjvu'
+ns_didjvu = 'http://jwilk.net/software/didjvu#'
 
 class Metadata(libxmp.XMPMeta):
 
