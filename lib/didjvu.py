@@ -291,6 +291,7 @@ class main():
         if xmp_output:
             logger.info('- saving XMP metadata')
             metadata = xmp.Metadata()
+            metadata.import_(image_filename)
             metadata.update(media_type='image/vnd.djvu')
             metadata.write(xmp_output)
 

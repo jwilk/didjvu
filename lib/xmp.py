@@ -12,6 +12,7 @@
 # General Public License for more details.
 
 import datetime
+import errno
 
 import libxmp
 
@@ -35,6 +36,22 @@ class Metadata(libxmp.XMPMeta):
 
     def serialize(self):
         return self.serialize_and_format(omit_packet_wrapper=True, tabchr='    ')
+
+    def import_(self, image_filename):
+        try:
+            file = open(image_filename + '.xmp', 'rb')
+        except (OSError, IOError), ex:
+            if ex.errno == errno.ENOENT:
+                return
+            raise
+        try:
+            self.read(file)
+        finally:
+            file.close()
+
+    def read(self, file):
+        xmp =file.read()
+        self.parse_from_str(xmp)
 
     def write(self, file):
         file.write(self.serialize())
