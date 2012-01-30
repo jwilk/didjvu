@@ -22,6 +22,10 @@ except ImportError:
 
 from . import djvu_extra as djvu
 from . import version
+try:
+    from . import xmp
+except ImportError, xmp_import_error:
+    xmp = None
 
 __version__ = version.__version__
 
@@ -111,6 +115,8 @@ class ArgumentParser(argparse.ArgumentParser):
             if p is p_bundle:
                 p.add_argument('-p', '--pages-per-dict', type=int, metavar='N', help='how many pages to compress in one pass')
             p.add_argument('-m', '--method', choices=methods, type=replace_underscores, default=default_method, help='binarization method')
+            if p is p_encode:
+                p.add_argument('--xmp', action='store_true', help='create sidecar XMP metadata')
             p.add_argument('-v', '--verbose', dest='verbosity', action='append_const', const=None, help='more informational messages')
             p.add_argument('-q', '--quiet', dest='verbosity', action='store_const', const=[], help='no informational messages')
             p.add_argument('input', metavar='<input-image>', nargs='+')
@@ -159,6 +165,11 @@ class ArgumentParser(argparse.ArgumentParser):
             o.pages_per_dict = 1
         action = getattr(actions, vars(o).pop('_action_'))
         o.method = self.__methods[o.method]
+        try:
+            if not xmp and o.xmp:
+                raise xmp_import_error
+        except AttributeError:
+            pass
         return action(o)
 
 __all__ = ['ArgumentParser']

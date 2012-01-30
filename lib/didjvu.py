@@ -27,6 +27,11 @@ from . import ipc
 from . import templates
 from . import temporary
 
+try:
+    from . import xmp
+except ImportError:
+    xmp = None
+
 logger = None
 
 def setup_logging():
@@ -217,13 +222,16 @@ class main():
         if o.output is None:
             if o.output_template is not None:
                 o.output = [templates.expand(o.output_template, f, n) for n, f in enumerate(o.input)]
+                o.xmp_output = [s + '.xmp' if o.xmp else None for s in o.output]
             elif len(o.input) == 1:
                 o.output = [sys.stdout]
+                o.xmp_output = [None]
                 check_tty()
             else:
                 raise ValueError("cannot output multiple files to stdout")
         else:
             if len(o.input) == 1:
+                o.xmp_output = [o.output + '.xmp'] if o.xmp else [None]
                 o.output = [o.output]
             else:
                 raise ValueError("cannot output multiple files to a single file")
@@ -231,6 +239,10 @@ class main():
         o.output = (
             open(f, 'wb') if isinstance(f, basestring) else f
             for f in o.output
+        )
+        o.xmp_output = (
+            open(f, 'wb') if isinstance(f, basestring) else f
+            for f in o.xmp_output
         )
 
     def check_single_output(self, o):
@@ -244,9 +256,9 @@ class main():
 
     def encode(self, o):
         self.check_multi_output(o)
-        parallel_for(o, self.encode_one, o.input, o.masks, o.output)
+        parallel_for(o, self.encode_one, o.input, o.masks, o.output, o.xmp_output)
 
-    def encode_one(self, o, image_filename, mask_filename, output):
+    def encode_one(self, o, image_filename, mask_filename, output, xmp_output):
         bytes_in = os.path.getsize(image_filename)
         logger.info('%s:' % image_filename)
         ftype = filetype.check(image_filename)
@@ -276,6 +288,11 @@ class main():
         ratio = 1.0 * bytes_in / bytes_out
         percent_saved = (1.0 * bytes_in - bytes_out) * 100 / bytes_in;
         logger.info('- %s', self.compression_info_template % locals())
+        if xmp_output:
+            logger.info('- saving XMP metadata')
+            metadata = xmp.Metadata()
+            metadata.update(media_type='image/vnd.djvu')
+            metadata.write(xmp_output)
 
     def separate_one(self, o, image_filename, output):
         bytes_in = os.path.getsize(image_filename)
@@ -318,7 +335,7 @@ class main():
 
     def _bundle_simple_page(self, o, input, mask, component_name):
         with open(component_name, 'wb') as component:
-            self.encode_one(o, input, mask, component)
+            self.encode_one(o, input, mask, component, None)
 
     def bundle_simple(self, o):
         [output] = o.output
