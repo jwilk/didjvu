@@ -277,6 +277,8 @@ class main():
         width, height = image.ncols, image.nrows
         logger.nosy('- image size: %d x %d', width, height)
         mask = generate_mask(mask_filename, image, o.method)
+        if xmp_output:
+            n_connected_components = len(mask.cc_analysis())
         logger.info('- converting to DjVu')
         djvu_doc = image_to_djvu(width, height, image, mask, options=o)
         djvu_file = djvu_doc.save()
@@ -296,6 +298,7 @@ class main():
                 media_type='image/vnd.djvu',
                 internal_properties=[
                     ('method', o.method.didjvu_name),
+                    ('ncc', str(n_connected_components)),
                 ],
             )
             metadata.write(xmp_output)
