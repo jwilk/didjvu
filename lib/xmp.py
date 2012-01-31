@@ -74,7 +74,6 @@ class Metadata(libxmp.XMPMeta):
         self.set_property_datetime(ns_xmp, 'ModifyDate', now)
         self.set_property_datetime(ns_xmp, 'MetadataDate', now)
         self.set_property(ns_xmp_mm, 'InstanceID', instance_id)
-        history_key = str(uuid.uuid4())
         event = Event(
             action='converted',
             parameters=event_params,
