@@ -50,7 +50,7 @@ class Metadata(libxmp.XMPMeta):
             file.close()
 
     def read(self, file):
-        xmp =file.read()
+        xmp = file.read()
         self.parse_from_str(xmp)
 
     def write(self, file):
