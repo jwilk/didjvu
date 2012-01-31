@@ -292,7 +292,12 @@ class main():
             logger.info('- saving XMP metadata')
             metadata = xmp.Metadata()
             metadata.import_(image_filename)
-            metadata.update(media_type='image/vnd.djvu')
+            metadata.update(
+                media_type='image/vnd.djvu',
+                internal_properties=[
+                    ('method', o.method.didjvu_name),
+                ],
+            )
             metadata.write(xmp_output)
 
     def separate_one(self, o, image_filename, output):

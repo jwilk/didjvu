@@ -82,7 +82,9 @@ def _load_methods():
             continue
         name = replace_suffix('', name)
         name = name.replace('_', '-')
-        methods[name] = colorspace_wrapper(plugin)
+        method = colorspace_wrapper(plugin)
+        method.didjvu_name = name
+        methods[name] = method
     return methods
 
 methods = _load_methods()
