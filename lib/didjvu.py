@@ -286,7 +286,7 @@ class main():
             djvu_file.close()
         bits_per_pixel = 8.0 * bytes_out / (width * height)
         ratio = 1.0 * bytes_in / bytes_out
-        percent_saved = (1.0 * bytes_in - bytes_out) * 100 / bytes_in;
+        percent_saved = (1.0 * bytes_in - bytes_out) * 100 / bytes_in
         logger.info('- %s', self.compression_info_template % locals())
         if xmp_output:
             logger.info('- saving XMP metadata')
@@ -363,7 +363,7 @@ class main():
                 djvu_file.close()
         bits_per_pixel = float('nan') # FIXME!
         ratio = 1.0 * bytes_in / bytes_out
-        percent_saved = (1.0 * bytes_in - bytes_out) * 100 / bytes_in;
+        percent_saved = (1.0 * bytes_in - bytes_out) * 100 / bytes_in
         logger.nosy(self.compression_info_template % locals())
 
     def _bundle_complex_page(self, o, page, minidjvu_in_dir, image_filename, mask_filename, pixels):
@@ -443,7 +443,7 @@ class main():
                     djvu_file.close()
         bits_per_pixel = 8.0 * bytes_out / pixels
         ratio = 1.0 * bytes_in / bytes_out
-        percent_saved = (1.0 * bytes_in - bytes_out) * 100 / bytes_in;
+        percent_saved = (1.0 * bytes_in - bytes_out) * 100 / bytes_in
         logger.nosy('%s', self.compression_info_template % locals())
 
 # vim:ts=4 sw=4 et
