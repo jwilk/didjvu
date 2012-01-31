@@ -14,7 +14,6 @@
 '''Bridge to the Gamera framework'''
 
 import ctypes
-import os
 import re
 import sys
 import warnings
