@@ -1,10 +1,10 @@
-didjvu (0.2.3) UNRELEASED; urgency=low
+didjvu (0.2.3) unstable; urgency=low
 
   * Produce more helpful error message when an external command is not found
     or a third-party module cannot be imported.
   * Add experimental support for XMP metadata.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Wed, 01 Feb 2012 18:57:46 +0100
+ -- Jakub Wilk <jwilk@jwilk.net>  Wed, 01 Feb 2012 20:16:18 +0100
 
 didjvu (0.2.2) unstable; urgency=low
 
