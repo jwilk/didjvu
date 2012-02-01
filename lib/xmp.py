@@ -134,4 +134,6 @@ class Metadata(libxmp.XMPMeta):
     def write(self, file):
         file.write(self.serialize())
 
+__all__ = ['Metadata']
+
 # vim:ts=4 sw=4 et
