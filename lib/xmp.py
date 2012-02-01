@@ -27,17 +27,28 @@ ns_didjvu = 'http://jwilk.net/software/didjvu#'
 
 from . import version
 
+def rfc3339(timestamp):
+    return timestamp.strftime('%Y-%m-%dT%H:%M:%S') + 'Z'
+
 class Event(object):
 
     default_sofware_agent = 'didjvu ' + version.__version__
 
-    def __init__(self, action=None, changed=None, instance_id=None, parameters=None, software_agent=default_sofware_agent):
+    def __init__(self,
+        action=None,
+        software_agent=default_sofware_agent,
+        parameters=None,
+        instance_id=None,
+        changed=None,
+        when=None,
+    ):
         self._items = [
             ('action', action),
             ('softwareAgent', software_agent),
             ('parameters', parameters),
             ('instanceID', instance_id),
             ('changed', changed),
+            ('when', rfc3339(when)),
         ]
         self._uuid = str(uuid.uuid4())
 
@@ -78,6 +89,7 @@ class Metadata(libxmp.XMPMeta):
             action='converted',
             parameters=event_params,
             instance_id=instance_id,
+            when=now,
         )
         self.append_array_item(ns_xmp_mm, 'History', str(event),
             dict(prop_array_is_ordered=True),
