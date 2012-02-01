@@ -19,6 +19,8 @@ import re
 import signal
 import subprocess
 
+from . import utils
+
 # CalledProcessError, CalledProcessInterrupted
 # ============================================
 
@@ -65,11 +67,6 @@ del get_signal_names
 # Subprocess
 # ==========
 
-def shell_escape(s, safe=re.compile('^[a-zA-Z0-9_+/=.,:%-]+$').match):
-    if safe(s):
-        return s
-    return "'%s'" % s.replace("'", r"'\''")
-
 class Subprocess(subprocess.Popen):
 
     @classmethod
@@ -99,7 +96,7 @@ class Subprocess(subprocess.Popen):
         except KeyError:
             commandline = args[0]
         if logger.isEnabledFor(logging.DEBUG):
-            logger.debug(' '.join(shell_escape(s) for s in commandline))
+            logger.debug(utils.shell_escape_list(commandline))
         self.__command = commandline[0]
         subprocess.Popen.__init__(self, *args, **kwargs)
 
