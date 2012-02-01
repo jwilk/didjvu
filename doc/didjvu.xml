@@ -450,6 +450,23 @@
         </variablelist>
     </refsection>
     <refsection>
+        <title>XMP support</title>
+        <para>
+            (These options apply to <command>encode</command> command only.)
+        </para>
+        <variablelist>
+        <varlistentry>
+            <term><option>--xmp</option></term>
+            <listitem>
+                <para>
+                    Create sidecar <ulink url='http://www.adobe.com/devnet/xmp.html'>XMP</ulink> metadata.
+                </para>
+                <note><para>This option is experimental!</para></note>
+            </listitem>
+        </varlistentry>
+        </variablelist>
+    </refsection>
+    <refsection>
         <title>Verbosity, help</title>
         <variablelist>
         <varlistentry>

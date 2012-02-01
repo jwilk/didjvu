@@ -17,6 +17,9 @@ Dependencies
 * argparse_ —
   Python command line parser
 
+* python-xmp-toolkit_ (needed for XMP support) -
+  Python XMP library
+
 .. _Python:
    http://python.org/
 .. _Gamera:
@@ -31,5 +34,7 @@ Dependencies
    http://djvu.org/
 .. _argparse:
    http://code.google.com/p/argparse/
+.. _python-xmp-toolkit:
+   http://code.google.com/p/python-xmp-toolkit/
 
 .. vim:ft=rst ts=3 sw=3 et tw=72
