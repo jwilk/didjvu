@@ -15,19 +15,12 @@
 
 import argparse
 
-try:
-    import gamera
-except ImportError:
-    gamera = None
-
 from . import djvu_extra as djvu
-from . import version
+from . import version as version_module
 try:
     from . import xmp
 except ImportError, xmp_import_error:
     xmp = None
-
-__version__ = version.__version__
 
 def range_int(x, y, typename):
     class rint(int):
@@ -77,11 +70,7 @@ class ArgumentParser(argparse.ArgumentParser):
 
     def __init__(self, methods, default_method):
         argparse.ArgumentParser.__init__(self, formatter_class=argparse.RawDescriptionHelpFormatter)
-        version = '%(prog)s ' + __version__
-        try:
-            version += ' (Gamera %s)' % gamera.__version__
-        except (AttributeError, TypeError, ValueError):
-            pass
+        version = version_module.get_software_agent()
         self.add_argument('--version', action='version', version=version, help='show version information and exit')
         p_separate = self.add_subparser('separate', help='generate masks for images')
         p_encode = self.add_subparser('encode', help='convert images to single-page DjVu documents')

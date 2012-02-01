@@ -32,16 +32,16 @@ def rfc3339(timestamp):
 
 class Event(object):
 
-    default_sofware_agent = 'didjvu ' + version.__version__
-
     def __init__(self,
         action=None,
-        software_agent=default_sofware_agent,
+        software_agent=None,
         parameters=None,
         instance_id=None,
         changed=None,
         when=None,
     ):
+        if software_agent is None:
+            software_agent = version.get_software_agent()
         self._items = [
             ('action', action),
             ('softwareAgent', software_agent),
