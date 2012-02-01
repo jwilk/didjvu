@@ -18,13 +18,25 @@ import re
 import sys
 import warnings
 
+from . import utils
+
+try:
+    import Image as PIL
+except ImportError, ex:
+    utils.enhance_import_error(ex, 'Python Imaging Library', 'python-imaging', 'http://www.pythonware.com/products/pil/')
+    raise
+
+try:
+    import gamera
+except ImportError, ex:
+    utils.enhance_import_error(ex, 'Gamera', 'python-gamera', 'http://gamera.sourceforge.net/')
+    raise
+
 from gamera import __version__ as version
 from gamera.core import load_image as _load_image
 from gamera.core import init_gamera as _init
 from gamera.core import Image, RGB, GREYSCALE, ONEBIT, Dim, RGBPixel
 from gamera.plugins.pil_io import from_pil as _from_pil
-
-import Image as PIL
 
 def has_version(*req_version):
     return tuple(map(int, version.split('.'))) >= req_version

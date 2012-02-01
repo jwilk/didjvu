@@ -16,6 +16,17 @@
 import os
 import re
 
+debian = os.path.exists('/etc/debian_version')
+
+def enhance_import_error(exception, package, debian_package, homepage):
+    message = str(exception)
+    format = '%(message)s; please install the %(package)s package'
+    if debian:
+        package = debian_package
+    else:
+        format += ' <%(homepage)s>'
+    exception.args = [format % locals()]
+
 def shell_escape(s, safe=re.compile('^[a-zA-Z0-9_+/=.,:%-]+$').match):
     if safe(s):
         return s
