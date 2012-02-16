@@ -62,6 +62,12 @@ def slice_type(max_slices=99):
         return result
     return slices
 
+def get_slice_repr(lst):
+    def fold(lst, obj):
+        return lst + [obj - sum(lst)]
+    plus_lst = reduce(fold, lst[1:], lst[:1])
+    return '+'.join(map(str, plus_lst))
+
 class intact(object):
 
     def __init__(self, x):
@@ -75,6 +81,17 @@ def replace_underscores(s):
 
 class ArgumentParser(argparse.ArgumentParser):
 
+    class defaults:
+        pageid_template = '{base-ext}.djvu'
+        pages_per_dict = 1
+        dpi = djvu.DPI_DEFAULT
+        fg_slices = [100]
+        fg_crcb = 'full'
+        fg_subsample = 6
+        bg_slices = [74, 84, 90, 97]
+        bg_crcb = 'normal'
+        bg_subsample = 3
+
     def __init__(self, methods, default_method):
         argparse.ArgumentParser.__init__(self, formatter_class=argparse.RawDescriptionHelpFormatter)
         version = version_module.get_software_agent()
@@ -83,16 +100,23 @@ class ArgumentParser(argparse.ArgumentParser):
         p_encode = self.add_subparser('encode', help='convert images to single-page DjVu documents')
         p_bundle = self.add_subparser('bundle', help='convert images to bundled multi-page DjVu document')
         epilog = []
+        default = self.defaults
         for p in p_separate, p_encode, p_bundle:
             epilog += ['%s --help' % p.prog]
             p.add_argument('-o', '--output', metavar='FILE', help='output filename')
             if p is p_bundle:
-                p.add_argument('--pageid-template', metavar='TEMPLATE', default='{base-ext}.djvu', help='naming scheme for page identifiers')
+                p.add_argument(
+                    '--pageid-template', metavar='TEMPLATE', default=default.pageid_template,
+                    help='naming scheme for page identifiers (default: "%s")' % default.pageid_template
+                )
             else:
-                p.add_argument('--output-template', metavar='TEMPLATE', help='naming scheme for output file')
+                p.add_argument(
+                    '--output-template', metavar='TEMPLATE',
+                    help='naming scheme for output file (e.g. "%s")' % default.pageid_template
+                )
             p.add_argument('--losslevel', dest='loss_level', type=losslevel_type, help=argparse.SUPPRESS)
             p.add_argument('--loss-level', dest='loss_level', type=losslevel_type, metavar='N', help='aggressiveness of lossy compression')
-            p.add_argument('--lossless', dest='loss_level', action='store_const', const=djvu.LOSS_LEVEL_MIN, help='lossless compression')
+            p.add_argument('--lossless', dest='loss_level', action='store_const', const=djvu.LOSS_LEVEL_MIN, help='lossless compression (default)')
             p.add_argument('--clean', dest='loss_level', action='store_const', const=djvu.LOSS_LEVEL_CLEAN, help='lossy compression: remove flyspecks')
             p.add_argument('--lossy', dest='loss_level', action='store_const', const=djvu.LOSS_LEVEL_LOSSY, help='lossy compression: substitute patterns with small variations')
             if p is not p_separate:
@@ -100,17 +124,40 @@ class ArgumentParser(argparse.ArgumentParser):
                 p.add_argument('--mask', action='append', dest='masks', metavar='MASK', help='use a pre-generated mask')
                 for layer, layer_name in ('fg', 'foreground'), ('bg', 'background'):
                     if layer == 'fg':
-                        p.add_argument('--fg-slices', type=slice_type(1), metavar='N', help='number of slices for background')
+                        p.add_argument(
+                            '--fg-slices', type=slice_type(1), metavar='N',
+                            help='number of slices for background (default: %s)' % get_slice_repr(default.fg_slices)
+                        )
                     else:
-                        p.add_argument('--bg-slices', type=slice_type(), metavar='N+...+N', help='number of slices in each forgeground chunk')
-                    p.add_argument('--%s-crcb' % layer, choices='normal half full none'.split(), help='chrominance encoding for %s' % layer_name)
-                    p.add_argument('--%s-subsample' % layer, type=subsample_type, metavar='N', help='subsample ratio for %s' % layer_name)
+                        p.add_argument(
+                            '--bg-slices', type=slice_type(), metavar='N+...+N',
+                            help='number of slices in each forgeground chunk (default: %s)' % get_slice_repr(default.bg_slices)
+                        )
+                    default_crcb = getattr(default, '%s_crcb' % layer)
+                    p.add_argument(
+                        '--%s-crcb' % layer, choices='normal half full none'.split(),
+                        help='chrominance encoding for %s (default: %s)' % (layer_name, default_crcb)
+                    )
+                    default_subsample = getattr(default, '%s_subsample' % layer)
+                    p.add_argument(
+                        '--%s-subsample' % layer, type=subsample_type, metavar='N',
+                        help='subsample ratio for %s (default: %d)' % (layer_name, default_subsample)
+                    )
                 p.add_argument('--fg-bg-defaults', help=argparse.SUPPRESS, action='store_const', const=1)
             if p is not p_separate:
-                p.add_argument('-d', '--dpi', type=dpi_type, metavar='N', help='image resolution')
+                p.add_argument(
+                    '-d', '--dpi', type=dpi_type, metavar='N',
+                    help='image resolution (default: %d)' % default.dpi
+                )
             if p is p_bundle:
-                p.add_argument('-p', '--pages-per-dict', type=int, metavar='N', help='how many pages to compress in one pass')
-            p.add_argument('-m', '--method', choices=methods, type=replace_underscores, default=default_method, help='binarization method')
+                p.add_argument(
+                    '-p', '--pages-per-dict', type=int, metavar='N',
+                    help='how many pages to compress in one pass (default: %d)' % default.pages_per_dict
+                )
+            p.add_argument(
+                '-m', '--method', choices=methods, type=replace_underscores, default=default_method,
+                help='binarization method (default: %s)' % default_method
+            )
             if p is p_encode:
                 p.add_argument('--xmp', action='store_true', help='create sidecar XMP metadata (experimental!)')
             p.add_argument('-v', '--verbose', dest='verbosity', action='append_const', const=None, help='more informational messages')
@@ -120,10 +167,10 @@ class ArgumentParser(argparse.ArgumentParser):
                 masks=[],
                 fg_bg_defaults=None,
                 loss_level=djvu.LOSS_LEVEL_MIN,
-                pages_per_dict=1,
-                dpi=djvu.DPI_DEFAULT,
-                fg_slices=intact([100]), fg_crcb=intact('full'), fg_subsample=intact(6),
-                bg_slices=intact([74, 84, 90, 97]), bg_crcb=intact('normal'), bg_subsample=intact(3),
+                pages_per_dict=default.pages_per_dict,
+                dpi=default.dpi,
+                fg_slices=intact(default.fg_slices), fg_crcb=intact(default.fg_crcb), fg_subsample=intact(default.fg_subsample),
+                bg_slices=intact(default.bg_slices), bg_crcb=intact(default.bg_crcb), bg_subsample=intact(default.bg_subsample),
                 verbosity=[None],
             )
         self.epilog = 'more help:\n  ' + '\n  '.join(epilog)
