@@ -102,7 +102,7 @@ class Metadata(libxmp.XMPMeta):
         self._substitute(substitutions)
 
     def _substitute(self, substitutions):
-        # libxmp doesn't allow to add complex structures.
+        # libxmp doesn't allow adding complex structures.
         # This is an ugly hack to work around this limitation.
         data = self.serialize_and_format(
             omit_packet_wrapper=True,
