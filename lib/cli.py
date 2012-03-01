@@ -86,10 +86,10 @@ class ArgumentParser(argparse.ArgumentParser):
         pages_per_dict = 1
         dpi = djvu.DPI_DEFAULT
         fg_slices = [100]
-        fg_crcb = djvu.CRCB_FULL
+        fg_crcb = djvu.CRCB.full
         fg_subsample = 6
         bg_slices = [74, 84, 90, 97]
-        bg_crcb = djvu.CRCB_NORMAL
+        bg_crcb = djvu.CRCB.normal
         bg_subsample = 3
 
     def __init__(self, methods, default_method):
@@ -135,7 +135,7 @@ class ArgumentParser(argparse.ArgumentParser):
                         )
                     default_crcb = getattr(default, '%s_crcb' % layer)
                     p.add_argument(
-                        '--%s-crcb' % layer, choices=djvu.CRCB_LIST,
+                        '--%s-crcb' % layer, choices=map(str, djvu.CRCB.values),
                         help='chrominance encoding for %s (default: %s)' % (layer_name, default_crcb)
                     )
                     default_subsample = getattr(default, '%s_subsample' % layer)
@@ -200,6 +200,8 @@ class ArgumentParser(argparse.ArgumentParser):
                         o.fg_bg_defaults = False
                     setattr(namespace, facet, value)
                     delattr(o, attrname)
+                if isinstance(namespace.crcb, str):
+                    namespace.crcb = getattr(djvu.CRCB, namespace.crcb)
         if o.fg_bg_defaults is not False:
             o.fg_bg_defaults = True
         o.verbosity = len(o.verbosity)
@@ -224,7 +226,7 @@ def dump_options(o, multi_page=False):
     else:
         for layer_name in 'fg', 'bg':
             layer = getattr(o, layer_name + '_options')
-            yield (layer_name + '-crcb', layer.crcb)
+            yield (layer_name + '-crcb', str(layer.crcb))
             yield (layer_name + '-slices', get_slice_repr(layer.slices))
             yield (layer_name + '-subsample', layer.subsample)
 

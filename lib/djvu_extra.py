@@ -37,17 +37,35 @@ SUBSAMPLE_MAX = 12
 
 IW44_SLICES_DEFAULT = (74, 89, 99)
 
-CRCB_FULL = 'full'
-CRCB_NORMAL = 'normal'
-CRCB_HALF = 'half'
-CRCB_NONE = 'none'
+class Crcb(object):
 
-CRCB_LIST = [
-    CRCB_FULL,
-    CRCB_NORMAL,
-    CRCB_HALF,
-    CRCB_NONE,
-]
+    def __init__(self, sort_key, name):
+        self._sort_key = sort_key
+        self._name = name
+
+    def __cmp__(self, other):
+        if not isinstance(other, Crcb):
+            return NotImplemented
+        return cmp(self._sort_key, other._sort_key)
+
+    def __str__(self):
+        return self._name
+
+    def __repr__(self):
+        return '%s.CRCB.%s' % (type(self).__module__, self._name)
+
+class CRCB:
+
+    values = [
+        Crcb(0, 'none'),
+        Crcb(1, 'half'),
+        Crcb(2, 'normal'),
+        Crcb(3, 'full'),
+    ]
+
+for _value in CRCB.values:
+    setattr(CRCB, str(_value), _value)
+del _value
 
 def bitonal_to_djvu(image, dpi=300, loss_level=0):
     pbm_file = temporary.file(suffix='.pbm')
@@ -56,13 +74,13 @@ def bitonal_to_djvu(image, dpi=300, loss_level=0):
     args = ['cjb2', '-losslevel', str(loss_level), pbm_file.name, djvu_file.name]
     return ipc.Proxy(djvu_file, ipc.Subprocess(args).wait, [pbm_file])
 
-def photo_to_djvu(image, dpi=100, slices=IW44_SLICES_DEFAULT, gamma=2.2, mask_image=None, crcb=CRCB_NORMAL):
+def photo_to_djvu(image, dpi=100, slices=IW44_SLICES_DEFAULT, gamma=2.2, mask_image=None, crcb=CRCB.normal):
     ppm_file = temporary.file(suffix='.ppm')
     temporaries = [ppm_file]
     image.save(ppm_file.name)
     djvu_file = temporary.file(suffix='.djvu', mode='r+b')
-    if crcb not in CRCB_LIST:
-        raise ValueError('Invalid CRCB value')
+    if not isinstance(crcb, Crcb):
+        raise TypeError
     args = [
         'c44',
         '-dpi', str(dpi),
@@ -292,7 +310,7 @@ __all__ = [
     'LOSS_LEVEL_MIN', 'LOSS_LEVEL_CLEAN', 'LOSS_LEVEL_LOSSY', 'LOSS_LEVEL_MAX',
     'SUBSAMPLE_MIN', 'SUBSAMPLE_DEFAULT', 'SUBSAMPLE_MAX',
     'IW44_SLICES_DEFAULT',
-    'CRCB_LIST', 'CRCB_FULL', 'CRCB_NORMAL', 'CRCB_HALF', 'CRCB_NONE',
+    'CRCB',
 ]
 
 # vim:ts=4 sw=4 et
