@@ -57,10 +57,10 @@ class Crcb(object):
 class CRCB:
 
     values = [
-        Crcb(0, 'none'),
-        Crcb(1, 'half'),
-        Crcb(2, 'normal'),
         Crcb(3, 'full'),
+        Crcb(2, 'normal'),
+        Crcb(1, 'half'),
+        Crcb(0, 'none'),
     ]
 
 for _value in CRCB.values:
