@@ -37,10 +37,17 @@ SUBSAMPLE_MAX = 12
 
 IW44_SLICES_DEFAULT = (74, 89, 99)
 
-CRCB_FULL = 3
-CRCB_NORMAL = 2
-CRCB_HALF = 1
-CRCB_NONE = 0
+CRCB_FULL = 'full'
+CRCB_NORMAL = 'normal'
+CRCB_HALF = 'half'
+CRCB_NONE = 'none'
+
+CRCB_LIST = [
+    CRCB_FULL,
+    CRCB_NORMAL,
+    CRCB_HALF,
+    CRCB_NONE,
+]
 
 def bitonal_to_djvu(image, dpi=300, loss_level=0):
     pbm_file = temporary.file(suffix='.pbm')
@@ -49,24 +56,19 @@ def bitonal_to_djvu(image, dpi=300, loss_level=0):
     args = ['cjb2', '-losslevel', str(loss_level), pbm_file.name, djvu_file.name]
     return ipc.Proxy(djvu_file, ipc.Subprocess(args).wait, [pbm_file])
 
-_crcb_map = {
-    CRCB_FULL: 'full',
-    CRCB_NORMAL: 'normal',
-    CRCB_HALF: 'half',
-    CRCB_NONE: 'none',
-}
-
 def photo_to_djvu(image, dpi=100, slices=IW44_SLICES_DEFAULT, gamma=2.2, mask_image=None, crcb=CRCB_NORMAL):
     ppm_file = temporary.file(suffix='.ppm')
     temporaries = [ppm_file]
     image.save(ppm_file.name)
     djvu_file = temporary.file(suffix='.djvu', mode='r+b')
+    if crcb not in CRCB_LIST:
+        raise ValueError('Invalid CRCB value')
     args = [
         'c44',
         '-dpi', str(dpi),
         '-slice', ','.join(map(str, slices)),
         '-gamma', '%.1f' % gamma,
-        '-crcb%s' % _crcb_map[crcb],
+        '-crcb%s' % crcb,
     ]
     if mask_image is not None:
         pbm_file = temporary.file(suffix='.pbm')
@@ -290,7 +292,7 @@ __all__ = [
     'LOSS_LEVEL_MIN', 'LOSS_LEVEL_CLEAN', 'LOSS_LEVEL_LOSSY', 'LOSS_LEVEL_MAX',
     'SUBSAMPLE_MIN', 'SUBSAMPLE_DEFAULT', 'SUBSAMPLE_MAX',
     'IW44_SLICES_DEFAULT',
-    'CRCB_FULL', 'CRCB_NORMAL', 'CRCB_HALF', 'CRCB_NONE',
+    'CRCB_LIST', 'CRCB_FULL', 'CRCB_NORMAL', 'CRCB_HALF', 'CRCB_NONE',
 ]
 
 # vim:ts=4 sw=4 et

@@ -294,12 +294,12 @@ class main():
             logger.info('- saving XMP metadata')
             metadata = xmp.Metadata()
             metadata.import_(image_filename)
+            internal_properties = list(cli.dump_options(o)) + [
+                ('n-connected-components', str(n_connected_components))
+            ]
             metadata.update(
                 media_type='image/vnd.djvu',
-                internal_properties=[
-                    ('method', o.method.didjvu_name),
-                    ('ncc', str(n_connected_components)),
-                ],
+                internal_properties=internal_properties,
             )
             metadata.write(xmp_output)
 

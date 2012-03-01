@@ -86,10 +86,10 @@ class ArgumentParser(argparse.ArgumentParser):
         pages_per_dict = 1
         dpi = djvu.DPI_DEFAULT
         fg_slices = [100]
-        fg_crcb = 'full'
+        fg_crcb = djvu.CRCB_FULL
         fg_subsample = 6
         bg_slices = [74, 84, 90, 97]
-        bg_crcb = 'normal'
+        bg_crcb = djvu.CRCB_NORMAL
         bg_subsample = 3
 
     def __init__(self, methods, default_method):
@@ -135,7 +135,7 @@ class ArgumentParser(argparse.ArgumentParser):
                         )
                     default_crcb = getattr(default, '%s_crcb' % layer)
                     p.add_argument(
-                        '--%s-crcb' % layer, choices='normal half full none'.split(),
+                        '--%s-crcb' % layer, choices=djvu.CRCB_LIST,
                         help='chrominance encoding for %s (default: %s)' % (layer_name, default_crcb)
                     )
                     default_subsample = getattr(default, '%s_subsample' % layer)
@@ -200,7 +200,6 @@ class ArgumentParser(argparse.ArgumentParser):
                         o.fg_bg_defaults = False
                     setattr(namespace, facet, value)
                     delattr(o, attrname)
-                namespace.crcb = getattr(djvu, 'CRCB_%s' % namespace.crcb.upper())
         if o.fg_bg_defaults is not False:
             o.fg_bg_defaults = True
         o.verbosity = len(o.verbosity)
@@ -215,6 +214,20 @@ class ArgumentParser(argparse.ArgumentParser):
             pass
         return action(o)
 
-__all__ = ['ArgumentParser']
+def dump_options(o, multi_page=False):
+    yield ('method', o.method.didjvu_name)
+    if multi_page:
+        yield ('pages-per-dict', o.pages_per_dict)
+    yield ('loss-level', o.loss_level)
+    if o.fg_bg_defaults:
+        yield ('fg-bg-defaults', True)
+    else:
+        for layer_name in 'fg', 'bg':
+            layer = getattr(o, layer_name + '_options')
+            yield (layer_name + '-crcb', layer.crcb)
+            yield (layer_name + '-slices', get_slice_repr(layer.slices))
+            yield (layer_name + '-subsample', layer.subsample)
+
+__all__ = ['ArgumentParser', 'dump_options']
 
 # vim:ts=4 sw=4 et
