@@ -98,7 +98,12 @@ class Metadata(libxmp.XMPMeta):
         )
         substitutions['<rdf:li>%s</rdf:li>' % str(event)] = event
         for k, v in internal_properties:
-            self.set_property(ns_didjvu, k, v)
+            if isinstance(v, bool):
+                self.set_property_bool(ns_didjvu, k, v)
+            elif isinstance(v, int):
+                self.set_property_int(ns_didjvu, k, v)
+            else:
+                self.set_property(ns_didjvu, k, v)
         self._substitute(substitutions)
 
     def _substitute(self, substitutions):
