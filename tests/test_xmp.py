@@ -81,10 +81,9 @@ def assert_correct_software_agent(software_agent):
 
 def assert_correct_timestamp(timestamp):
     return assert_true(re.match(
-        '[0-9]{4}(-[0-9]{2}){2}T[0-9]{2}(:[0-9]{2}){2}$',
+        '[0-9]{4}(-[0-9]{2}){2}T[0-9]{2}(:[0-9]{2}){2}([+-][0-9]{2}:[0-9]{2}|Z)?$',
         timestamp
     ))
-    # FIXME: what about timezone?
 
 class test_metadata():
 
@@ -234,14 +233,17 @@ class test_metadata():
             yield self._test_updated_exiv2(xmp_file), tag_exiv2
             yield self._test_updated_libxmp(xmp_file), tag_libxmp
 
+    _original_software_agent = 'scanhelper 0.2.4'
+    _original_create_date = '2012-02-01T16:28:00+01:00'
+
     def _test_updated_exiv2(self, xmp_file):
         def test(dummy):
             output = run_exiv2(xmp_file.name)
             def pop():
                 return tuple(next(output).rstrip('\n').split(None, 1))
-            assert_equal(pop(), ('Xmp.xmp.CreatorTool', 'scanhelper 0.2.1'))
+            assert_equal(pop(), ('Xmp.xmp.CreatorTool', self._original_software_agent))
             key, create_date = pop()
-            assert_equal((key, create_date), ('Xmp.xmp.CreateDate', '2012-02-01T16:28:00Z'))
+            assert_equal((key, create_date), ('Xmp.xmp.CreateDate', self._original_create_date))
             key, metadata_date = pop()
             assert_equal(key, 'Xmp.xmp.MetadataDate')
             assert_correct_timestamp(metadata_date)
@@ -256,13 +258,14 @@ class test_metadata():
             # History[1]
             assert_equal(pop(), ('Xmp.xmpMM.History[1]', 'type="Struct"'))
             assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:action', 'created'))
-            assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:softwareAgent', 'scanhelper 0.2.1'))
+            assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:softwareAgent', self._original_software_agent))
             key, original_uuid = pop()
             assert_equal(key, 'Xmp.xmpMM.History[1]/stEvt:instanceID')
             assert_correct_uuid(original_uuid)
             assert_equal(original_uuid, 'uuid:a2686c01b50e4b6aab2cccdef40f6286')
             assert_not_equal(uuid, original_uuid)
-            assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:when', create_date))
+            key, original_metadata_date = pop()
+            assert_correct_timestamp(original_metadata_date)
             # History[2]
             assert_equal(pop(), ('Xmp.xmpMM.History[2]', 'type="Struct"'))
             assert_equal(pop(), ('Xmp.xmpMM.History[2]/stEvt:action', 'converted'))
@@ -294,6 +297,7 @@ class test_metadata():
             assert_equal(get(ns_dc, 'format'), 'image/x-test')
             assert_equal(get(ns_tiff, 'ImageWidth'), '69')
             assert_equal(get(ns_tiff, 'ImageHeight'), '42')
+            assert_equal(get(ns_xmp, 'CreatorTool'), self._original_software_agent)
             create_date = get(ns_xmp, 'CreateDate')
             assert_true(type(create_date), datetime.datetime)
             mod_date = get(ns_xmp, 'ModifyDate')
@@ -306,12 +310,13 @@ class test_metadata():
             assert_correct_uuid(uuid)
             # History[1]
             assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:action'), 'created')
-            assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:softwareAgent'), 'scanhelper 0.2.1')
+            assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:softwareAgent'), self._original_software_agent)
             original_uuid = get(ns_xmp_mm, 'History[1]/stEvt:instanceID')
             assert_correct_uuid(original_uuid)
             assert_equal(original_uuid, 'uuid:a2686c01b50e4b6aab2cccdef40f6286')
             assert_not_equal(uuid, original_uuid)
-            assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:when'), create_date)
+            original_metadata_date = get(ns_xmp_mm, 'History[1]/stEvt:when')
+            assert_true(create_date <= original_metadata_date)
             # History[2]
             assert_equal(get(ns_xmp_mm, 'History[2]/stEvt:action'), 'converted')
             software_agent = get(ns_xmp_mm, 'History[2]/stEvt:softwareAgent')
