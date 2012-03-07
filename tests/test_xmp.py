@@ -56,6 +56,7 @@ class test_metadata():
             meta = xmp.Metadata()
             meta.write(xmp_file)
             xmp_file.flush()
+            xmp_file.seek(0)
             yield self._test_empty_exiv2(xmp_file), tag_exiv2
             yield self._test_empty_libxmp(xmp_file), tag_libxmp
 
