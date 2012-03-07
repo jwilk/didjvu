@@ -67,23 +67,30 @@ def run_exiv2(filename, fail_ok=False):
         if not fail_ok:
             raise
 
+def assert_regexp_matches(regexp, text):
+    if isinstance(regexp, basestring):
+        regexp = re.compile(regexp)
+    if not regexp.search(text):
+        message = '''Regexp didn't match: %r not found in %r''' % (regexp.pattern, text)
+        assert_true(0, message)
+
 def assert_correct_uuid(uuid):
-    return assert_true(re.match(
+    return assert_regexp_matches(
         '^uuid:[0-9a-f]{32}$',
         uuid
-    ))
+    )
 
 def assert_correct_software_agent(software_agent):
-    return assert_true(re.match(
+    return assert_regexp_matches(
         'didjvu [0-9.]+( [(]Gamera [0-9.]+[)])?',
         software_agent
-    ))
+    )
 
 def assert_correct_timestamp(timestamp):
-    return assert_true(re.match(
+    return assert_regexp_matches(
         '[0-9]{4}(-[0-9]{2}){2}T[0-9]{2}(:[0-9]{2}){2}([+-][0-9]{2}:[0-9]{2}|Z)?$',
         timestamp
-    ))
+    )
 
 class test_metadata():
 
