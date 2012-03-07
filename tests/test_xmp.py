@@ -21,6 +21,17 @@ from lib import ipc
 from lib import temporary
 from lib import xmp
 
+try:
+    import libxmp
+    from libxmp.consts import (
+        XMP_NS_RDF as ns_rdf,
+        XMP_NS_DC as ns_dc,
+        XMP_NS_XMP as ns_xmp,
+        XMP_NS_XMP_MM as ns_xmp_mm,
+    )
+except ImportError, libxmp_import_error:
+    libxmp = None
+
 def test_rfc3339():
     timestamp = datetime.datetime(2012, 3, 7, 12, 43, 26, 23692)
     result = xmp.rfc3339(timestamp)
@@ -88,12 +99,10 @@ class test_metadata():
 
     def _test_empty_libxmp(self, xmp_file):
         def test(dummy):
-            try:
-                import libxmp
-                import xml.etree.cElementTree as etree
-                import cStringIO as io
-            except ImportError, ex:
-                raise SkipTest(ex)
+            if libxmp is None:
+                raise SkipTest(libxmp_import_error)
+            import xml.etree.cElementTree as etree
+            import cStringIO as io
             meta = libxmp.XMPMeta()
             meta.parse_from_str(xmp_file.read())
             xml_meta = meta.serialize_to_str(omit_all_formatting=True, omit_packet_wrapper=True)
@@ -106,11 +115,11 @@ class test_metadata():
             assert_equal(element.tag, '{adobe:ns:meta/}xmpmeta')
             event, element = pop()
             assert_equal(event, 'start')
-            assert_equal(element.tag, '{http://www.w3.org/1999/02/22-rdf-syntax-ns#}RDF')
+            assert_equal(element.tag, '{%s}RDF' % ns_rdf)
             event, element = pop()
             assert_equal(event, 'start')
-            assert_equal(element.tag, '{http://www.w3.org/1999/02/22-rdf-syntax-ns#}Description')
-            assert_equal(element.attrib['{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about'], '')
+            assert_equal(element.tag, '{%s}Description' % ns_rdf)
+            assert_equal(element.attrib['{%s}about' % ns_rdf], '')
             event, element = pop()
             assert_equal(event, 'end')
             event, element = pop()
@@ -175,16 +184,8 @@ class test_metadata():
 
     def _test_new_libxmp(self, xmp_file):
         def test(dummy):
-            try:
-                import libxmp
-                import libxmp.consts
-                from libxmp.consts import XMP_NS_DC as ns_dc
-                from libxmp.consts import XMP_NS_XMP as ns_xmp
-                from libxmp.consts import XMP_NS_XMP_MM as ns_xmp_mm
-                import xml.etree.cElementTree as etree
-                import cStringIO as io
-            except ImportError, ex:
-                raise SkipTest(ex)
+            if libxmp is None:
+                raise SkipTest(libxmp_import_error)
             meta = libxmp.XMPMeta()
             def get(namespace, key):
                 return meta.get_property(namespace, key)
