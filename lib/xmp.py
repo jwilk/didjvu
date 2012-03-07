@@ -15,6 +15,7 @@
 
 import datetime
 import errno
+import time
 import uuid
 import xml.etree.cElementTree as etree
 
@@ -29,13 +30,38 @@ ns_didjvu = 'http://jwilk.net/software/didjvu#'
 
 from . import version
 
-def rfc3339(timestamp):
-    '''
-    Format datetime.datetime object (represeting UTC date and time) in
-    accordance with RFC 3339.
-    '''
-    assert timestamp.tzinfo is None
-    return timestamp.strftime('%Y-%m-%dT%H:%M:%S') + 'Z'
+class rfc3339(object):
+
+    def __init__(self, unixtime):
+        self._localtime = time.localtime(unixtime)
+
+    def _str(self):
+        return time.strftime('%Y-%m-%dT%H:%M:%S', self._localtime)
+
+    def _str_tz(self):
+        offset = time.timezone if not self._localtime.tm_isdst else time.altzone
+        hours, minutes  = divmod(abs(offset) // 60, 60)
+        return '%s%02d:%02d' % ('+' if offset < 0 else '-', hours, minutes)
+
+    def __str__(self):
+        '''Format the timestamp object in accordance with RFC 3339.'''
+        return self._str() + self._str_tz()
+
+    _properties = dict(
+        year='tm_year',
+        month='tm_mon',
+        day='tm_mday',
+        hour='tm_hour',
+        minute='tm_min',
+        second='tm_sec',
+    )
+
+for _attr, _st_attr in rfc3339._properties.iteritems():
+    def _method(self, st_attr=_st_attr):
+        return getattr(self._localtime, st_attr)
+    _method = property(_method, doc=getattr(time.struct_time, _st_attr).__doc__)
+    setattr(rfc3339, _attr, _method)
+del _attr, _st_attr, _method, rfc3339._properties
 
 class Event(object):
 
@@ -55,7 +81,7 @@ class Event(object):
             ('parameters', parameters),
             ('instanceID', instance_id),
             ('changed', changed),
-            ('when', rfc3339(when)),
+            ('when', str(when)),
         ]
         self._uuid = str(uuid.uuid4())
 
@@ -81,7 +107,7 @@ class Metadata(libxmp.XMPMeta):
     def update(self, media_type, internal_properties={}):
         substitutions = {}
         instance_id = 'uuid:' + str(uuid.uuid4()).replace('-', '')
-        now = datetime.datetime.utcnow()
+        now = rfc3339(time.time())
         original_media_type = self.get_property(ns_dc, 'format')
         # TODO: try to guess original media type
         self.set_property(ns_dc, 'format', media_type)

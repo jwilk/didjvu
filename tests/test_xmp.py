@@ -14,6 +14,7 @@
 import datetime
 import os
 import re
+import time
 
 from nose import SkipTest
 from nose.tools import (
@@ -39,9 +40,8 @@ except ImportError, libxmp_import_error:
     libxmp = None
 
 def test_rfc3339():
-    timestamp = datetime.datetime(2012, 3, 7, 12, 43, 26, 23692)
-    result = xmp.rfc3339(timestamp)
-    assert_equal(result, '2012-03-07T12:43:26Z')
+    result = xmp.rfc3339(time.time())
+    assert_correct_timestamp(str(result))
 
 class tag_exiv2(object):
     def __repr__(self): return 'exiv2'
@@ -183,7 +183,8 @@ class test_metadata():
             assert_correct_software_agent(software_agent)
             assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:parameters', 'to image/x-test'))
             assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:instanceID', uuid))
-            assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:when', mod_date + 'Z')) # FIXME: what about timezone?
+            key, evt_date = pop()
+            assert_equal((key, evt_date[:19]), ('Xmp.xmpMM.History[1]/stEvt:when', mod_date)) # FIXME: timezone information is lost
             assert_equal(pop(), ('Xmp.didjvu.test_int', '42'))
             assert_equal(pop(), ('Xmp.didjvu.test_str', 'eggs'))
             assert_equal(pop(), ('Xmp.didjvu.test_bool', 'True'))
@@ -215,7 +216,7 @@ class test_metadata():
             assert_correct_software_agent(software_agent)
             assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:parameters'), 'to image/x-test')
             assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:instanceID'), uuid)
-            assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:when'), str(mod_date) + 'Z') # FIXME: what about timezone?
+            assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:when')[:19], str(mod_date)[:19]) # FIXME: timezone information is lost
             assert_equal(get(xmp.ns_didjvu, 'test_int'), '42')
             assert_equal(get(xmp.ns_didjvu, 'test_str'), 'eggs')
             assert_equal(get(xmp.ns_didjvu, 'test_bool'), 'True')
@@ -281,7 +282,8 @@ class test_metadata():
             assert_correct_software_agent(software_agent)
             assert_equal(pop(), ('Xmp.xmpMM.History[2]/stEvt:parameters', 'from image/png to image/x-test'))
             assert_equal(pop(), ('Xmp.xmpMM.History[2]/stEvt:instanceID', uuid))
-            assert_equal(pop(), ('Xmp.xmpMM.History[2]/stEvt:when', metadata_date + 'Z')) # FIXME: what about timezone?
+            key, evt_date = pop()
+            assert_equal((key, evt_date[:19]), ('Xmp.xmpMM.History[2]/stEvt:when', metadata_date)) # FIXME: timezone information is lost
             # internal properties
             assert_equal(pop(), ('Xmp.didjvu.test_int', '42'))
             assert_equal(pop(), ('Xmp.didjvu.test_str', 'eggs'))
@@ -330,7 +332,7 @@ class test_metadata():
             assert_correct_software_agent(software_agent)
             assert_equal(get(ns_xmp_mm, 'History[2]/stEvt:parameters'), 'from image/png to image/x-test')
             assert_equal(get(ns_xmp_mm, 'History[2]/stEvt:instanceID'), uuid)
-            assert_equal(get(ns_xmp_mm, 'History[2]/stEvt:when'), str(mod_date) + 'Z') # FIXME: what about timezone?
+            assert_equal(get(ns_xmp_mm, 'History[2]/stEvt:when')[:19], str(mod_date)[:19]) # FIXME: timezone information is lost
             # internal properties
             assert_equal(get(xmp.ns_didjvu, 'test_int'), '42')
             assert_equal(get(xmp.ns_didjvu, 'test_str'), 'eggs')
