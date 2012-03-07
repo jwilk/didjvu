@@ -33,7 +33,6 @@ class tag_libxmp(object):
     def __repr__(self): return 'libxmp'
 tag_libxmp = tag_libxmp()
 
-
 def run_exiv2(filename, fail_ok=False):
     try:
         child = ipc.Subprocess(
