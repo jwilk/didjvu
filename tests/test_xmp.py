@@ -82,13 +82,13 @@ def assert_correct_uuid(uuid):
 
 def assert_correct_software_agent(software_agent):
     return assert_regexp_matches(
-        'didjvu [0-9.]+( [(]Gamera [0-9.]+[)])?',
+        '^didjvu [0-9.]+( [(]Gamera [0-9.]+[)])?',
         software_agent
     )
 
 def assert_correct_timestamp(timestamp):
     return assert_regexp_matches(
-        '[0-9]{4}(-[0-9]{2}){2}T[0-9]{2}(:[0-9]{2}){2}([+-][0-9]{2}:[0-9]{2}|Z)?$',
+        '^[0-9]{4}(-[0-9]{2}){2}T[0-9]{2}(:[0-9]{2}){2}([+-][0-9]{2}:[0-9]{2}|Z)?$',
         timestamp
     )
 
