@@ -12,10 +12,15 @@
 # General Public License for more details.
 
 import datetime
+import os
 import re
 
 from nose import SkipTest
-from nose.tools import assert_true, assert_equal
+from nose.tools import (
+    assert_equal,
+    assert_not_equal,
+    assert_true,
+)
 
 from lib import ipc
 from lib import temporary
@@ -28,6 +33,7 @@ try:
         XMP_NS_DC as ns_dc,
         XMP_NS_XMP as ns_xmp,
         XMP_NS_XMP_MM as ns_xmp_mm,
+        XMP_NS_TIFF as ns_tiff,
     )
 except ImportError, libxmp_import_error:
     libxmp = None
@@ -204,6 +210,116 @@ class test_metadata():
             assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:parameters'), 'to image/x-test')
             assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:instanceID'), uuid)
             assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:when'), str(mod_date) + 'Z') # FIXME: what about timezone?
+            assert_equal(get(xmp.ns_didjvu, 'test_int'), '42')
+            assert_equal(get(xmp.ns_didjvu, 'test_str'), 'eggs')
+            assert_equal(get(xmp.ns_didjvu, 'test_bool'), 'True')
+        return test
+
+    def test_updated(self):
+        image_path = os.path.join(os.path.dirname(__file__), 'example.png')
+        with temporary.file() as xmp_file:
+            meta = xmp.Metadata()
+            meta.import_(image_path)
+            meta.update(
+                media_type='image/x-test',
+                internal_properties=[
+                    ('test_int', 42),
+                    ('test_str', 'eggs'),
+                    ('test_bool', True),
+                ]
+            )
+            meta.write(xmp_file)
+            xmp_file.flush()
+            xmp_file.seek(0)
+            yield self._test_updated_exiv2(xmp_file), tag_exiv2
+            yield self._test_updated_libxmp(xmp_file), tag_libxmp
+
+    def _test_updated_exiv2(self, xmp_file):
+        def test(dummy):
+            output = run_exiv2(xmp_file.name)
+            def pop():
+                return tuple(next(output).rstrip('\n').split(None, 1))
+            assert_equal(pop(), ('Xmp.xmp.CreatorTool', 'scanhelper 0.2.1'))
+            key, create_date = pop()
+            assert_equal((key, create_date), ('Xmp.xmp.CreateDate', '2012-02-01T16:28:00Z'))
+            key, metadata_date = pop()
+            assert_equal(key, 'Xmp.xmp.MetadataDate')
+            assert_correct_timestamp(metadata_date)
+            assert_equal(pop(), ('Xmp.xmp.ModifyDate', metadata_date))
+            assert_equal(pop(), ('Xmp.dc.format', 'image/x-test'))
+            assert_equal(pop(), ('Xmp.tiff.ImageWidth', '69'))
+            assert_equal(pop(), ('Xmp.tiff.ImageHeight', '42'))
+            key, uuid = pop()
+            assert_equal(key, 'Xmp.xmpMM.InstanceID')
+            assert_correct_uuid(uuid)
+            assert_equal(pop(), ('Xmp.xmpMM.History', 'type="Seq"'))
+            # History[1]
+            assert_equal(pop(), ('Xmp.xmpMM.History[1]', 'type="Struct"'))
+            assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:action', 'created'))
+            assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:softwareAgent', 'scanhelper 0.2.1'))
+            key, original_uuid = pop()
+            assert_equal(key, 'Xmp.xmpMM.History[1]/stEvt:instanceID')
+            assert_correct_uuid(original_uuid)
+            assert_equal(original_uuid, 'uuid:a2686c01b50e4b6aab2cccdef40f6286')
+            assert_not_equal(uuid, original_uuid)
+            assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:when', create_date))
+            # History[2]
+            assert_equal(pop(), ('Xmp.xmpMM.History[2]', 'type="Struct"'))
+            assert_equal(pop(), ('Xmp.xmpMM.History[2]/stEvt:action', 'converted'))
+            key, software_agent = pop()
+            assert_equal(key, 'Xmp.xmpMM.History[2]/stEvt:softwareAgent')
+            assert_correct_software_agent(software_agent)
+            assert_equal(pop(), ('Xmp.xmpMM.History[2]/stEvt:parameters', 'from image/png to image/x-test'))
+            assert_equal(pop(), ('Xmp.xmpMM.History[2]/stEvt:instanceID', uuid))
+            assert_equal(pop(), ('Xmp.xmpMM.History[2]/stEvt:when', metadata_date + 'Z')) # FIXME: what about timezone?
+            # internal properties
+            assert_equal(pop(), ('Xmp.didjvu.test_int', '42'))
+            assert_equal(pop(), ('Xmp.didjvu.test_str', 'eggs'))
+            assert_equal(pop(), ('Xmp.didjvu.test_bool', 'True'))
+            try:
+                line = pop()
+            except StopIteration:
+                line = None
+            assert_true(line is None)
+        return test
+
+    def _test_updated_libxmp(self, xmp_file):
+        def test(dummy):
+            if libxmp is None:
+                raise SkipTest(libxmp_import_error)
+            meta = libxmp.XMPMeta()
+            def get(namespace, key):
+                return meta.get_property(namespace, key)
+            meta.parse_from_str(xmp_file.read())
+            assert_equal(get(ns_dc, 'format'), 'image/x-test')
+            assert_equal(get(ns_tiff, 'ImageWidth'), '69')
+            assert_equal(get(ns_tiff, 'ImageHeight'), '42')
+            create_date = get(ns_xmp, 'CreateDate')
+            assert_true(type(create_date), datetime.datetime)
+            mod_date = get(ns_xmp, 'ModifyDate')
+            assert_true(mod_date > create_date)
+            assert_true(type(mod_date), datetime.datetime)
+            metadata_date = get(ns_xmp, 'MetadataDate')
+            assert_true(type(metadata_date), datetime.datetime)
+            assert_equal(mod_date, metadata_date)
+            uuid = get(ns_xmp_mm, 'InstanceID')
+            assert_correct_uuid(uuid)
+            # History[1]
+            assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:action'), 'created')
+            assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:softwareAgent'), 'scanhelper 0.2.1')
+            original_uuid = get(ns_xmp_mm, 'History[1]/stEvt:instanceID')
+            assert_correct_uuid(original_uuid)
+            assert_equal(original_uuid, 'uuid:a2686c01b50e4b6aab2cccdef40f6286')
+            assert_not_equal(uuid, original_uuid)
+            assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:when'), create_date)
+            # History[2]
+            assert_equal(get(ns_xmp_mm, 'History[2]/stEvt:action'), 'converted')
+            software_agent = get(ns_xmp_mm, 'History[2]/stEvt:softwareAgent')
+            assert_correct_software_agent(software_agent)
+            assert_equal(get(ns_xmp_mm, 'History[2]/stEvt:parameters'), 'from image/png to image/x-test')
+            assert_equal(get(ns_xmp_mm, 'History[2]/stEvt:instanceID'), uuid)
+            assert_equal(get(ns_xmp_mm, 'History[2]/stEvt:when'), str(mod_date) + 'Z') # FIXME: what about timezone?
+            # internal properties
             assert_equal(get(xmp.ns_didjvu, 'test_int'), '42')
             assert_equal(get(xmp.ns_didjvu, 'test_str'), 'eggs')
             assert_equal(get(xmp.ns_didjvu, 'test_bool'), 'True')
