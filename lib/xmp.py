@@ -30,6 +30,11 @@ ns_didjvu = 'http://jwilk.net/software/didjvu#'
 from . import version
 
 def rfc3339(timestamp):
+    '''
+    Format datetime.datetime object (represeting UTC date and time) in
+    accordance with RFC 3339.
+    '''
+    assert timestamp.tzinfo is None
     return timestamp.strftime('%Y-%m-%dT%H:%M:%S') + 'Z'
 
 class Event(object):
