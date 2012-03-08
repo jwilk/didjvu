@@ -75,7 +75,7 @@ class Event(object):
     def items(self):
         return iter(self._items)
 
-class Metadata(object):
+class MetadataBase(object):
 
     def __init__(self):
         backend = self._backend = libxmp.XMPMeta()
@@ -122,6 +122,17 @@ class Metadata(object):
         assert backend.count_array_items(ns_xmp_mm, 'History') == count + 1
         return result
 
+    def serialize(self):
+        backend = self._backend
+        return backend.serialize_and_format(omit_packet_wrapper=True, tabchr='    ')
+
+    def read(self, file):
+        backend = self._backend
+        xmp = file.read()
+        self._backend.parse_from_str(xmp)
+
+class Metadata(MetadataBase):
+
     def update(self, media_type, internal_properties={}):
         substitutions = {}
         instance_id = gen_uuid()
@@ -146,10 +157,6 @@ class Metadata(object):
         for k, v in internal_properties:
             self[ns_didjvu, k] = v
 
-    def serialize(self):
-        backend = self._backend
-        return backend.serialize_and_format(omit_packet_wrapper=True, tabchr='    ')
-
     def import_(self, image_filename):
         try:
             file = open(image_filename + '.xmp', 'rb')
@@ -161,11 +168,6 @@ class Metadata(object):
             self.read(file)
         finally:
             file.close()
-
-    def read(self, file):
-        backend = self._backend
-        xmp = file.read()
-        self._backend.parse_from_str(xmp)
 
     def write(self, file):
         file.write(self.serialize())
