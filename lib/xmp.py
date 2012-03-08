@@ -92,7 +92,9 @@ class Metadata(libxmp.XMPMeta):
             )
             count = 0
             assert count == self.count_array_items(ns_xmp_mm, 'History')
-        return self.add_to_history(event, count + 1)
+        result = self.add_to_history(event, count + 1)
+        assert count + 1 == self.count_array_items(ns_xmp_mm, 'History')
+        return result
 
     def update(self, media_type, internal_properties={}):
         substitutions = {}
