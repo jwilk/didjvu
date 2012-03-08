@@ -67,26 +67,33 @@ class Event(object):
             ('changed', changed),
             ('when', str(when)),
         ]
-        self._uuid = str(uuid.uuid4())
 
-    def __str__(self):
-        return self._uuid
-
-    def as_xml(self):
-        element = etree.Element('{%s}li' % ns_rdf)
-        element.attrib['{%s}parseType' % ns_rdf] = "Resource"
-        for key, value in self._items:
-            if value is None:
-                continue
-            node = etree.SubElement(element, '{%s}%s' % (ns_xmp_event, key))
-            node.text = value
-        return etree.tostring(element)
+    @property
+    def items(self):
+        return iter(self._items)
 
 class Metadata(libxmp.XMPMeta):
 
     def __init__(self):
         libxmp.XMPMeta.__init__(self)
         self.register_namespace(ns_didjvu, 'didjvu')
+
+    def add_to_history(self, event, index):
+        for key, value in event.items:
+            if value is None:
+                continue
+            self.set_property(ns_xmp_mm, 'History[%d]/stEvt:%s' % (index, key), value)
+
+    def append_to_history(self, event):
+        count = self.count_array_items(ns_xmp_mm, 'History')
+        if self.count_array_items(ns_xmp_mm, 'History') == 0:
+            self.set_property(ns_xmp_mm, 'History', '',
+                prop_value_is_array=True,
+                prop_array_is_ordered=True
+            )
+            count = 0
+            assert count == self.count_array_items(ns_xmp_mm, 'History')
+        return self.add_to_history(event, count + 1)
 
     def update(self, media_type, internal_properties={}):
         substitutions = {}
@@ -108,10 +115,7 @@ class Metadata(libxmp.XMPMeta):
             instance_id=instance_id,
             when=now,
         )
-        self.append_array_item(ns_xmp_mm, 'History', str(event),
-            dict(prop_array_is_ordered=True),
-        )
-        substitutions['<rdf:li>%s</rdf:li>' % str(event)] = event
+        self.append_to_history(event)
         for k, v in internal_properties:
             if isinstance(v, bool):
                 self.set_property_bool(ns_didjvu, k, v)
@@ -119,18 +123,6 @@ class Metadata(libxmp.XMPMeta):
                 self.set_property_int(ns_didjvu, k, v)
             else:
                 self.set_property(ns_didjvu, k, v)
-        self._substitute(substitutions)
-
-    def _substitute(self, substitutions):
-        # libxmp doesn't allow adding complex structures.
-        # This is an ugly hack to work around this limitation.
-        data = self.serialize_and_format(
-            omit_packet_wrapper=True,
-            omit_all_formatting=True
-        )
-        for key, value in substitutions.iteritems():
-            data = data.replace(key, value.as_xml())
-        self.parse_from_str(data)
 
     def serialize(self):
         return self.serialize_and_format(omit_packet_wrapper=True, tabchr='    ')
