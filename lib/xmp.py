@@ -74,33 +74,35 @@ class Event(object):
     def items(self):
         return iter(self._items)
 
-class Metadata(libxmp.XMPMeta):
+class Metadata(object):
 
     def __init__(self):
-        libxmp.XMPMeta.__init__(self)
-        prefix = self.register_namespace(ns_didjvu, 'didjvu')
+        backend = self._backend = libxmp.XMPMeta()
+        prefix = backend.register_namespace(ns_didjvu, 'didjvu')
         if prefix is None:
             raise XmpError('Cannot register namespace for didjvu internal properties')
 
     def __setitem__(self, (namespace, key), value):
+        backend = self._backend
         if isinstance(value, bool):
-            rc = self.set_property_bool(namespace, key, value)
+            rc = backend.set_property_bool(namespace, key, value)
         elif isinstance(value, int):
-            rc = self.set_property_int(namespace, key, value)
+            rc = backend.set_property_int(namespace, key, value)
         elif isinstance(value, list) and len(value) == 0:
-            rc = self.set_property(namespace, key, '',
+            rc = backend.set_property(namespace, key, '',
                  prop_value_is_array=True,
                  prop_array_is_ordered=True
             )
         else:
             if isinstance(value, rfc3339):
                 value = str(value)
-            rc = self.set_property(namespace, key, value)
+            rc = backend.set_property(namespace, key, value)
         if rc is None:
             raise XmpError('Cannot set property')
 
     def __getitem__(self, (namespace, key)):
-        return self.get_property(namespace, key)
+        backend = self._backend
+        return backend.get_property(namespace, key)
 
     def add_to_history(self, event, index):
         for key, value in event.items:
@@ -109,13 +111,14 @@ class Metadata(libxmp.XMPMeta):
             self[ns_xmp_mm, 'History[%d]/stEvt:%s' % (index, key)] = value
 
     def append_to_history(self, event):
-        count = self.count_array_items(ns_xmp_mm, 'History')
-        if self.count_array_items(ns_xmp_mm, 'History') == 0:
+        backend = self._backend
+        count = backend.count_array_items(ns_xmp_mm, 'History')
+        if backend.count_array_items(ns_xmp_mm, 'History') == 0:
             self[ns_xmp_mm, 'History'] = []
             count = 0
-            assert self.count_array_items(ns_xmp_mm, 'History') == 0
+            assert backend.count_array_items(ns_xmp_mm, 'History') == 0
         result = self.add_to_history(event, count + 1)
-        assert self.count_array_items(ns_xmp_mm, 'History') == count + 1
+        assert backend.count_array_items(ns_xmp_mm, 'History') == count + 1
         return result
 
     def update(self, media_type, internal_properties={}):
@@ -143,7 +146,8 @@ class Metadata(libxmp.XMPMeta):
             self[ns_didjvu, k] = v
 
     def serialize(self):
-        return self.serialize_and_format(omit_packet_wrapper=True, tabchr='    ')
+        backend = self._backend
+        return backend.serialize_and_format(omit_packet_wrapper=True, tabchr='    ')
 
     def import_(self, image_filename):
         try:
@@ -158,8 +162,9 @@ class Metadata(libxmp.XMPMeta):
             file.close()
 
     def read(self, file):
+        backend = self._backend
         xmp = file.read()
-        self.parse_from_str(xmp)
+        self._backend.parse_from_str(xmp)
 
     def write(self, file):
         file.write(self.serialize())
