@@ -73,6 +73,9 @@ class rfc3339(object):
                 return datetime.timedelta(0)
         return datetime.datetime(*self._localtime[:6], tzinfo=tz())
 
+def gen_uuid():
+    return 'uuid:' + str(uuid.uuid4()).replace('-', '')
+
 class XmpError(RuntimeError):
     pass
 
@@ -181,7 +184,7 @@ class Metadata(object):
         return self.add_to_history(event, i)
 
     def update(self, media_type, internal_properties={}):
-        instance_id = 'uuid:' + str(uuid.uuid4()).replace('-', '')
+        instance_id = gen_uuid()
         now = rfc3339(time.time())
         original_media_type = self.get('dc.format')
         # TODO: try to guess original media type
