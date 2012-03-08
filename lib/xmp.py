@@ -17,7 +17,6 @@ import datetime
 import errno
 import time
 import uuid
-import xml.etree.cElementTree as etree
 
 import libxmp
 
