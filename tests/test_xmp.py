@@ -270,8 +270,7 @@ class test_metadata():
             assert_correct_uuid(original_uuid)
             assert_equal(original_uuid, 'uuid:a2686c01b50e4b6aab2cccdef40f6286')
             assert_not_equal(uuid, original_uuid)
-            key, original_metadata_date = pop()
-            assert_correct_timestamp(original_metadata_date)
+            assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:when', create_date))
             # History[2]
             assert_equal(pop(), ('Xmp.xmpMM.History[2]', 'type="Struct"'))
             assert_equal(pop(), ('Xmp.xmpMM.History[2]/stEvt:action', 'converted'))
@@ -280,9 +279,7 @@ class test_metadata():
             assert_correct_software_agent(software_agent)
             assert_equal(pop(), ('Xmp.xmpMM.History[2]/stEvt:parameters', 'from image/png to image/x-test'))
             assert_equal(pop(), ('Xmp.xmpMM.History[2]/stEvt:instanceID', uuid))
-            key, evt_date = pop()
-            assert_correct_timestamp(evt_date)
-            assert_equal((key, evt_date), ('Xmp.xmpMM.History[2]/stEvt:when', metadata_date))
+            assert_equal(pop(), ('Xmp.xmpMM.History[2]/stEvt:when', metadata_date))
             # internal properties
             assert_equal(pop(), ('Xmp.didjvu.test_int', '42'))
             assert_equal(pop(), ('Xmp.didjvu.test_str', 'eggs'))
@@ -321,8 +318,7 @@ class test_metadata():
             assert_correct_uuid(original_uuid)
             assert_equal(original_uuid, 'uuid:a2686c01b50e4b6aab2cccdef40f6286')
             assert_not_equal(uuid, original_uuid)
-            original_metadata_date = get(ns_xmp_mm, 'History[1]/stEvt:when')
-            assert_true(create_date <= original_metadata_date)
+            assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:when'), create_date)
             # History[2]
             assert_equal(get(ns_xmp_mm, 'History[2]/stEvt:action'), 'converted')
             software_agent = get(ns_xmp_mm, 'History[2]/stEvt:softwareAgent')
