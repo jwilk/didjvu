@@ -44,6 +44,9 @@ class rfc3339(object):
         '''Format the timestamp object in accordance with RFC 3339.'''
         return self._str() + self._str_tz()
 
+def gen_uuid():
+    return 'uuid:' + str(uuid.uuid4()).replace('-', '')
+
 class XmpError(RuntimeError):
     pass
 
@@ -121,7 +124,7 @@ class Metadata(object):
 
     def update(self, media_type, internal_properties={}):
         substitutions = {}
-        instance_id = 'uuid:' + str(uuid.uuid4()).replace('-', '')
+        instance_id = gen_uuid()
         now = rfc3339(time.time())
         original_media_type = self[ns_dc, 'format']
         # TODO: try to guess original media type

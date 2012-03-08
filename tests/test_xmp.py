@@ -43,6 +43,13 @@ def test_rfc3339():
     result = xmp.rfc3339(time.time())
     assert_correct_timestamp(str(result))
 
+def test_uuid():
+    uuid1 = xmp.gen_uuid()
+    assert_correct_uuid(uuid1)
+    uuid2 = xmp.gen_uuid()
+    assert_correct_uuid(uuid2)
+    assert_not_equal(uuid1, uuid2)
+
 class tag_exiv2(object):
     def __repr__(self): return 'exiv2'
 tag_exiv2 = tag_exiv2()
