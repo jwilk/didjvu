@@ -46,6 +46,9 @@ class rfc3339(object):
         '''Format the timestamp object in accordance with RFC 3339.'''
         return self._str() + self._str_tz()
 
+class XmpError(RuntimeError):
+    pass
+
 class Event(object):
 
     def __init__(self,
@@ -75,41 +78,60 @@ class Metadata(libxmp.XMPMeta):
 
     def __init__(self):
         libxmp.XMPMeta.__init__(self)
-        self.register_namespace(ns_didjvu, 'didjvu')
+        prefix = self.register_namespace(ns_didjvu, 'didjvu')
+        if prefix is None:
+            raise XmpError('Cannot register namespace for didjvu internal properties')
+
+    def __setitem__(self, (namespace, key), value):
+        if isinstance(value, bool):
+            rc = self.set_property_bool(namespace, key, value)
+        elif isinstance(value, int):
+            rc = self.set_property_int(namespace, key, value)
+        elif isinstance(value, list) and len(value) == 0:
+            rc = self.set_property(namespace, key, '',
+                 prop_value_is_array=True,
+                 prop_array_is_ordered=True
+            )
+        else:
+            if isinstance(value, rfc3339):
+                value = str(value)
+            rc = self.set_property(namespace, key, value)
+        if rc is None:
+            raise XmpError('Cannot set property')
+
+    def __getitem__(self, (namespace, key)):
+        return self.get_property(namespace, key)
 
     def add_to_history(self, event, index):
         for key, value in event.items:
             if value is None:
                 continue
-            self.set_property(ns_xmp_mm, 'History[%d]/stEvt:%s' % (index, key), value)
+            self[ns_xmp_mm, 'History[%d]/stEvt:%s' % (index, key)] = value
 
     def append_to_history(self, event):
         count = self.count_array_items(ns_xmp_mm, 'History')
         if self.count_array_items(ns_xmp_mm, 'History') == 0:
-            self.set_property(ns_xmp_mm, 'History', '',
-                prop_value_is_array=True,
-                prop_array_is_ordered=True
-            )
+            self[ns_xmp_mm, 'History'] = []
             count = 0
-            assert count == self.count_array_items(ns_xmp_mm, 'History')
+            assert self.count_array_items(ns_xmp_mm, 'History') == 0
         result = self.add_to_history(event, count + 1)
-        assert count + 1 == self.count_array_items(ns_xmp_mm, 'History')
+        assert self.count_array_items(ns_xmp_mm, 'History') == count + 1
         return result
 
     def update(self, media_type, internal_properties={}):
         substitutions = {}
         instance_id = 'uuid:' + str(uuid.uuid4()).replace('-', '')
         now = rfc3339(time.time())
-        original_media_type = self.get_property(ns_dc, 'format')
+        original_media_type = self[ns_dc, 'format']
         # TODO: try to guess original media type
-        self.set_property(ns_dc, 'format', media_type)
+        self[ns_dc, 'format'] = media_type
         if original_media_type is not None:
             event_params = 'from %s to %s' % (original_media_type, media_type)
         else:
             event_params = 'to %s' % (media_type,)
-        self.set_property(ns_xmp, 'ModifyDate', str(now))
-        self.set_property(ns_xmp, 'MetadataDate', str(now))
-        self.set_property(ns_xmp_mm, 'InstanceID', instance_id)
+        self[ns_xmp, 'ModifyDate'] = str(now)
+        self[ns_xmp, 'MetadataDate'] = str(now)
+        self[ns_xmp_mm, 'InstanceID'] = instance_id
         event = Event(
             action='converted',
             parameters=event_params,
@@ -118,12 +140,7 @@ class Metadata(libxmp.XMPMeta):
         )
         self.append_to_history(event)
         for k, v in internal_properties:
-            if isinstance(v, bool):
-                self.set_property_bool(ns_didjvu, k, v)
-            elif isinstance(v, int):
-                self.set_property_int(ns_didjvu, k, v)
-            else:
-                self.set_property(ns_didjvu, k, v)
+            self[ns_didjvu, k] = v
 
     def serialize(self):
         return self.serialize_and_format(omit_packet_wrapper=True, tabchr='    ')
