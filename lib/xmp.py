@@ -13,7 +13,6 @@
 
 '''XMP support'''
 
-import datetime
 import errno
 import time
 import uuid
@@ -129,12 +128,11 @@ class MetadataBase(object):
     def read(self, file):
         backend = self._backend
         xmp = file.read()
-        self._backend.parse_from_str(xmp)
+        backend.parse_from_str(xmp)
 
 class Metadata(MetadataBase):
 
     def update(self, media_type, internal_properties={}):
-        substitutions = {}
         instance_id = gen_uuid()
         now = rfc3339(time.time())
         original_media_type = self[ns_dc, 'format']
