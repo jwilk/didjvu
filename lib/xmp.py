@@ -20,11 +20,9 @@ import uuid
 
 import libxmp
 
-from libxmp.consts import XMP_NS_RDF as ns_rdf
 from libxmp.consts import XMP_NS_DC as ns_dc
 from libxmp.consts import XMP_NS_XMP as ns_xmp
 from libxmp.consts import XMP_NS_XMP_MM as ns_xmp_mm
-from libxmp.consts import XMP_NS_XMP_ResourceEvent as ns_xmp_event
 ns_didjvu = 'http://jwilk.net/software/didjvu#'
 
 from . import version
