@@ -47,22 +47,6 @@ class rfc3339(object):
         '''Format the timestamp object in accordance with RFC 3339.'''
         return self._str() + self._str_tz()
 
-    _properties = dict(
-        year='tm_year',
-        month='tm_mon',
-        day='tm_mday',
-        hour='tm_hour',
-        minute='tm_min',
-        second='tm_sec',
-    )
-
-for _attr, _st_attr in rfc3339._properties.iteritems():
-    def _method(self, st_attr=_st_attr):
-        return getattr(self._localtime, st_attr)
-    _method = property(_method, doc=getattr(time.struct_time, _st_attr).__doc__)
-    setattr(rfc3339, _attr, _method)
-del _attr, _st_attr, _method, rfc3339._properties
-
 class Event(object):
 
     def __init__(self,
