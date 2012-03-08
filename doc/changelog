@@ -5,8 +5,9 @@ didjvu (0.2.4) UNRELEASED; urgency=low
     + Store more information about conversion options (loss-level, C44
       encoding options).
     + Rename ‘ncc’ to ‘n-connected-components’ for clarity.
+    + Don't convert timestamps to UTC, as recommended by the XMP specification.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Thu, 01 Mar 2012 23:30:50 +0100
+ -- Jakub Wilk <jwilk@jwilk.net>  Wed, 07 Mar 2012 22:06:17 +0100
 
 didjvu (0.2.3) unstable; urgency=low
 

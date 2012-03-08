@@ -1,0 +1,31 @@
+<x:xmpmeta
+    xmlns:x="adobe:ns:meta/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:xmp="http://ns.adobe.com/xap/1.0/"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:tiff="http://ns.adobe.com/tiff/1.0/"
+    xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/"
+    xmlns:stEvt="http://ns.adobe.com/xap/1.0/sType/ResourceEvent#"
+>
+<rdf:RDF>
+    <rdf:Description rdf:about="">
+        <xmp:CreatorTool>scanhelper 0.2.4</xmp:CreatorTool>
+        <xmp:CreateDate>2012-02-01T16:28:00+01:00</xmp:CreateDate>
+        <xmp:MetadataDate>2012-02-29T20:30:21+01:00</xmp:MetadataDate>
+        <dc:format>image/png</dc:format>
+        <tiff:ImageWidth>69</tiff:ImageWidth>
+        <tiff:ImageHeight>42</tiff:ImageHeight>
+        <xmpMM:InstanceID>uuid:a2686c01b50e4b6aab2cccdef40f6286</xmpMM:InstanceID>
+        <xmpMM:History>
+            <rdf:Seq>
+                <rdf:li rdf:parseType="Resource">
+                    <stEvt:action>created</stEvt:action>
+                    <stEvt:softwareAgent>scanhelper 0.2.4</stEvt:softwareAgent>
+                    <stEvt:instanceID>uuid:a2686c01b50e4b6aab2cccdef40f6286</stEvt:instanceID>
+                    <stEvt:when>2012-02-01T16:28:00+01:00</stEvt:when>
+                </rdf:li>
+            </rdf:Seq>
+        </xmpMM:History>
+    </rdf:Description>
+</rdf:RDF>
+</x:xmpmeta>

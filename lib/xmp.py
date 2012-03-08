@@ -16,6 +16,7 @@
 import datetime
 import errno
 import itertools
+import time
 import uuid
 import xml.etree.cElementTree as etree
 
@@ -46,8 +47,31 @@ except AttributeError:
     del et_register_namespace
 etree.register_namespace('x', 'adobe:ns:meta/')
 
-def rfc3339(timestamp):
-    return timestamp.strftime('%Y-%m-%dT%H:%M:%S') + 'Z'
+class rfc3339(object):
+
+    def __init__(self, unixtime):
+        self._localtime = time.localtime(unixtime)
+
+    def _str(self):
+        return time.strftime('%Y-%m-%dT%H:%M:%S', self._localtime)
+
+    def _str_tz(self):
+        offset = time.timezone if not self._localtime.tm_isdst else time.altzone
+        hours, minutes  = divmod(abs(offset) // 60, 60)
+        return '%s%02d:%02d' % ('+' if offset < 0 else '-', hours, minutes)
+
+    def __str__(self):
+        '''Format the timestamp object in accordance with RFC 3339.'''
+        return self._str() + self._str_tz()
+
+    def as_datetime(self):
+        offset = time.timezone if not self._localtime.tm_isdst else time.altzone
+        class tz(datetime.tzinfo):
+            def utcoffset(self, dt):
+                return datetime.timedelta(seconds=-offset)
+            def dst(self, dt):
+                return datetime.timedelta(0)
+        return datetime.datetime(*self._localtime[:6], tzinfo=tz())
 
 class Event(object):
 
@@ -67,7 +91,7 @@ class Event(object):
             ('parameters', parameters),
             ('instanceID', instance_id),
             ('changed', changed),
-            ('when', rfc3339(when)),
+            ('when', str(when)),
         ]
 
     def add_to_history(self, metadata, index):
@@ -154,7 +178,7 @@ class Metadata(object):
     def update(self, media_type, internal_properties={}):
         substitutions = {}
         instance_id = 'uuid:' + str(uuid.uuid4()).replace('-', '')
-        now = datetime.datetime.utcnow()
+        now = rfc3339(time.time())
         original_media_type = self.get('dc.format')
         # TODO: try to guess original media type
         self['dc.format'] = tuple(media_type.split('/'))
@@ -162,8 +186,8 @@ class Metadata(object):
             event_params = 'from %s to %s' % ('/'.join(original_media_type.value), media_type)
         else:
             event_params = 'to %s' % (media_type,)
-        self['xmp.ModifyDate'] = now
-        self['xmp.MetadataDate'] = now
+        self['xmp.ModifyDate'] = now.as_datetime()
+        self['xmp.MetadataDate'] = now.as_datetime()
         self['xmpMM.InstanceID'] = instance_id
         event = Event(
             action='converted',
