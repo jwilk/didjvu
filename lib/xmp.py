@@ -126,7 +126,7 @@ class Metadata(object):
         if description is None:
             raise NotImplementedError('Cannot add xmpMM:History')
         e_description = etree.SubElement(description, '{%s}History' % ns_xmpmm)
-        e_seq = etree.SubElement(e_description, '{%s}Seq' % ns_rdf)
+        etree.SubElement(e_description, '{%s}Seq' % ns_rdf)
         fp.seek(0)
         fp.truncate()
         xmp.write(fp, xml_declaration=True)
@@ -176,7 +176,6 @@ class Metadata(object):
         return self.add_to_history(event, i)
 
     def update(self, media_type, internal_properties={}):
-        substitutions = {}
         instance_id = 'uuid:' + str(uuid.uuid4()).replace('-', '')
         now = rfc3339(time.time())
         original_media_type = self.get('dc.format')
