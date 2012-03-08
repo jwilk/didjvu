@@ -59,7 +59,7 @@ def run_exiv2(filename, fail_ok=False):
         )
     except OSError, ex:
         raise SkipTest(ex)
-    for line in child.stdout:
+    for line in sorted(child.stdout):
         yield line
     try:
         child.wait()
@@ -167,27 +167,39 @@ class test_metadata():
             output = run_exiv2(xmp_file.name)
             def pop():
                 return tuple(next(output).rstrip('\n').split(None, 1))
+            # Dublin Core:
             assert_equal(pop(), ('Xmp.dc.format', 'image/x-test'))
-            key, mod_date = pop()
+            # internal properties:
+            assert_equal(pop(), ('Xmp.didjvu.test_bool', 'True'))
+            assert_equal(pop(), ('Xmp.didjvu.test_int', '42'))
+            assert_equal(pop(), ('Xmp.didjvu.test_str', 'eggs'))
+            # XMP:
+            key, metadata_date = pop()
+            assert_correct_timestamp(metadata_date)
+            assert_equal(key, 'Xmp.xmp.MetadataDate')
+            key, modify_date = pop()
             assert_equal(key, 'Xmp.xmp.ModifyDate')
-            assert_correct_timestamp(mod_date)
-            assert_equal(pop(), ('Xmp.xmp.MetadataDate', mod_date))
-            key, uuid = pop()
-            assert_equal(key, 'Xmp.xmpMM.InstanceID')
-            assert_correct_uuid(uuid)
+            assert_correct_timestamp(modify_date)
+            assert_equal(metadata_date, modify_date)
+            # XMP Media Management:
             assert_equal(pop(), ('Xmp.xmpMM.History', 'type="Seq"'))
+            # - History[1]:
             assert_equal(pop(), ('Xmp.xmpMM.History[1]', 'type="Struct"'))
             assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:action', 'converted'))
+            key, evt_uuid = pop()
+            assert_correct_uuid(evt_uuid)
+            assert_equal(key, 'Xmp.xmpMM.History[1]/stEvt:instanceID')
+            assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:parameters', 'to image/x-test'))
             key, software_agent = pop()
             assert_equal(key, 'Xmp.xmpMM.History[1]/stEvt:softwareAgent')
             assert_correct_software_agent(software_agent)
-            assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:parameters', 'to image/x-test'))
-            assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:instanceID', uuid))
             key, evt_date = pop()
-            assert_equal((key, evt_date), ('Xmp.xmpMM.History[1]/stEvt:when', mod_date))
-            assert_equal(pop(), ('Xmp.didjvu.test_int', '42'))
-            assert_equal(pop(), ('Xmp.didjvu.test_str', 'eggs'))
-            assert_equal(pop(), ('Xmp.didjvu.test_bool', 'True'))
+            assert_equal((key, evt_date), ('Xmp.xmpMM.History[1]/stEvt:when', modify_date))
+            # - InstanceID:
+            key, uuid = pop()
+            assert_equal(key, 'Xmp.xmpMM.InstanceID')
+            assert_correct_uuid(uuid)
+            assert_equal(uuid, evt_uuid)
             try:
                 line = pop()
             except StopIteration:
@@ -247,43 +259,54 @@ class test_metadata():
             output = run_exiv2(xmp_file.name)
             def pop():
                 return tuple(next(output).rstrip('\n').split(None, 1))
-            assert_equal(pop(), ('Xmp.xmp.CreatorTool', self._original_software_agent))
+            # Dublin Core:
+            assert_equal(pop(), ('Xmp.dc.format', 'image/x-test'))
+            # internal properties:
+            assert_equal(pop(), ('Xmp.didjvu.test_bool', 'True'))
+            assert_equal(pop(), ('Xmp.didjvu.test_int', '42'))
+            assert_equal(pop(), ('Xmp.didjvu.test_str', 'eggs'))
+            # TIFF:
+            assert_equal(pop(), ('Xmp.tiff.ImageHeight', '42'))
+            assert_equal(pop(), ('Xmp.tiff.ImageWidth', '69'))
+            # XMP:
             key, create_date = pop()
             assert_equal((key, create_date), ('Xmp.xmp.CreateDate', self._original_create_date))
+            assert_equal(pop(), ('Xmp.xmp.CreatorTool', self._original_software_agent))
             key, metadata_date = pop()
             assert_equal(key, 'Xmp.xmp.MetadataDate')
             assert_correct_timestamp(metadata_date)
-            assert_equal(pop(), ('Xmp.xmp.ModifyDate', metadata_date))
-            assert_equal(pop(), ('Xmp.dc.format', 'image/x-test'))
-            assert_equal(pop(), ('Xmp.tiff.ImageWidth', '69'))
-            assert_equal(pop(), ('Xmp.tiff.ImageHeight', '42'))
-            key, uuid = pop()
-            assert_equal(key, 'Xmp.xmpMM.InstanceID')
-            assert_correct_uuid(uuid)
+            key, modify_date = pop()
+            assert_equal(key, 'Xmp.xmp.ModifyDate')
+            assert_correct_timestamp(modify_date)
+            assert_equal(metadata_date, modify_date)
+            # XMP Media Management:
             assert_equal(pop(), ('Xmp.xmpMM.History', 'type="Seq"'))
-            # History[1]
+            # - History[1]:
             assert_equal(pop(), ('Xmp.xmpMM.History[1]', 'type="Struct"'))
             assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:action', 'created'))
-            assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:softwareAgent', self._original_software_agent))
             key, original_uuid = pop()
             assert_equal(key, 'Xmp.xmpMM.History[1]/stEvt:instanceID')
             assert_correct_uuid(original_uuid)
             assert_equal(original_uuid, 'uuid:a2686c01b50e4b6aab2cccdef40f6286')
-            assert_not_equal(uuid, original_uuid)
+            assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:softwareAgent', self._original_software_agent))
             assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:when', create_date))
-            # History[2]
+            # - History[2]
             assert_equal(pop(), ('Xmp.xmpMM.History[2]', 'type="Struct"'))
             assert_equal(pop(), ('Xmp.xmpMM.History[2]/stEvt:action', 'converted'))
+            key, evt_uuid = pop()
+            assert_equal(key, 'Xmp.xmpMM.History[2]/stEvt:instanceID')
+            assert_correct_uuid(evt_uuid)
+            assert_equal(pop(), ('Xmp.xmpMM.History[2]/stEvt:parameters', 'from image/png to image/x-test'))
             key, software_agent = pop()
             assert_equal(key, 'Xmp.xmpMM.History[2]/stEvt:softwareAgent')
             assert_correct_software_agent(software_agent)
-            assert_equal(pop(), ('Xmp.xmpMM.History[2]/stEvt:parameters', 'from image/png to image/x-test'))
-            assert_equal(pop(), ('Xmp.xmpMM.History[2]/stEvt:instanceID', uuid))
             assert_equal(pop(), ('Xmp.xmpMM.History[2]/stEvt:when', metadata_date))
-            # internal properties
-            assert_equal(pop(), ('Xmp.didjvu.test_int', '42'))
-            assert_equal(pop(), ('Xmp.didjvu.test_str', 'eggs'))
-            assert_equal(pop(), ('Xmp.didjvu.test_bool', 'True'))
+            # - InstanceID:
+            key, uuid = pop()
+            assert_equal(key, 'Xmp.xmpMM.InstanceID')
+            assert_correct_uuid(evt_uuid)
+            assert_equal(uuid, evt_uuid)
+            assert_not_equal(uuid, original_uuid)
             try:
                 line = pop()
             except StopIteration:
