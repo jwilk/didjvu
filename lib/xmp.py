@@ -115,8 +115,8 @@ class Metadata(libxmp.XMPMeta):
             event_params = 'from %s to %s' % (original_media_type, media_type)
         else:
             event_params = 'to %s' % (media_type,)
-        self.set_property_datetime(ns_xmp, 'ModifyDate', now)
-        self.set_property_datetime(ns_xmp, 'MetadataDate', now)
+        self.set_property(ns_xmp, 'ModifyDate', str(now))
+        self.set_property(ns_xmp, 'MetadataDate', str(now))
         self.set_property(ns_xmp_mm, 'InstanceID', instance_id)
         event = Event(
             action='converted',

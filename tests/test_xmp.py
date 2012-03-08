@@ -88,7 +88,7 @@ def assert_correct_software_agent(software_agent):
 
 def assert_correct_timestamp(timestamp):
     return assert_regexp_matches(
-        '^[0-9]{4}(-[0-9]{2}){2}T[0-9]{2}(:[0-9]{2}){2}([+-][0-9]{2}:[0-9]{2}|Z)?$',
+        '^[0-9]{4}(-[0-9]{2}){2}T[0-9]{2}(:[0-9]{2}){2}([+-][0-9]{2}:[0-9]{2}|Z)$',
         timestamp
     )
 
@@ -184,7 +184,7 @@ class test_metadata():
             assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:parameters', 'to image/x-test'))
             assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:instanceID', uuid))
             key, evt_date = pop()
-            assert_equal((key, evt_date[:19]), ('Xmp.xmpMM.History[1]/stEvt:when', mod_date)) # FIXME: timezone information is lost
+            assert_equal((key, evt_date), ('Xmp.xmpMM.History[1]/stEvt:when', mod_date))
             assert_equal(pop(), ('Xmp.didjvu.test_int', '42'))
             assert_equal(pop(), ('Xmp.didjvu.test_str', 'eggs'))
             assert_equal(pop(), ('Xmp.didjvu.test_bool', 'True'))
@@ -205,9 +205,7 @@ class test_metadata():
             meta.parse_from_str(xmp_file.read())
             assert_equal(get(ns_dc, 'format'), 'image/x-test')
             mod_date = get(ns_xmp, 'ModifyDate')
-            assert_true(type(mod_date), datetime.datetime)
             metadata_date = get(ns_xmp, 'MetadataDate')
-            assert_true(type(metadata_date), datetime.datetime)
             assert_equal(mod_date, metadata_date)
             uuid = get(ns_xmp_mm, 'InstanceID')
             assert_correct_uuid(uuid)
@@ -216,7 +214,7 @@ class test_metadata():
             assert_correct_software_agent(software_agent)
             assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:parameters'), 'to image/x-test')
             assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:instanceID'), uuid)
-            assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:when')[:19], str(mod_date)[:19]) # FIXME: timezone information is lost
+            assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:when'), str(mod_date))
             assert_equal(get(xmp.ns_didjvu, 'test_int'), '42')
             assert_equal(get(xmp.ns_didjvu, 'test_str'), 'eggs')
             assert_equal(get(xmp.ns_didjvu, 'test_bool'), 'True')
@@ -283,7 +281,8 @@ class test_metadata():
             assert_equal(pop(), ('Xmp.xmpMM.History[2]/stEvt:parameters', 'from image/png to image/x-test'))
             assert_equal(pop(), ('Xmp.xmpMM.History[2]/stEvt:instanceID', uuid))
             key, evt_date = pop()
-            assert_equal((key, evt_date[:19]), ('Xmp.xmpMM.History[2]/stEvt:when', metadata_date)) # FIXME: timezone information is lost
+            assert_correct_timestamp(evt_date)
+            assert_equal((key, evt_date), ('Xmp.xmpMM.History[2]/stEvt:when', metadata_date))
             # internal properties
             assert_equal(pop(), ('Xmp.didjvu.test_int', '42'))
             assert_equal(pop(), ('Xmp.didjvu.test_str', 'eggs'))
@@ -308,12 +307,10 @@ class test_metadata():
             assert_equal(get(ns_tiff, 'ImageHeight'), '42')
             assert_equal(get(ns_xmp, 'CreatorTool'), self._original_software_agent)
             create_date = get(ns_xmp, 'CreateDate')
-            assert_true(type(create_date), datetime.datetime)
+            assert_equal(create_date, self._original_create_date)
             mod_date = get(ns_xmp, 'ModifyDate')
             assert_true(mod_date > create_date)
-            assert_true(type(mod_date), datetime.datetime)
             metadata_date = get(ns_xmp, 'MetadataDate')
-            assert_true(type(metadata_date), datetime.datetime)
             assert_equal(mod_date, metadata_date)
             uuid = get(ns_xmp_mm, 'InstanceID')
             assert_correct_uuid(uuid)
@@ -332,7 +329,7 @@ class test_metadata():
             assert_correct_software_agent(software_agent)
             assert_equal(get(ns_xmp_mm, 'History[2]/stEvt:parameters'), 'from image/png to image/x-test')
             assert_equal(get(ns_xmp_mm, 'History[2]/stEvt:instanceID'), uuid)
-            assert_equal(get(ns_xmp_mm, 'History[2]/stEvt:when')[:19], str(mod_date)[:19]) # FIXME: timezone information is lost
+            assert_equal(get(ns_xmp_mm, 'History[2]/stEvt:when'), mod_date)
             # internal properties
             assert_equal(get(xmp.ns_didjvu, 'test_int'), '42')
             assert_equal(get(xmp.ns_didjvu, 'test_str'), 'eggs')

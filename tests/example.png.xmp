@@ -22,7 +22,7 @@
                     <stEvt:action>created</stEvt:action>
                     <stEvt:softwareAgent>scanhelper 0.2.4</stEvt:softwareAgent>
                     <stEvt:instanceID>uuid:a2686c01b50e4b6aab2cccdef40f6286</stEvt:instanceID>
-                    <stEvt:when>2012-02-01T16:28:00Z</stEvt:when>
+                    <stEvt:when>2012-02-29T20:30:21+01:00</stEvt:when>
                 </rdf:li>
             </rdf:Seq>
         </xmpMM:History>
