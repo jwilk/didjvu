@@ -16,12 +16,20 @@
 import errno
 import uuid
 
-ns_didjvu = 'http://jwilk.net/software/didjvu#'
-
 from .. import timestamp
+from .. import utils
 from .. import version
 
-from . libxmp_backend import MetadataBase
+try:
+    from . import libxmp_backend as default_backend
+except ImportError, exc:
+    try:
+        from . import pyexiv2_backend as default_backend
+    except ImportError:
+        utils.enhance_import_error(exc, 'python-xmp-toolkit', 'python-libxmp', 'http://code.google.com/p/python-xmp-toolkit/')
+        raise exc
+
+ns_didjvu = 'http://jwilk.net/software/didjvu#'
 
 def gen_uuid():
     return 'uuid:' + str(uuid.uuid4()).replace('-', '')
@@ -51,48 +59,52 @@ class Event(object):
     def items(self):
         return iter(self._items)
 
-class Metadata(MetadataBase):
+def metadata(backend=default_backend):
 
-    ns_didjvu = ns_didjvu
+    class Metadata(backend.MetadataBase):
 
-    def update(self, media_type, internal_properties={}):
-        instance_id = gen_uuid()
-        now = timestamp.now()
-        original_media_type = self.get('dc.format')
-        # TODO: try to guess original media type
-        self['dc.format'] = media_type
-        if original_media_type is not None:
-            event_params = 'from %s to %s' % (original_media_type, media_type)
-        else:
-            event_params = 'to %s' % (media_type,)
-        self['xmp.ModifyDate'] = now
-        self['xmp.MetadataDate'] = now
-        self['xmpMM.InstanceID'] = instance_id
-        event = Event(
-            action='converted',
-            parameters=event_params,
-            instance_id=instance_id,
-            when=now,
-        )
-        self.append_to_history(event)
-        for k, v in internal_properties:
-            self['didjvu.' + k] = v
+        ns_didjvu = ns_didjvu
 
-    def import_(self, image_filename):
-        try:
-            file = open(image_filename + '.xmp', 'rb')
-        except (OSError, IOError), ex:
-            if ex.errno == errno.ENOENT:
-                return
-            raise
-        try:
-            self.read(file)
-        finally:
-            file.close()
+        def update(self, media_type, internal_properties={}):
+            instance_id = gen_uuid()
+            now = timestamp.now()
+            original_media_type = self.get('dc.format')
+            # TODO: try to guess original media type
+            self['dc.format'] = media_type
+            if original_media_type is not None:
+                event_params = 'from %s to %s' % (original_media_type, media_type)
+            else:
+                event_params = 'to %s' % (media_type,)
+            self['xmp.ModifyDate'] = now
+            self['xmp.MetadataDate'] = now
+            self['xmpMM.InstanceID'] = instance_id
+            event = Event(
+                action='converted',
+                parameters=event_params,
+                instance_id=instance_id,
+                when=now,
+            )
+            self.append_to_history(event)
+            for k, v in internal_properties:
+                self['didjvu.' + k] = v
 
-    def write(self, file):
-        file.write(self.serialize())
+        def import_(self, image_filename):
+            try:
+                file = open(image_filename + '.xmp', 'rb')
+            except (OSError, IOError), ex:
+                if ex.errno == errno.ENOENT:
+                    return
+                raise
+            try:
+                self.read(file)
+            finally:
+                file.close()
 
-__all__ = ['Metadata']
+        def write(self, file):
+            file.write(self.serialize())
+
+    return Metadata()
+
+__all__ = ['metadata']
 
 # vim:ts=4 sw=4 et

@@ -26,7 +26,6 @@ from . import version as version_module
 try:
     from . import xmp
 except ImportError, xmp_import_error:
-    utils.enhance_import_error(xmp_import_error, 'python-xmp-toolkit', 'python-libxmp', 'http://code.google.com/p/python-xmp-toolkit/')
     xmp = None
 
 def range_int(x, y, typename):

@@ -292,7 +292,7 @@ class main():
         logger.info('- %s', self.compression_info_template % locals())
         if xmp_output:
             logger.info('- saving XMP metadata')
-            metadata = xmp.Metadata()
+            metadata = xmp.metadata()
             metadata.import_(image_filename)
             internal_properties = list(cli.dump_options(o)) + [
                 ('n-connected-components', str(n_connected_components))

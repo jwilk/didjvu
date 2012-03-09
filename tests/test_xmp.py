@@ -85,7 +85,7 @@ class test_metadata():
 
     def test_empty(self):
         with temporary.file() as xmp_file:
-            meta = xmp.Metadata()
+            meta = xmp.metadata()
             meta.write(xmp_file)
             xmp_file.flush()
             xmp_file.seek(0)
@@ -136,7 +136,7 @@ class test_metadata():
 
     def test_new(self):
         with temporary.file() as xmp_file:
-            meta = xmp.Metadata()
+            meta = xmp.metadata()
             meta.update(
                 media_type='image/x-test',
                 internal_properties=[
@@ -224,7 +224,7 @@ class test_metadata():
     def test_updated(self):
         image_path = os.path.join(os.path.dirname(__file__), 'example.png')
         with temporary.file() as xmp_file:
-            meta = xmp.Metadata()
+            meta = xmp.metadata()
             meta.import_(image_path)
             meta.update(
                 media_type='image/x-test',
