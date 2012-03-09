@@ -22,9 +22,31 @@ from .common import (
     assert_true,
 )
 
+xmp_backends = []
+
 from lib import ipc
 from lib import temporary
 from lib import xmp
+
+try:
+    from lib.xmp import libxmp_backend
+except ImportError, libxmp_backend_import_error:
+    class libxmp_backend:
+        # dummy replacement
+        class MetadataBase(object):
+            def __init__(self):
+                raise SkipTest(libxmp_backend_import_error)
+
+try:
+    from lib.xmp import pyexiv2_backend
+except ImportError, pyexiv2_backend_import_error:
+    class pyexiv2_backend:
+        # dummy replacement
+        class MetadataBase(object):
+            def __init__(self):
+                raise SkipTest(pyexiv2_backend_import_error)
+
+xmp_backends = [libxmp_backend, pyexiv2_backend]
 
 try:
     import libxmp
@@ -45,12 +67,18 @@ def test_uuid():
     assert_correct_uuid(uuid2)
     assert_not_equal(uuid1, uuid2)
 
+def tag_backend(backend):
+    class tag(object):
+        def __repr__(self):
+            return backend.__name__.split('.')[-1]
+    return tag()
+
 class tag_exiv2(object):
-    def __repr__(self): return 'exiv2'
+    def __repr__(self): return 'exiv2_checker'
 tag_exiv2 = tag_exiv2()
 
 class tag_libxmp(object):
-    def __repr__(self): return 'libxmp'
+    def __repr__(self): return 'libxmp_checker'
 tag_libxmp = tag_libxmp()
 
 def run_exiv2(filename, fail_ok=False):
@@ -84,22 +112,31 @@ def assert_correct_software_agent(software_agent):
 class test_metadata():
 
     def test_empty(self):
-        with temporary.file() as xmp_file:
-            meta = xmp.metadata()
-            meta.write(xmp_file)
-            xmp_file.flush()
-            xmp_file.seek(0)
-            yield self._test_empty_exiv2(xmp_file), tag_exiv2
-            yield self._test_empty_libxmp(xmp_file), tag_libxmp
+        for backend in xmp_backends:
+            with temporary.file() as xmp_file:
+                exc = None
+                try:
+                    meta = xmp.metadata(backend=backend)
+                    meta.write(xmp_file)
+                    xmp_file.flush()
+                    xmp_file.seek(0)
+                except Exception, exc:
+                    pass
+                yield self._test_empty_exiv2(xmp_file, exception=exc), tag_backend(backend), tag_exiv2
+                yield self._test_empty_libxmp(xmp_file, exception=exc), tag_backend(backend), tag_libxmp
 
-    def _test_empty_exiv2(self, xmp_file):
-        def test(dummy):
+    def _test_empty_exiv2(self, xmp_file, exception=None):
+        def test(*dummy):
+            if exception is not None:
+                raise exception
             for line in run_exiv2(xmp_file.name, fail_ok=True):
                 assert_equal(line, '')
         return test
 
-    def _test_empty_libxmp(self, xmp_file):
-        def test(dummy):
+    def _test_empty_libxmp(self, xmp_file, exception=None):
+        def test(*dummy):
+            if exception is not None:
+                raise exception
             if libxmp is None:
                 raise SkipTest(libxmp_import_error)
             import xml.etree.cElementTree as etree
@@ -135,24 +172,31 @@ class test_metadata():
         return test
 
     def test_new(self):
-        with temporary.file() as xmp_file:
-            meta = xmp.metadata()
-            meta.update(
-                media_type='image/x-test',
-                internal_properties=[
-                    ('test_int', 42),
-                    ('test_str', 'eggs'),
-                    ('test_bool', True),
-                ]
-            )
-            meta.write(xmp_file)
-            xmp_file.flush()
-            xmp_file.seek(0)
-            yield self._test_new_exiv2(xmp_file), tag_exiv2
-            yield self._test_new_libxmp(xmp_file), tag_libxmp
+        for backend in xmp_backends:
+            with temporary.file() as xmp_file:
+                exc = None
+                try:
+                    meta = xmp.metadata(backend=backend)
+                    meta.update(
+                        media_type='image/x-test',
+                        internal_properties=[
+                            ('test_int', 42),
+                            ('test_str', 'eggs'),
+                            ('test_bool', True),
+                        ]
+                    )
+                    meta.write(xmp_file)
+                    xmp_file.flush()
+                    xmp_file.seek(0)
+                except Exception, exc:
+                    pass
+                yield self._test_new_exiv2(xmp_file, exception=exc), tag_backend(backend), tag_exiv2
+                yield self._test_new_libxmp(xmp_file, exception=exc), tag_backend(backend), tag_libxmp
 
-    def _test_new_exiv2(self, xmp_file):
-        def test(dummy):
+    def _test_new_exiv2(self, xmp_file, exception=None):
+        def test(*dummy):
+            if exception is not None:
+                raise exception
             output = run_exiv2(xmp_file.name)
             def pop():
                 return tuple(next(output).rstrip('\n').split(None, 1))
@@ -196,8 +240,10 @@ class test_metadata():
             assert_true(line is None)
         return test
 
-    def _test_new_libxmp(self, xmp_file):
-        def test(dummy):
+    def _test_new_libxmp(self, xmp_file, exception=None):
+        def test(*dummy):
+            if exception is not None:
+                raise exception
             if libxmp is None:
                 raise SkipTest(libxmp_import_error)
             meta = libxmp.XMPMeta()
@@ -223,29 +269,36 @@ class test_metadata():
 
     def test_updated(self):
         image_path = os.path.join(os.path.dirname(__file__), 'example.png')
-        with temporary.file() as xmp_file:
-            meta = xmp.metadata()
-            meta.import_(image_path)
-            meta.update(
-                media_type='image/x-test',
-                internal_properties=[
-                    ('test_int', 42),
-                    ('test_str', 'eggs'),
-                    ('test_bool', True),
-                ]
-            )
-            meta.write(xmp_file)
-            xmp_file.flush()
-            xmp_file.seek(0)
-            yield self._test_updated_exiv2(xmp_file), tag_exiv2
-            yield self._test_updated_libxmp(xmp_file), tag_libxmp
+        for backend in xmp_backends:
+            with temporary.file() as xmp_file:
+                exc = None
+                try:
+                    meta = xmp.metadata(backend=backend)
+                    meta.import_(image_path)
+                    meta.update(
+                        media_type='image/x-test',
+                        internal_properties=[
+                            ('test_int', 42),
+                            ('test_str', 'eggs'),
+                            ('test_bool', True),
+                        ]
+                    )
+                    meta.write(xmp_file)
+                    xmp_file.flush()
+                    xmp_file.seek(0)
+                except Exception, exc:
+                    pass
+                yield self._test_updated_exiv2(xmp_file, exception=exc), tag_backend(backend), tag_exiv2
+                yield self._test_updated_libxmp(xmp_file, exception=exc), tag_backend(backend), tag_libxmp
 
     _original_software_agent = 'scanhelper 0.2.4'
     _original_create_date = '2012-02-01T16:28:00+01:00'
     _original_uuid = 'uuid:a2686c01b50e4b6aab2cccdef40f6286'
 
-    def _test_updated_exiv2(self, xmp_file):
-        def test(dummy):
+    def _test_updated_exiv2(self, xmp_file, exception=None):
+        def test(*dummy):
+            if exception is not None:
+                raise exception
             output = run_exiv2(xmp_file.name)
             def pop():
                 return tuple(next(output).rstrip('\n').split(None, 1))
@@ -304,8 +357,10 @@ class test_metadata():
             assert_true(line is None)
         return test
 
-    def _test_updated_libxmp(self, xmp_file):
-        def test(dummy):
+    def _test_updated_libxmp(self, xmp_file, exception=None):
+        def test(*dummy):
+            if exception is not None:
+                raise exception
             if libxmp is None:
                 raise SkipTest(libxmp_import_error)
             meta = libxmp.XMPMeta()
