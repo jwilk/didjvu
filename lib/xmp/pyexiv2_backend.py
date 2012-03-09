@@ -11,19 +11,16 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 # General Public License for more details.
 
-'''XMP support'''
+'''XMP support (pyexiv2 backend)'''
 
-import datetime
-import errno
 import itertools
-import uuid
 import xml.etree.cElementTree as etree
 
 import pyexiv2.xmp
 
-from . import temporary
-from . import timestamp
-from . import version
+from .. import temporary
+from .. import timestamp
+from .. import version
 
 ns_rdf = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
 ns_xmpmm = 'http://ns.adobe.com/xap/1.0/mm/'
@@ -46,9 +43,6 @@ except AttributeError:
     etree.register_namespace = et_register_namespace
     del et_register_namespace
 etree.register_namespace('x', 'adobe:ns:meta/')
-
-def gen_uuid():
-    return 'uuid:' + str(uuid.uuid4()).replace('-', '')
 
 class XmpError(RuntimeError):
     pass
@@ -189,46 +183,6 @@ class MetadataBase(object):
         fp.write(data)
         self._reload()
 
-class Metadata(MetadataBase):
-
-    def update(self, media_type, internal_properties={}):
-        instance_id = gen_uuid()
-        now = timestamp.now()
-        original_media_type = self.get('dc.format')
-        # TODO: try to guess original media type
-        self['dc.format'] = media_type
-        if original_media_type is not None:
-            event_params = 'from %s to %s' % (original_media_type, media_type)
-        else:
-            event_params = 'to %s' % (media_type,)
-        self['xmp.ModifyDate'] = now
-        self['xmp.MetadataDate'] = now
-        self['xmpMM.InstanceID'] = instance_id
-        event = Event(
-            action='converted',
-            parameters=event_params,
-            instance_id=instance_id,
-            when=now,
-        )
-        self.append_to_history(event)
-        for k, v in internal_properties:
-            self['didjvu.' + k] = v
-
-    def import_(self, image_filename):
-        try:
-            file = open(image_filename + '.xmp', 'rb')
-        except (OSError, IOError), ex:
-            if ex.errno == errno.ENOENT:
-                return
-            raise
-        try:
-            self.read(file)
-        finally:
-            file.close()
-
-    def write(self, file):
-        file.write(self.serialize())
-
-__all__ = ['Metadata']
+__all__ = ['MetadataBase']
 
 # vim:ts=4 sw=4 et
