@@ -93,6 +93,20 @@ class MetadataBase(object):
         namespace = getattr(cls, 'ns_' + namespace)
         return namespace, key
 
+    def get(self, key, fallback=None):
+        namespace, key = self._expand_key(key)
+        backend = self._backend
+        result = backend.get_property(namespace, key)
+        if result is None:
+            result = fallback
+        return result
+
+    def __getitem__(self, key):
+        result = self.get(key)
+        if result is None:
+            raise KeyError(key)
+        return result
+
     def __setitem__(self, key, value):
         namespace, key = self._expand_key(key)
         backend = self._backend
@@ -111,11 +125,6 @@ class MetadataBase(object):
             rc = backend.set_property(namespace, key, value)
         if rc is None:
             raise XmpError('Cannot set property')
-
-    def __getitem__(self, key):
-        namespace, key = self._expand_key(key)
-        backend = self._backend
-        return backend.get_property(namespace, key)
 
     def add_to_history(self, event, index):
         for key, value in event.items:
@@ -149,7 +158,7 @@ class Metadata(MetadataBase):
     def update(self, media_type, internal_properties={}):
         instance_id = gen_uuid()
         now = rfc3339(time.time())
-        original_media_type = self['dc.format']
+        original_media_type = self.get('dc.format')
         # TODO: try to guess original media type
         self['dc.format'] = media_type
         if original_media_type is not None:
