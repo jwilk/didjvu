@@ -15,13 +15,11 @@
 
 import errno
 import time
+import re
 import uuid
 
 import libxmp
 
-from libxmp.consts import XMP_NS_DC as ns_dc
-from libxmp.consts import XMP_NS_XMP as ns_xmp
-from libxmp.consts import XMP_NS_XMP_MM as ns_xmp_mm
 ns_didjvu = 'http://jwilk.net/software/didjvu#'
 
 from . import version
@@ -76,13 +74,27 @@ class Event(object):
 
 class MetadataBase(object):
 
+    from libxmp.consts import XMP_NS_DC as ns_dc
+    from libxmp.consts import XMP_NS_XMP as ns_xmp
+    from libxmp.consts import XMP_NS_XMP_MM as ns_xmp_mm
+    ns_didjvu = ns_didjvu
+
     def __init__(self):
         backend = self._backend = libxmp.XMPMeta()
-        prefix = backend.register_namespace(ns_didjvu, 'didjvu')
+        prefix = backend.register_namespace(self.ns_didjvu, 'didjvu')
         if prefix is None:
             raise XmpError('Cannot register namespace for didjvu internal properties')
 
-    def __setitem__(self, (namespace, key), value):
+    @classmethod
+    def _expand_key(cls, key):
+        namespace, key = key.split('.', 1)
+        if namespace == 'xmpMM':
+            namespace = 'xmp_mm'
+        namespace = getattr(cls, 'ns_' + namespace)
+        return namespace, key
+
+    def __setitem__(self, key, value):
+        namespace, key = self._expand_key(key)
         backend = self._backend
         if isinstance(value, bool):
             rc = backend.set_property_bool(namespace, key, value)
@@ -100,7 +112,8 @@ class MetadataBase(object):
         if rc is None:
             raise XmpError('Cannot set property')
 
-    def __getitem__(self, (namespace, key)):
+    def __getitem__(self, key):
+        namespace, key = self._expand_key(key)
         backend = self._backend
         return backend.get_property(namespace, key)
 
@@ -108,17 +121,18 @@ class MetadataBase(object):
         for key, value in event.items:
             if value is None:
                 continue
-            self[ns_xmp_mm, 'History[%d]/stEvt:%s' % (index, key)] = value
+            self['xmpMM.History[%d]/stEvt:%s' % (index, key)] = value
 
     def append_to_history(self, event):
         backend = self._backend
-        count = backend.count_array_items(ns_xmp_mm, 'History')
-        if backend.count_array_items(ns_xmp_mm, 'History') == 0:
-            self[ns_xmp_mm, 'History'] = []
-            count = 0
-            assert backend.count_array_items(ns_xmp_mm, 'History') == 0
+        def count_history():
+            return backend.count_array_items(self.ns_xmp_mm, 'History')
+        count = count_history()
+        if count == 0:
+            self['xmpMM.History'] = []
+            assert count_history() == 0
         result = self.add_to_history(event, count + 1)
-        assert backend.count_array_items(ns_xmp_mm, 'History') == count + 1
+        assert count_history() == count + 1
         return result
 
     def serialize(self):
@@ -135,16 +149,16 @@ class Metadata(MetadataBase):
     def update(self, media_type, internal_properties={}):
         instance_id = gen_uuid()
         now = rfc3339(time.time())
-        original_media_type = self[ns_dc, 'format']
+        original_media_type = self['dc.format']
         # TODO: try to guess original media type
-        self[ns_dc, 'format'] = media_type
+        self['dc.format'] = media_type
         if original_media_type is not None:
             event_params = 'from %s to %s' % (original_media_type, media_type)
         else:
             event_params = 'to %s' % (media_type,)
-        self[ns_xmp, 'ModifyDate'] = str(now)
-        self[ns_xmp, 'MetadataDate'] = str(now)
-        self[ns_xmp_mm, 'InstanceID'] = instance_id
+        self['xmp.ModifyDate'] = str(now)
+        self['xmp.MetadataDate'] = str(now)
+        self['xmpMM.InstanceID'] = instance_id
         event = Event(
             action='converted',
             parameters=event_params,
@@ -153,7 +167,7 @@ class Metadata(MetadataBase):
         )
         self.append_to_history(event)
         for k, v in internal_properties:
-            self[ns_didjvu, k] = v
+            self['didjvu.' + k] = v
 
     def import_(self, image_filename):
         try:
