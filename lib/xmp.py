@@ -169,6 +169,8 @@ class MetadataBase(object):
     def __setitem__(self, key, value):
         if isinstance(value, rfc3339):
             value = value.as_datetime()
+        elif key.startswith('didjvu.'):
+            value = str(value)
         self._meta['Xmp.' + key] = value
 
     def add_to_history(self, event, index):
@@ -220,7 +222,7 @@ class Metadata(MetadataBase):
         )
         self.append_to_history(event)
         for k, v in internal_properties:
-            self['didjvu.' + k] = str(v)
+            self['didjvu.' + k] = v
 
     def import_(self, image_filename):
         try:
