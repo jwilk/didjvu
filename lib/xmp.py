@@ -156,8 +156,8 @@ class Metadata(MetadataBase):
             event_params = 'from %s to %s' % (original_media_type, media_type)
         else:
             event_params = 'to %s' % (media_type,)
-        self['xmp.ModifyDate'] = str(now)
-        self['xmp.MetadataDate'] = str(now)
+        self['xmp.ModifyDate'] = now
+        self['xmp.MetadataDate'] = now
         self['xmpMM.InstanceID'] = instance_id
         event = Event(
             action='converted',
