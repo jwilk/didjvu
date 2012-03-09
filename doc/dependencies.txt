@@ -44,6 +44,6 @@ For XMP support one of the following libraries is needed:
 .. _pyexiv2:
    http://tilloy.net/dev/pyexiv2/
 .. _Exiv2:
-   http://www.exiv2.org/ 
+   http://www.exiv2.org/
 
 .. vim:ft=rst ts=3 sw=3 et tw=72
