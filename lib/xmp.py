@@ -106,7 +106,7 @@ class Event(object):
                 continue
             metadata['xmpMM.History[%d]/stEvt:%s' % (index, key)] = value
 
-class Metadata(object):
+class MetadataBase(object):
 
     def _reload(self):
         fp = self._fp
@@ -183,6 +183,22 @@ class Metadata(object):
                 break
         return self.add_to_history(event, i)
 
+    def serialize(self):
+        self._meta.write()
+        fp = self._fp
+        fp.seek(0)
+        return fp.read()
+
+    def read(self, file):
+        data = file.read()
+        fp = self._fp
+        fp.seek(0)
+        fp.truncate()
+        fp.write(data)
+        self._reload()
+
+class Metadata(MetadataBase):
+
     def update(self, media_type, internal_properties={}):
         instance_id = gen_uuid()
         now = rfc3339(time.time())
@@ -206,12 +222,6 @@ class Metadata(object):
         for k, v in internal_properties:
             self['didjvu.' + k] = str(v)
 
-    def serialize(self):
-        self._meta.write()
-        fp = self._fp
-        fp.seek(0)
-        return fp.read()
-
     def import_(self, image_filename):
         try:
             file = open(image_filename + '.xmp', 'rb')
@@ -223,14 +233,6 @@ class Metadata(object):
             self.read(file)
         finally:
             file.close()
-
-    def read(self, file):
-        data = file.read()
-        fp = self._fp
-        fp.seek(0)
-        fp.truncate()
-        fp.write(data)
-        self._reload()
 
     def write(self, file):
         file.write(self.serialize())
