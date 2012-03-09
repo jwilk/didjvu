@@ -100,11 +100,9 @@ class Event(object):
             ('when', str(when)),
         ]
 
-    def add_to_history(self, metadata, index):
-        for key, value in self._items:
-            if value is None:
-                continue
-            metadata['xmpMM.History[%d]/stEvt:%s' % (index, key)] = value
+    @property
+    def items(self):
+        return iter(self._items)
 
 class MetadataBase(object):
 
@@ -174,7 +172,10 @@ class MetadataBase(object):
         self._meta['Xmp.' + key] = value
 
     def add_to_history(self, event, index):
-        return event.add_to_history(self, index)
+        for key, value in event.items:
+            if value is None:
+                continue
+            self['xmpMM.History[%d]/stEvt:%s' % (index, key)] = value
 
     def append_to_history(self, event):
         self._add_history()
