@@ -100,6 +100,9 @@ class Event(object):
                 continue
             metadata['xmpMM.History[%d]/stEvt:%s' % (index, key)] = value
 
+class XmpError(RuntimeError):
+    pass
+
 class Metadata(object):
 
     def _reload(self):
@@ -124,7 +127,7 @@ class Metadata(object):
         for description in xmp.iterfind('.//{%s}Description' % ns_rdf):
             pass
         if description is None:
-            raise NotImplementedError('Cannot add xmpMM:History')
+            raise XmpError('Cannot add xmpMM:History')
         e_description = etree.SubElement(description, '{%s}History' % ns_xmpmm)
         etree.SubElement(e_description, '{%s}Seq' % ns_rdf)
         fp.seek(0)
@@ -136,7 +139,7 @@ class Metadata(object):
         try:
             self['xmpMM.History']
         except LookupError:
-            raise NotImplementedError('Cannot add xmpMM:History')
+            raise XmpError('Cannot add xmpMM:History')
 
     def __init__(self):
         self._fp = fp = temporary.file(suffix='.xmp')
