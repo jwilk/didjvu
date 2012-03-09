@@ -22,24 +22,8 @@ import libxmp
 
 ns_didjvu = 'http://jwilk.net/software/didjvu#'
 
+from . import timestamp
 from . import version
-
-class rfc3339(object):
-
-    def __init__(self, unixtime):
-        self._localtime = time.localtime(unixtime)
-
-    def _str(self):
-        return time.strftime('%Y-%m-%dT%H:%M:%S', self._localtime)
-
-    def _str_tz(self):
-        offset = time.timezone if not self._localtime.tm_isdst else time.altzone
-        hours, minutes  = divmod(abs(offset) // 60, 60)
-        return '%s%02d:%02d' % ('+' if offset < 0 else '-', hours, minutes)
-
-    def __str__(self):
-        '''Format the timestamp object in accordance with RFC 3339.'''
-        return self._str() + self._str_tz()
 
 def gen_uuid():
     return 'uuid:' + str(uuid.uuid4()).replace('-', '')
@@ -118,7 +102,7 @@ class MetadataBase(object):
                  prop_array_is_ordered=True
             )
         else:
-            if isinstance(value, rfc3339):
+            if isinstance(value, timestamp.Timestamp):
                 value = str(value)
             rc = backend.set_property(namespace, key, value)
         if rc is None:
@@ -155,7 +139,7 @@ class Metadata(MetadataBase):
 
     def update(self, media_type, internal_properties={}):
         instance_id = gen_uuid()
-        now = rfc3339(time.time())
+        now = timestamp.now()
         original_media_type = self.get('dc.format')
         # TODO: try to guess original media type
         self['dc.format'] = media_type

@@ -13,13 +13,13 @@
 
 import datetime
 import os
-import re
-import time
 
-from nose import SkipTest
-from nose.tools import (
+from .common import (
+    SkipTest,
     assert_equal,
     assert_not_equal,
+    assert_regexp_matches,
+    assert_rfc3339_timestamp,
     assert_true,
 )
 
@@ -38,10 +38,6 @@ try:
     )
 except ImportError, libxmp_import_error:
     libxmp = None
-
-def test_rfc3339():
-    result = xmp.rfc3339(time.time())
-    assert_correct_timestamp(str(result))
 
 def test_uuid():
     uuid1 = xmp.gen_uuid()
@@ -74,13 +70,6 @@ def run_exiv2(filename, fail_ok=False):
         if not fail_ok:
             raise
 
-def assert_regexp_matches(regexp, text):
-    if isinstance(regexp, basestring):
-        regexp = re.compile(regexp)
-    if not regexp.search(text):
-        message = '''Regexp didn't match: %r not found in %r''' % (regexp.pattern, text)
-        assert_true(0, message)
-
 def assert_correct_uuid(uuid):
     return assert_regexp_matches(
         '^uuid:[0-9a-f]{32}$',
@@ -91,12 +80,6 @@ def assert_correct_software_agent(software_agent):
     return assert_regexp_matches(
         '^didjvu [0-9.]+( [(]Gamera [0-9.]+[)])?',
         software_agent
-    )
-
-def assert_correct_timestamp(timestamp):
-    return assert_regexp_matches(
-        '^[0-9]{4}(-[0-9]{2}){2}T[0-9]{2}(:[0-9]{2}){2}([+-][0-9]{2}:[0-9]{2}|Z)$',
-        timestamp
     )
 
 class test_metadata():
@@ -182,11 +165,11 @@ class test_metadata():
             assert_equal(pop(), ('Xmp.didjvu.test_str', 'eggs'))
             # XMP:
             key, metadata_date = pop()
-            assert_correct_timestamp(metadata_date)
+            assert_rfc3339_timestamp(metadata_date)
             assert_equal(key, 'Xmp.xmp.MetadataDate')
             key, modify_date = pop()
             assert_equal(key, 'Xmp.xmp.ModifyDate')
-            assert_correct_timestamp(modify_date)
+            assert_rfc3339_timestamp(modify_date)
             assert_equal(metadata_date, modify_date)
             # XMP Media Management:
             assert_equal(pop(), ('Xmp.xmpMM.History', 'type="Seq"'))
@@ -282,10 +265,10 @@ class test_metadata():
             assert_equal(pop(), ('Xmp.xmp.CreatorTool', self._original_software_agent))
             key, metadata_date = pop()
             assert_equal(key, 'Xmp.xmp.MetadataDate')
-            assert_correct_timestamp(metadata_date)
+            assert_rfc3339_timestamp(metadata_date)
             key, modify_date = pop()
             assert_equal(key, 'Xmp.xmp.ModifyDate')
-            assert_correct_timestamp(modify_date)
+            assert_rfc3339_timestamp(modify_date)
             assert_equal(metadata_date, modify_date)
             # XMP Media Management:
             assert_equal(pop(), ('Xmp.xmpMM.History', 'type="Seq"'))
