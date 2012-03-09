@@ -161,6 +161,8 @@ class Metadata(object):
         return self._meta['Xmp.' + key]
 
     def __setitem__(self, key, value):
+        if isinstance(value, rfc3339):
+            value = value.as_datetime()
         self._meta['Xmp.' + key] = value
 
     def add_to_history(self, event, index):
@@ -185,8 +187,8 @@ class Metadata(object):
             event_params = 'from %s to %s' % ('/'.join(original_media_type.value), media_type)
         else:
             event_params = 'to %s' % (media_type,)
-        self['xmp.ModifyDate'] = now.as_datetime()
-        self['xmp.MetadataDate'] = now.as_datetime()
+        self['xmp.ModifyDate'] = now
+        self['xmp.MetadataDate'] = now
         self['xmpMM.InstanceID'] = instance_id
         event = Event(
             action='converted',
