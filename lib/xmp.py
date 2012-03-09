@@ -112,7 +112,7 @@ class MetadataBase(object):
         etree.SubElement(e_description, '{%s}Seq' % ns_rdf)
         fp.seek(0)
         fp.truncate()
-        xmp.write(fp, xml_declaration=True)
+        xmp.write(fp, encoding='UTF-8')
         fp.flush()
         fp.seek(0)
         self._reload()
