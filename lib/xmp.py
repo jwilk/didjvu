@@ -14,8 +14,6 @@
 '''XMP support'''
 
 import errno
-import time
-import re
 import uuid
 
 import libxmp
