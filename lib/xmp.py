@@ -76,7 +76,7 @@ class MetadataBase(object):
 
     from libxmp.consts import XMP_NS_DC as ns_dc
     from libxmp.consts import XMP_NS_XMP as ns_xmp
-    from libxmp.consts import XMP_NS_XMP_MM as ns_xmp_mm
+    from libxmp.consts import XMP_NS_XMP_MM as ns_xmpmm
     ns_didjvu = ns_didjvu
 
     def __init__(self):
@@ -88,9 +88,7 @@ class MetadataBase(object):
     @classmethod
     def _expand_key(cls, key):
         namespace, key = key.split('.', 1)
-        if namespace == 'xmpMM':
-            namespace = 'xmp_mm'
-        namespace = getattr(cls, 'ns_' + namespace)
+        namespace = getattr(cls, 'ns_' + namespace.lower())
         return namespace, key
 
     def get(self, key, fallback=None):
@@ -135,7 +133,7 @@ class MetadataBase(object):
     def append_to_history(self, event):
         backend = self._backend
         def count_history():
-            return backend.count_array_items(self.ns_xmp_mm, 'History')
+            return backend.count_array_items(self.ns_xmpmm, 'History')
         count = count_history()
         if count == 0:
             self['xmpMM.History'] = []
