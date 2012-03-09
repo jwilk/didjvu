@@ -159,16 +159,26 @@ class MetadataBase(object):
             fp.close()
 
     def get(self, key, fallback=None):
-        return self._meta.get('Xmp.' + key, fallback)
+        try:
+            return self[key]
+        except LookupError:
+            return fallback
 
     def __getitem__(self, key):
-        return self._meta['Xmp.' + key]
+        tag = self._meta['Xmp.' + key]
+        if tag.type == 'MIMEType':
+            value = tag.raw_value
+        else:
+            value = tag.value
+        return value
 
     def __setitem__(self, key, value):
         if isinstance(value, rfc3339):
             value = value.as_datetime()
         elif key.startswith('didjvu.'):
             value = str(value)
+        elif key == 'dc.format' and isinstance(value, basestring):
+            value = tuple(value.split('/', 1))
         self._meta['Xmp.' + key] = value
 
     def add_to_history(self, event, index):
@@ -207,9 +217,9 @@ class Metadata(MetadataBase):
         now = rfc3339(time.time())
         original_media_type = self.get('dc.format')
         # TODO: try to guess original media type
-        self['dc.format'] = tuple(media_type.split('/'))
+        self['dc.format'] = media_type
         if original_media_type is not None:
-            event_params = 'from %s to %s' % ('/'.join(original_media_type.value), media_type)
+            event_params = 'from %s to %s' % (original_media_type, media_type)
         else:
             event_params = 'to %s' % (media_type,)
         self['xmp.ModifyDate'] = now
