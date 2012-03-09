@@ -73,6 +73,9 @@ class rfc3339(object):
                 return datetime.timedelta(0)
         return datetime.datetime(*self._localtime[:6], tzinfo=tz())
 
+class XmpError(RuntimeError):
+    pass
+
 class Event(object):
 
     def __init__(self,
@@ -99,9 +102,6 @@ class Event(object):
             if value is None:
                 continue
             metadata['xmpMM.History[%d]/stEvt:%s' % (index, key)] = value
-
-class XmpError(RuntimeError):
-    pass
 
 class Metadata(object):
 
