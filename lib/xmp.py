@@ -23,6 +23,7 @@ import xml.etree.cElementTree as etree
 import pyexiv2.xmp
 
 from . import temporary
+from . import timestamp
 from . import version
 
 ns_rdf = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
@@ -46,32 +47,6 @@ except AttributeError:
     etree.register_namespace = et_register_namespace
     del et_register_namespace
 etree.register_namespace('x', 'adobe:ns:meta/')
-
-class rfc3339(object):
-
-    def __init__(self, unixtime):
-        self._localtime = time.localtime(unixtime)
-
-    def _str(self):
-        return time.strftime('%Y-%m-%dT%H:%M:%S', self._localtime)
-
-    def _str_tz(self):
-        offset = time.timezone if not self._localtime.tm_isdst else time.altzone
-        hours, minutes  = divmod(abs(offset) // 60, 60)
-        return '%s%02d:%02d' % ('+' if offset < 0 else '-', hours, minutes)
-
-    def __str__(self):
-        '''Format the timestamp object in accordance with RFC 3339.'''
-        return self._str() + self._str_tz()
-
-    def as_datetime(self):
-        offset = time.timezone if not self._localtime.tm_isdst else time.altzone
-        class tz(datetime.tzinfo):
-            def utcoffset(self, dt):
-                return datetime.timedelta(seconds=-offset)
-            def dst(self, dt):
-                return datetime.timedelta(0)
-        return datetime.datetime(*self._localtime[:6], tzinfo=tz())
 
 def gen_uuid():
     return 'uuid:' + str(uuid.uuid4()).replace('-', '')
@@ -173,7 +148,7 @@ class MetadataBase(object):
         return value
 
     def __setitem__(self, key, value):
-        if isinstance(value, rfc3339):
+        if isinstance(value, timestamp.Timestamp):
             value = value.as_datetime()
         elif key.startswith('didjvu.'):
             value = str(value)
@@ -214,7 +189,7 @@ class Metadata(MetadataBase):
 
     def update(self, media_type, internal_properties={}):
         instance_id = gen_uuid()
-        now = rfc3339(time.time())
+        now = timestamp.now()
         original_media_type = self.get('dc.format')
         # TODO: try to guess original media type
         self['dc.format'] = media_type
