@@ -16,7 +16,6 @@
 import datetime
 import errno
 import itertools
-import time
 import uuid
 import xml.etree.cElementTree as etree
 
