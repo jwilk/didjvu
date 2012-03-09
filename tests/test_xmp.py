@@ -260,6 +260,7 @@ class test_metadata():
 
     _original_software_agent = 'scanhelper 0.2.4'
     _original_create_date = '2012-02-01T16:28:00+01:00'
+    _original_uuid = 'uuid:a2686c01b50e4b6aab2cccdef40f6286'
 
     def _test_updated_exiv2(self, xmp_file):
         def test(dummy):
@@ -294,7 +295,7 @@ class test_metadata():
             key, original_uuid = pop()
             assert_equal(key, 'Xmp.xmpMM.History[1]/stEvt:instanceID')
             assert_correct_uuid(original_uuid)
-            assert_equal(original_uuid, 'uuid:a2686c01b50e4b6aab2cccdef40f6286')
+            assert_equal(original_uuid, self._original_uuid)
             assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:softwareAgent', self._original_software_agent))
             assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:when', create_date))
             # - History[2]
@@ -346,7 +347,7 @@ class test_metadata():
             assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:softwareAgent'), self._original_software_agent)
             original_uuid = get(ns_xmp_mm, 'History[1]/stEvt:instanceID')
             assert_correct_uuid(original_uuid)
-            assert_equal(original_uuid, 'uuid:a2686c01b50e4b6aab2cccdef40f6286')
+            assert_equal(original_uuid, self._original_uuid)
             assert_not_equal(uuid, original_uuid)
             assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:when'), create_date)
             # History[2]
