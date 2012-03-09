@@ -99,7 +99,12 @@ class MetadataBase(object):
         fp.seek(0)
         xmp = etree.parse(fp)
         description = None
-        for description in xmp.iterfind('.//{%s}Description' % ns_rdf):
+        try:
+            xmp_find = xmp.iterfind
+        except AttributeError:
+            # Python 2.6
+            xmp_find = xmp.findall
+        for description in xmp_find('.//{%s}Description' % ns_rdf):
             pass
         if description is None:
             raise XmpError('Cannot add xmpMM:History')
