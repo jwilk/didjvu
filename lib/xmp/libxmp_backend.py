@@ -11,55 +11,21 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 # General Public License for more details.
 
-'''XMP support'''
-
-import errno
-import uuid
+'''XMP support (python-xmp-toolkit backend)'''
 
 import libxmp
 
-ns_didjvu = 'http://jwilk.net/software/didjvu#'
-
-from . import timestamp
-from . import version
-
-def gen_uuid():
-    return 'uuid:' + str(uuid.uuid4()).replace('-', '')
+from .. import timestamp
 
 class XmpError(RuntimeError):
     pass
-
-class Event(object):
-
-    def __init__(self,
-        action=None,
-        software_agent=None,
-        parameters=None,
-        instance_id=None,
-        changed=None,
-        when=None,
-    ):
-        if software_agent is None:
-            software_agent = version.get_software_agent()
-        self._items = [
-            ('action', action),
-            ('softwareAgent', software_agent),
-            ('parameters', parameters),
-            ('instanceID', instance_id),
-            ('changed', changed),
-            ('when', str(when)),
-        ]
-
-    @property
-    def items(self):
-        return iter(self._items)
 
 class MetadataBase(object):
 
     from libxmp.consts import XMP_NS_DC as ns_dc
     from libxmp.consts import XMP_NS_XMP as ns_xmp
     from libxmp.consts import XMP_NS_XMP_MM as ns_xmpmm
-    ns_didjvu = ns_didjvu
+    ns_didjvu = NotImplemented
 
     def __init__(self):
         backend = self._backend = libxmp.XMPMeta()
@@ -133,46 +99,6 @@ class MetadataBase(object):
         xmp = file.read()
         backend.parse_from_str(xmp)
 
-class Metadata(MetadataBase):
-
-    def update(self, media_type, internal_properties={}):
-        instance_id = gen_uuid()
-        now = timestamp.now()
-        original_media_type = self.get('dc.format')
-        # TODO: try to guess original media type
-        self['dc.format'] = media_type
-        if original_media_type is not None:
-            event_params = 'from %s to %s' % (original_media_type, media_type)
-        else:
-            event_params = 'to %s' % (media_type,)
-        self['xmp.ModifyDate'] = now
-        self['xmp.MetadataDate'] = now
-        self['xmpMM.InstanceID'] = instance_id
-        event = Event(
-            action='converted',
-            parameters=event_params,
-            instance_id=instance_id,
-            when=now,
-        )
-        self.append_to_history(event)
-        for k, v in internal_properties:
-            self['didjvu.' + k] = v
-
-    def import_(self, image_filename):
-        try:
-            file = open(image_filename + '.xmp', 'rb')
-        except (OSError, IOError), ex:
-            if ex.errno == errno.ENOENT:
-                return
-            raise
-        try:
-            self.read(file)
-        finally:
-            file.close()
-
-    def write(self, file):
-        file.write(self.serialize())
-
-__all__ = ['Metadata']
+__all__ = ['MetadataBase']
 
 # vim:ts=4 sw=4 et
