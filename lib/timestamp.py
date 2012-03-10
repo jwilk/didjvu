@@ -31,14 +31,14 @@ class Timestamp(object):
         '''Format the timestamp object in accordance with RFC 3339.'''
         return self._str() + self._str_tz()
 
-    def as_datetime(self):
+    def as_datetime(self, cls=datetime.datetime):
         offset = time.timezone if not self._localtime.tm_isdst else time.altzone
         class tz(datetime.tzinfo):
             def utcoffset(self, dt):
                 return datetime.timedelta(seconds=-offset)
             def dst(self, dt):
                 return datetime.timedelta(0)
-        return datetime.datetime(*self._localtime[:6], tzinfo=tz())
+        return cls(*self._localtime[:6], tzinfo=tz())
 
 def now():
     return Timestamp(time.time())
