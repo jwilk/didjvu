@@ -13,6 +13,7 @@
 
 '''XMP support (pyexiv2 backend)'''
 
+import datetime
 import itertools
 import xml.etree.cElementTree as etree
 
@@ -69,6 +70,22 @@ class Event(object):
     @property
     def items(self):
         return iter(self._items)
+
+class datetime_for_pyexiv2(datetime.datetime):
+
+    __almost_zero = 1.0
+    while __almost_zero / 2 > 0:
+        __almost_zero /= 2
+
+    def __init__(self, year, month, day, hour, minute, second, microsecond=0, tzinfo=None):
+        datetime.datetime.__init__(self, year, month, day, hour, minute, second, microsecond, tzinfo=tzinfo)
+        self.__second = second
+
+    @property
+    def second(self):
+        # pyexiv2 uses HH:MM format (instead of HH:MM:SS) if .seconds is 0.
+        # Let's fool it into thinking it's always non-zero.
+        return self.__second or self.__almost_zero
 
 class MetadataBase(object):
 
@@ -145,7 +162,7 @@ class MetadataBase(object):
 
     def __setitem__(self, key, value):
         if isinstance(value, timestamp.Timestamp):
-            value = value.as_datetime()
+            value = value.as_datetime(cls=datetime_for_pyexiv2)
         elif key.startswith('didjvu.'):
             value = str(value)
         elif key == 'dc.format' and isinstance(value, basestring):
