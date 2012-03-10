@@ -29,8 +29,6 @@ except ImportError, exc:
         utils.enhance_import_error(exc, 'python-xmp-toolkit', 'python-libxmp', 'http://code.google.com/p/python-xmp-toolkit/')
         raise exc
 
-ns_didjvu = 'http://jwilk.net/software/didjvu#'
-
 def gen_uuid():
     return 'uuid:' + str(uuid.uuid4()).replace('-', '')
 
@@ -62,8 +60,6 @@ class Event(object):
 def metadata(backend=default_backend):
 
     class Metadata(backend.MetadataBase):
-
-        ns_didjvu = ns_didjvu
 
         def update(self, media_type, internal_properties={}):
             instance_id = gen_uuid()

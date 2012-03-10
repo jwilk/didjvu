@@ -27,6 +27,7 @@ xmp_backends = []
 from lib import ipc
 from lib import temporary
 from lib import xmp
+from lib.xmp import namespaces as ns
 
 try:
     from lib.xmp import libxmp_backend
@@ -50,13 +51,7 @@ xmp_backends = [libxmp_backend, pyexiv2_backend]
 
 try:
     import libxmp
-    from libxmp.consts import (
-        XMP_NS_RDF as ns_rdf,
-        XMP_NS_DC as ns_dc,
-        XMP_NS_XMP as ns_xmp,
-        XMP_NS_XMP_MM as ns_xmp_mm,
-        XMP_NS_TIFF as ns_tiff,
-    )
+    import libxmp.consts
 except ImportError, libxmp_import_error:
     libxmp = None
 
@@ -109,6 +104,15 @@ def assert_correct_software_agent(software_agent):
         software_agent
     )
 
+def test_namespaces():
+    if libxmp is None:
+        raise SkipTest(libxmp_import_error)
+    assert_equal(libxmp.consts.XMP_NS_DC, ns.dc)
+    assert_equal(libxmp.consts.XMP_NS_RDF, ns.rdf)
+    assert_equal(libxmp.consts.XMP_NS_TIFF, ns.tiff)
+    assert_equal(libxmp.consts.XMP_NS_XMP, ns.xmp)
+    assert_equal(libxmp.consts.XMP_NS_XMP_MM, ns.xmpmm)
+
 class test_metadata():
 
     def test_empty(self):
@@ -153,11 +157,11 @@ class test_metadata():
             assert_equal(element.tag, '{adobe:ns:meta/}xmpmeta')
             event, element = pop()
             assert_equal(event, 'start')
-            assert_equal(element.tag, '{%s}RDF' % ns_rdf)
+            assert_equal(element.tag, '{%s}RDF' % ns.rdf)
             event, element = pop()
             assert_equal(event, 'start')
-            assert_equal(element.tag, '{%s}Description' % ns_rdf)
-            assert_equal(element.attrib['{%s}about' % ns_rdf], '')
+            assert_equal(element.tag, '{%s}Description' % ns.rdf)
+            assert_equal(element.attrib['{%s}about' % ns.rdf], '')
             event, element = pop()
             assert_equal(event, 'end')
             event, element = pop()
@@ -250,21 +254,21 @@ class test_metadata():
             def get(namespace, key):
                 return meta.get_property(namespace, key)
             meta.parse_from_str(xmp_file.read())
-            assert_equal(get(ns_dc, 'format'), 'image/x-test')
-            mod_date = get(ns_xmp, 'ModifyDate')
-            metadata_date = get(ns_xmp, 'MetadataDate')
+            assert_equal(get(ns.dc, 'format'), 'image/x-test')
+            mod_date = get(ns.xmp, 'ModifyDate')
+            metadata_date = get(ns.xmp, 'MetadataDate')
             assert_equal(mod_date, metadata_date)
-            uuid = get(ns_xmp_mm, 'InstanceID')
+            uuid = get(ns.xmpmm, 'InstanceID')
             assert_correct_uuid(uuid)
-            assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:action'), 'converted')
-            software_agent = get(ns_xmp_mm, 'History[1]/stEvt:softwareAgent')
+            assert_equal(get(ns.xmpmm, 'History[1]/stEvt:action'), 'converted')
+            software_agent = get(ns.xmpmm, 'History[1]/stEvt:softwareAgent')
             assert_correct_software_agent(software_agent)
-            assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:parameters'), 'to image/x-test')
-            assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:instanceID'), uuid)
-            assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:when'), str(mod_date))
-            assert_equal(get(xmp.ns_didjvu, 'test_int'), '42')
-            assert_equal(get(xmp.ns_didjvu, 'test_str'), 'eggs')
-            assert_equal(get(xmp.ns_didjvu, 'test_bool'), 'True')
+            assert_equal(get(ns.xmpmm, 'History[1]/stEvt:parameters'), 'to image/x-test')
+            assert_equal(get(ns.xmpmm, 'History[1]/stEvt:instanceID'), uuid)
+            assert_equal(get(ns.xmpmm, 'History[1]/stEvt:when'), str(mod_date))
+            assert_equal(get(ns.didjvu, 'test_int'), '42')
+            assert_equal(get(ns.didjvu, 'test_str'), 'eggs')
+            assert_equal(get(ns.didjvu, 'test_bool'), 'True')
         return test
 
     def test_updated(self):
@@ -367,37 +371,37 @@ class test_metadata():
             def get(namespace, key):
                 return meta.get_property(namespace, key)
             meta.parse_from_str(xmp_file.read())
-            assert_equal(get(ns_dc, 'format'), 'image/x-test')
-            assert_equal(get(ns_tiff, 'ImageWidth'), '69')
-            assert_equal(get(ns_tiff, 'ImageHeight'), '42')
-            assert_equal(get(ns_xmp, 'CreatorTool'), self._original_software_agent)
-            create_date = get(ns_xmp, 'CreateDate')
+            assert_equal(get(ns.dc, 'format'), 'image/x-test')
+            assert_equal(get(ns.tiff, 'ImageWidth'), '69')
+            assert_equal(get(ns.tiff, 'ImageHeight'), '42')
+            assert_equal(get(ns.xmp, 'CreatorTool'), self._original_software_agent)
+            create_date = get(ns.xmp, 'CreateDate')
             assert_equal(create_date, self._original_create_date)
-            mod_date = get(ns_xmp, 'ModifyDate')
+            mod_date = get(ns.xmp, 'ModifyDate')
             assert_true(mod_date > create_date)
-            metadata_date = get(ns_xmp, 'MetadataDate')
+            metadata_date = get(ns.xmp, 'MetadataDate')
             assert_equal(mod_date, metadata_date)
-            uuid = get(ns_xmp_mm, 'InstanceID')
+            uuid = get(ns.xmpmm, 'InstanceID')
             assert_correct_uuid(uuid)
             # History[1]
-            assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:action'), 'created')
-            assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:softwareAgent'), self._original_software_agent)
-            original_uuid = get(ns_xmp_mm, 'History[1]/stEvt:instanceID')
+            assert_equal(get(ns.xmpmm, 'History[1]/stEvt:action'), 'created')
+            assert_equal(get(ns.xmpmm, 'History[1]/stEvt:softwareAgent'), self._original_software_agent)
+            original_uuid = get(ns.xmpmm, 'History[1]/stEvt:instanceID')
             assert_correct_uuid(original_uuid)
             assert_equal(original_uuid, self._original_uuid)
             assert_not_equal(uuid, original_uuid)
-            assert_equal(get(ns_xmp_mm, 'History[1]/stEvt:when'), create_date)
+            assert_equal(get(ns.xmpmm, 'History[1]/stEvt:when'), create_date)
             # History[2]
-            assert_equal(get(ns_xmp_mm, 'History[2]/stEvt:action'), 'converted')
-            software_agent = get(ns_xmp_mm, 'History[2]/stEvt:softwareAgent')
+            assert_equal(get(ns.xmpmm, 'History[2]/stEvt:action'), 'converted')
+            software_agent = get(ns.xmpmm, 'History[2]/stEvt:softwareAgent')
             assert_correct_software_agent(software_agent)
-            assert_equal(get(ns_xmp_mm, 'History[2]/stEvt:parameters'), 'from image/png to image/x-test')
-            assert_equal(get(ns_xmp_mm, 'History[2]/stEvt:instanceID'), uuid)
-            assert_equal(get(ns_xmp_mm, 'History[2]/stEvt:when'), mod_date)
+            assert_equal(get(ns.xmpmm, 'History[2]/stEvt:parameters'), 'from image/png to image/x-test')
+            assert_equal(get(ns.xmpmm, 'History[2]/stEvt:instanceID'), uuid)
+            assert_equal(get(ns.xmpmm, 'History[2]/stEvt:when'), mod_date)
             # internal properties
-            assert_equal(get(xmp.ns_didjvu, 'test_int'), '42')
-            assert_equal(get(xmp.ns_didjvu, 'test_str'), 'eggs')
-            assert_equal(get(xmp.ns_didjvu, 'test_bool'), 'True')
+            assert_equal(get(ns.didjvu, 'test_int'), '42')
+            assert_equal(get(ns.didjvu, 'test_str'), 'eggs')
+            assert_equal(get(ns.didjvu, 'test_bool'), 'True')
         return test
 
 # vim:ts=4 sw=4 et

@@ -17,26 +17,23 @@ import libxmp
 
 from .. import timestamp
 
+from . import namespaces as ns
+
 class XmpError(RuntimeError):
     pass
 
 class MetadataBase(object):
 
-    from libxmp.consts import XMP_NS_DC as ns_dc
-    from libxmp.consts import XMP_NS_XMP as ns_xmp
-    from libxmp.consts import XMP_NS_XMP_MM as ns_xmpmm
-    ns_didjvu = NotImplemented
-
     def __init__(self):
         backend = self._backend = libxmp.XMPMeta()
-        prefix = backend.register_namespace(self.ns_didjvu, 'didjvu')
+        prefix = backend.register_namespace(ns.didjvu, 'didjvu')
         if prefix is None:
             raise XmpError('Cannot register namespace for didjvu internal properties')
 
     @classmethod
     def _expand_key(cls, key):
         namespace, key = key.split('.', 1)
-        namespace = getattr(cls, 'ns_' + namespace.lower())
+        namespace = getattr(ns, namespace.lower())
         return namespace, key
 
     def get(self, key, fallback=None):
@@ -81,7 +78,7 @@ class MetadataBase(object):
     def append_to_history(self, event):
         backend = self._backend
         def count_history():
-            return backend.count_array_items(self.ns_xmpmm, 'History')
+            return backend.count_array_items(ns.xmpmm, 'History')
         count = count_history()
         if count == 0:
             self['xmpMM.History'] = []

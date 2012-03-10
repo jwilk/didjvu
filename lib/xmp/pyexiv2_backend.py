@@ -22,9 +22,7 @@ from .. import temporary
 from .. import timestamp
 from .. import version
 
-ns_rdf = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
-ns_xmpmm = 'http://ns.adobe.com/xap/1.0/mm/'
-ns_didjvu = 'http://jwilk.net/software/didjvu#'
+from . import namespaces as ns
 
 def xmp_register_namespace(prefix, uri):
     # work-around for <http://bugs.debian.org/662878>
@@ -32,7 +30,7 @@ def xmp_register_namespace(prefix, uri):
         def endswith(self, suffix, *args, **kwargs):
             return True
     pyexiv2.xmp.register_namespace(fool_pyexiv2(uri), prefix)
-xmp_register_namespace('didjvu', ns_didjvu)
+xmp_register_namespace('didjvu', ns.didjvu)
 
 try:
     etree.register_namespace
@@ -98,12 +96,12 @@ class MetadataBase(object):
         except AttributeError:
             # Python 2.6
             xmp_find = xmp.findall
-        for description in xmp_find('.//{%s}Description' % ns_rdf):
+        for description in xmp_find('.//{%s}Description' % ns.rdf):
             pass
         if description is None:
             raise XmpError('Cannot add xmpMM:History')
-        e_description = etree.SubElement(description, '{%s}History' % ns_xmpmm)
-        etree.SubElement(e_description, '{%s}Seq' % ns_rdf)
+        e_description = etree.SubElement(description, '{%s}History' % ns.xmpmm)
+        etree.SubElement(e_description, '{%s}Seq' % ns.rdf)
         fp.seek(0)
         fp.truncate()
         xmp.write(fp, encoding='UTF-8')
@@ -118,7 +116,7 @@ class MetadataBase(object):
     def __init__(self):
         self._fp = fp = temporary.file(suffix='.xmp')
         fp.write('<x:xmpmeta xmlns:x="adobe:ns:meta/" xmlns:rdf="%s">'
-            '<rdf:RDF/></x:xmpmeta>' % ns_rdf
+            '<rdf:RDF/></x:xmpmeta>' % ns.rdf
         )
         self._reload()
         self._original_meta = self._meta
