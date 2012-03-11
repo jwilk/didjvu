@@ -78,7 +78,7 @@ class datetime_for_pyexiv2(datetime.datetime):
         __almost_zero /= 2
 
     def __init__(self, year, month, day, hour, minute, second, microsecond=0, tzinfo=None):
-        datetime.datetime.__init__(self, year, month, day, hour, minute, second, microsecond, tzinfo=tzinfo)
+        datetime.datetime.__init__(self)
         self.__second = second
 
     @property
