@@ -27,7 +27,7 @@ def assert_regexp_matches(regexp, text):
         regexp = re.compile(regexp)
     if not regexp.search(text):
         message = '''Regexp didn't match: %r not found in %r''' % (regexp.pattern, text)
-        assert_true(0, message)
+        raise AssertionError(message)
 
 def assert_rfc3339_timestamp(timestamp):
     return assert_regexp_matches(
