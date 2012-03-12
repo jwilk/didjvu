@@ -13,7 +13,7 @@
 
 import os
 
-from .common import (
+from . common import (
     SkipTest,
     assert_equal,
     assert_not_equal,

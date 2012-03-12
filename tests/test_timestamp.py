@@ -11,9 +11,9 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 # General Public License for more details.
 
-import timestamp
+from . common import assert_rfc3339_timestamp
 
-from .common import assert_rfc3339_timestamp
+from lib import timestamp
 
 def test_now():
     result = timestamp.now()
