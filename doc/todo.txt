@@ -6,22 +6,22 @@ Things to do
    http://sf.net/tracker/?func=detail&aid=1972089&group_id=32953&atid=406583
    for details.
 
- * Allow to run *didjvu* in parallel (``-j``/``--jobs``).
+ * Allow running *didjvu* in parallel (``-j``/``--jobs``).
 
- * Allow to specify page titles (``--page-title-template``).
+ * Allow specifying page titles (``--page-title-template``).
 
- * Allow to customize gamma value (``--gamma``).
+ * Allow customizing gamma value (``--gamma``).
 
- * Allow to use other than PIL imaging libraries (e.g. GraphicsMagick,
+ * Allow using other than PIL imaging libraries (e.g. GraphicsMagick,
    ExactImage). Or not to use any (apart from Gamera) library at all.
 
  * Optimize the ``subsample_fg()`` function, which is called if
    non-standard image quality options are used.
 
- * Allow to run ``didjvu encode`` and ``didjvu separate`` on
+ * Allow running ``didjvu encode`` and ``didjvu separate`` on
    a single-page DjVu files.
 
- * Allow to run ``didjvu bundle`` on DjVu files.
+ * Allow running ``didjvu bundle`` on DjVu files.
 
  * Make sure that ``--pageid-template`` never provokes page-id
    conflicts.
