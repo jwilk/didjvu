@@ -215,9 +215,9 @@ class ArgumentParser(argparse.ArgumentParser):
             pass
         return action(o)
 
-def dump_options(o, multi_page=False):
+def dump_options(o, multipage=False):
     yield ('method', o.method.didjvu_name)
-    if multi_page:
+    if multipage:
         yield ('pages-per-dict', o.pages_per_dict)
     yield ('loss-level', o.loss_level)
     if o.fg_bg_defaults:
