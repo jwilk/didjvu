@@ -1,4 +1,4 @@
-didjvu (0.2.4) UNRELEASED; urgency=low
+didjvu (0.2.4) unstable; urgency=low
 
   * Make ‘didjvu <command> --help’ print defaults.
   * Improve XMP support:
@@ -9,7 +9,7 @@ didjvu (0.2.4) UNRELEASED; urgency=low
     + Use pyexiv2 as XMP backend if python-xmp-toolkit is not available.
     + Add XMP support to the ‘bundle’ command.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Tue, 13 Mar 2012 20:16:37 +0100
+ -- Jakub Wilk <jwilk@jwilk.net>  Tue, 13 Mar 2012 21:12:22 +0100
 
 didjvu (0.2.3) unstable; urgency=low
 
