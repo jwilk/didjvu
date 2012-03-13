@@ -7,4 +7,4 @@ include doc/*.txt
 include doc/*.xml
 include doc/changelog
 include tools/manpage-fixup
-recursive-include lib/ *.py
+recursive-include lib *.py
