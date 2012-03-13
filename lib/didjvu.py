@@ -251,8 +251,10 @@ class main():
             o.output = [sys.stdout]
             check_tty()
         else:
-            o.output = [file(o.output, 'wb')]
-        assert len(o.output) == 1
+            filename = o.output
+            o.output = [file(filename, 'wb')]
+            o.xmp_output = [file(filename + '.xmp', 'wb')] if o.xmp else [None]
+        assert len(o.output) == len(o.xmp_output) == 1
 
     def encode(self, o):
         self.check_multi_output(o)
@@ -341,6 +343,16 @@ class main():
             self.bundle_simple(o)
         else:
             self.bundle_complex(o)
+        [xmp_output] = o.xmp_output
+        if xmp_output:
+            logger.info('saving XMP metadata')
+            metadata = xmp.metadata()
+            internal_properties = list(cli.dump_options(o, multipage=True))
+            metadata.update(
+                media_type='image/vnd.djvu',
+                internal_properties=internal_properties,
+            )
+            metadata.write(xmp_output)
 
     def _bundle_simple_page(self, o, input, mask, component_name):
         with open(component_name, 'wb') as component:

@@ -7,8 +7,9 @@ didjvu (0.2.4) UNRELEASED; urgency=low
     + Rename ‘ncc’ to ‘n-connected-components’ for clarity.
     + Don't convert timestamps to UTC, as recommended by the XMP specification.
     + Use pyexiv2 as XMP backend if python-xmp-toolkit is not available.
+    + Add XMP support to the ‘bundle’ command.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Fri, 09 Mar 2012 20:43:22 +0100
+ -- Jakub Wilk <jwilk@jwilk.net>  Tue, 13 Mar 2012 20:16:37 +0100
 
 didjvu (0.2.3) unstable; urgency=low
 

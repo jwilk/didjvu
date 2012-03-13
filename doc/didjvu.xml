@@ -452,7 +452,7 @@
     <refsection>
         <title>XMP support</title>
         <para>
-            (These options apply to <command>encode</command> command only.)
+            (These options apply to <command>encode</command> and <command>bundle</command> commands only.)
         </para>
         <variablelist>
         <varlistentry>

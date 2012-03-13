@@ -157,7 +157,7 @@ class ArgumentParser(argparse.ArgumentParser):
                 '-m', '--method', choices=methods, type=replace_underscores, default=default_method,
                 help='binarization method (default: %s)' % default_method
             )
-            if p is p_encode:
+            if p is p_encode or p is p_bundle:
                 p.add_argument('--xmp', action='store_true', help='create sidecar XMP metadata (experimental!)')
             p.add_argument('-v', '--verbose', dest='verbosity', action='append_const', const=None, help='more informational messages')
             p.add_argument('-q', '--quiet', dest='verbosity', action='store_const', const=[], help='no informational messages')
