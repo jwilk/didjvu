@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # encoding=UTF-8
 
-# Copyright © 2009, 2010, 2011 Jakub Wilk <jwilk@jwilk.net>
+# Copyright © 2009, 2010, 2011, 2012 Jakub Wilk <jwilk@jwilk.net>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ Programming Language :: Python
 Programming Language :: Python :: 2
 Topic :: Text Processing
 Topic :: Multimedia :: Graphics
-'''.strip().split('\n')
+'''.strip().splitlines()
 
 import glob
 import os
