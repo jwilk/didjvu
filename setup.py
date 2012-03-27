@@ -18,6 +18,8 @@ separate foreground/background layers, which it can then encode into a `DjVu
 <http://djvu.org/>`_ file."
 '''
 
+from __future__ import with_statement
+
 classifiers = '''
 Development Status :: 4 - Beta
 Environment :: Console
@@ -32,6 +34,7 @@ Topic :: Multimedia :: Graphics
 
 import glob
 import os
+import re
 import sys
 
 import distutils.core
@@ -51,6 +54,33 @@ class build_doc(distutils_build):
 
     description = 'build documentation'
 
+    _url_regex = re.compile(
+        r'^(\\%http://.*)',
+        re.MULTILINE
+    )
+
+    _date_regex = re.compile(
+        '"(?P<month>[0-9]{2})/(?P<day>[0-9]{2})/(?P<year>[0-9]{4})"'
+    )
+
+    def build_man(self, manname, commandline):
+        self.spawn(commandline)
+        with open(manname, 'r+') as file:
+            contents = file.read()
+            # Format URLs consistently:
+            contents = self._url_regex.sub(
+                lambda m: r'\m[blue]\fI%s\fR\m[]' % m.groups(),
+                contents,
+            )
+            # Use RFC 3339 date format:
+            contents = self._date_regex.sub(
+                lambda m: '%(year)s-%(month)s-%(day)s' % m.groupdict(),
+                contents
+            )
+            file.seek(0)
+            file.truncate()
+            file.write(contents)
+
     def run(self):
         for xmlname in glob.glob(os.path.join('doc', '*.xml')):
             manname = os.path.splitext(xmlname)[0] + '.1'
@@ -62,9 +92,7 @@ class build_doc(distutils_build):
                 'http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl',
                 xmlname,
             ]
-            self.make_file([xmlname], manname, self.spawn, [command])
-            if not self.dry_run:
-                self.spawn(['./tools/manpage-fixup', manname])
+            self.make_file([xmlname], manname, self.build_man, [manname, command])
 
 class sdist(distutils_sdist):
 
