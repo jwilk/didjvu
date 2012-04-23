@@ -372,7 +372,7 @@
             <term><option>--fg-crcb=none</option></term>
             <listitem>
                 <para>
-                    Disable the encoding of the chrominance of the background layer.
+                    Disable the encoding of the chrominance of the foreground layer.
                 </para>
             </listitem>
         </varlistentry>
