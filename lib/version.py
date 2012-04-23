@@ -11,7 +11,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 # General Public License for more details.
 
-__version__ = '0.2.5'
+__version__ = '0.2.6'
 
 def get_software_agent():
     try:
