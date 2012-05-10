@@ -1,3 +1,9 @@
+didjvu (0.2.6) UNRELEASED; urgency=low
+
+  * Fix compatibility with PIL ≥ 1.2.
+
+ -- Jakub Wilk <jwilk@jwilk.net>  Thu, 10 May 2012 22:30:44 +0200
+
 didjvu (0.2.5) unstable; urgency=low
 
   * Use RFC 3339 date format in the manual page. Don't call external programs

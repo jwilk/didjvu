@@ -21,10 +21,13 @@ import warnings
 from . import utils
 
 try:
-    import Image as PIL
+    from PIL import Image as PIL
 except ImportError, ex:
     utils.enhance_import_error(ex, 'Python Imaging Library', 'python-imaging', 'http://www.pythonware.com/products/pil/')
     raise
+else:
+    # Gamera still expects that PIL can be imported as Image
+    sys.modules['Image'] = PIL
 
 try:
     import gamera
