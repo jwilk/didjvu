@@ -171,6 +171,7 @@ class ArgumentParser(argparse.ArgumentParser):
                 fg_slices=intact(default.fg_slices), fg_crcb=intact(default.fg_crcb), fg_subsample=intact(default.fg_subsample),
                 bg_slices=intact(default.bg_slices), bg_crcb=intact(default.bg_crcb), bg_subsample=intact(default.bg_subsample),
                 verbosity=[None],
+                xmp=False,
             )
         self.epilog = 'more help:\n  ' + '\n  '.join(epilog)
         self.__methods = methods
