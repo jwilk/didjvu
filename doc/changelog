@@ -1,4 +1,4 @@
-didjvu (0.2.6) UNRELEASED; urgency=low
+didjvu (0.2.6) unstable; urgency=low
 
   * Fix compatibility with PIL ≥ 1.2.
   * Fix a copy&paste error in the manual page. Thanks to Janusz S. Bień for
@@ -6,7 +6,7 @@ didjvu (0.2.6) UNRELEASED; urgency=low
   * Fix the ‘separate’ subcommand. Thanks to Janusz S. Bień for the bug
     report.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Tue, 15 May 2012 11:57:02 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Tue, 15 May 2012 11:57:24 +0200
 
 didjvu (0.2.5) unstable; urgency=low
 
