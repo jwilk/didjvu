@@ -114,7 +114,7 @@ def to_pil_1bpp(image):
 
 def _decref(o):
     '''
-    Forcibly set refcount of the object to 1.
+    Forcibly decrease refcount of the object by 1.
     '''
     libc = ctypes.cdll.LoadLibrary(None)
     memmove = libc.memmove
