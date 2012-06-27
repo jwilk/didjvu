@@ -1,7 +1,7 @@
 # encoding=UTF-8
 
 '''
-Helper module that allows to use command-line tools without installing them.
+helper module that allows using the command-line tool without installing it
 '''
 
 import sys
