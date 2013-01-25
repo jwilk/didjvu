@@ -1,8 +1,9 @@
 didjvu (0.2.7) UNRELEASED; urgency=low
 
-  * 
+  * Improve the manual page, as per man-pages(7) recommendations:
+    - Remove the “AUTHOR” sections.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Mon, 18 Jun 2012 23:38:24 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Fri, 25 Jan 2013 20:18:18 +0100
 
 didjvu (0.2.6) unstable; urgency=low
 
