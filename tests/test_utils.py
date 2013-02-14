@@ -36,6 +36,7 @@ class test_enhance_import():
                 except ImportError, ex:
                     utils.enhance_import_error(ex, 'PyNonexistent', 'python-nonexistent', 'http://pynonexistent.example.net/')
                     raise
+                nonexistent.f() # quieten pyflakes
 
     def test_nondebian(self):
         with interim(utils, debian=False):
@@ -45,5 +46,6 @@ class test_enhance_import():
                 except ImportError, ex:
                     utils.enhance_import_error(ex, 'PyNonexistent', 'python-nonexistent', 'http://pynonexistent.example.net/')
                     raise
+                nonexistent.f() # quieten pyflakes
 
 # vim:ts=4 sw=4 et
