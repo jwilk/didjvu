@@ -14,7 +14,6 @@
 '''various helper functions'''
 
 import os
-import re
 
 debian = os.path.exists('/etc/debian_version')
 
