@@ -2,8 +2,8 @@ didjvu (0.2.7) UNRELEASED; urgency=low
 
   * Improve the manual page, as per man-pages(7) recommendations:
     - Remove the “AUTHOR” sections.
-  * Make “setup.py clean -a” remove compiled manual pages (unless they were
-    built by “setup.py sdist”).
+  * Make “setup.py clean -a” remove compiled manual page (unless it was built
+    by “setup.py sdist”).
   * Check Python version at runtime, not only in setup.py.
 
  -- Jakub Wilk <jwilk@jwilk.net>  Mon, 18 Feb 2013 23:02:45 +0100
