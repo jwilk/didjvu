@@ -44,13 +44,6 @@ from distutils.command.sdist import sdist as distutils_sdist
 
 from lib.version import __version__
 
-if sys.version_info < (2, 5):
-    # Only Python ≥ 2.6 is officially supported, but the software is not completely
-    # unusable with Python 2.5:
-    raise RuntimeError('didjvu requires Python >= 2.6')
-if sys.version_info >= (3, 0):
-    raise RuntimeError('didjvu is not compatible with Python 3.X')
-
 class build_doc(distutils_build):
 
     description = 'build documentation'
