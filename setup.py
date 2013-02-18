@@ -39,6 +39,7 @@ import sys
 
 import distutils.core
 from distutils.command.build import build as distutils_build
+from distutils.command.clean import clean as distutils_clean
 from distutils.command.sdist import sdist as distutils_sdist
 
 from lib.version import __version__
@@ -95,13 +96,40 @@ class build_doc(distutils_build):
             ]
             self.make_file([xmlname], manname, self.build_man, [manname, command])
 
+distutils_build.sub_commands[:0] = [('build_doc', None)]
+
+class clean(distutils_clean):
+
+    def run(self):
+        distutils_clean.run(self)
+        if not self.all:
+            return
+        for manname in glob.glob(os.path.join('doc', '*.1')):
+            with open(manname, 'r') as file:
+                stamp = file.readline()
+            if stamp != sdist.manpage_stamp:
+                self.execute(os.unlink, [manname], 'removing %s' % manname)
+
 class sdist(distutils_sdist):
+
+    manpage_stamp = '''.\\" [created by setup.py sdist]\n'''
 
     def run(self):
         self.run_command('build_doc')
         return distutils_sdist.run(self)
 
-distutils_build.sub_commands[:0] = [('build_doc', None)]
+    def _rewrite_manpage(self, manname):
+        with open(manname, 'r') as file:
+            contents = file.read()
+        os.unlink(manname)
+        with open(manname, 'w') as file:
+            file.write(self.manpage_stamp)
+            file.write(contents)
+
+    def make_release_tree(self, base_dir, files):
+        distutils_sdist.make_release_tree(self, base_dir, files)
+        for manname in glob.glob(os.path.join(base_dir, 'doc', '*.1')):
+            self.execute(self._rewrite_manpage, [manname], 'rewriting %s' % manname)
 
 distutils.core.setup(
     name = 'didjvu',
@@ -117,7 +145,11 @@ distutils.core.setup(
     package_dir = dict(didjvu='lib'),
     scripts = ['didjvu'],
     data_files = [('share/man/man1', glob.glob('doc/*.1'))],
-    cmdclass = dict(sdist=sdist, build_doc=build_doc),
+    cmdclass = dict(
+        build_doc=build_doc,
+        clean=clean,
+        sdist=sdist,
+    ),
 )
 
 # vim:ts=4 sw=4 et

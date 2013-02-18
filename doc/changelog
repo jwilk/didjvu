@@ -2,8 +2,10 @@ didjvu (0.2.7) UNRELEASED; urgency=low
 
   * Improve the manual page, as per man-pages(7) recommendations:
     - Remove the “AUTHOR” sections.
+  * Make “setup.py clean -a” remove compiled manual pages (unless they were
+    built by “setup.py sdist”).
 
- -- Jakub Wilk <jwilk@jwilk.net>  Fri, 25 Jan 2013 20:18:18 +0100
+ -- Jakub Wilk <jwilk@jwilk.net>  Mon, 18 Feb 2013 22:54:39 +0100
 
 didjvu (0.2.6) unstable; urgency=low
 
