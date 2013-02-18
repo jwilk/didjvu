@@ -35,7 +35,6 @@ Topic :: Multimedia :: Graphics
 import glob
 import os
 import re
-import sys
 
 import distutils.core
 from distutils.command.build import build as distutils_build
