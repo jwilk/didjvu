@@ -249,6 +249,7 @@ class main():
         self.check_common(o)
         if o.output is None:
             o.output = [sys.stdout]
+            o.xmp_output = [None]
             check_tty()
         else:
             filename = o.output

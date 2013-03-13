@@ -6,8 +6,9 @@ didjvu (0.2.7) UNRELEASED; urgency=low
     by “setup.py sdist”).
   * Check Python version at runtime, not only in setup.py.
   * Add support for the Brink and Pendock's minimum-cross entropy method.
+  * Fix the ‘bundle’ command when used without the -o/--output option.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Wed, 13 Mar 2013 20:41:09 +0100
+ -- Jakub Wilk <jwilk@jwilk.net>  Wed, 13 Mar 2013 22:01:27 +0100
 
 didjvu (0.2.6) unstable; urgency=low
 
