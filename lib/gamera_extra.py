@@ -90,6 +90,8 @@ def _load_methods():
         from gamera.plugins.binarization import white_rohrer_threshold
         if has_version(3, 3, 1):
             from gamera.plugins.binarization import shading_subtraction
+        if has_version(3, 4, 0):
+            from gamera.plugins.binarization import brink_threshold
     methods = {}
     for name, plugin in vars(_methods).items():
         if name.startswith('_'):

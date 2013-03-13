@@ -249,6 +249,12 @@
                         <listitem><para>Bernsen thresholding algorithm</para></listitem>
                     </varlistentry>
                     <varlistentry>
+                        <term><literal>brink</literal></term>
+                        <listitem><para>Brink and Pendock's minimum-cross entropy method</para>
+                            <note><para>this method requires Gamera ≥ 3.4.0</para></note>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
                         <term><literal>djvu</literal></term>
                         <listitem><para>DjVu thresholding algorithm</para></listitem>
                     </varlistentry>
