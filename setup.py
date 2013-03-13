@@ -13,9 +13,9 @@
 # General Public License for more details.
 
 '''
-"*didjvu* uses the `Gamera <http://gamera.informatik.hsnr.de/>`_ framework to
+*didjvu* uses the `Gamera <http://gamera.informatik.hsnr.de/>`_ framework to
 separate foreground/background layers, which it can then encode into a `DjVu
-<http://djvu.org/>`_ file."
+<http://djvu.org/>`_ file.
 '''
 
 from __future__ import with_statement
