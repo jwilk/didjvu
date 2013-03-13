@@ -306,7 +306,6 @@ class main():
             metadata.write(xmp_output)
 
     def separate_one(self, o, image_filename, output):
-        bytes_in = os.path.getsize(image_filename)
         logger.info('%s:', image_filename)
         ftype = filetype.check(image_filename)
         if ftype.like(filetype.djvu):
