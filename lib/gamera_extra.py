@@ -26,7 +26,7 @@ except ImportError, ex:
     utils.enhance_import_error(ex, 'Python Imaging Library', 'python-imaging', 'http://www.pythonware.com/products/pil/')
     raise
 else:
-    # Gamera still expects that PIL can be imported as Image
+    # Gamera (<< 3.4.0) still expects that PIL can be imported as Image
     sys.modules['Image'] = PIL
 
 try:
