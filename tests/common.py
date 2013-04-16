@@ -65,4 +65,9 @@ def interim(obj, **override):
         for key, value in copy.iteritems():
             setattr(obj, key, value)
 
+__all__ = [
+    'SkipTest', 'assert_equal', 'assert_not_equal', 'assert_true',
+    'assert_regexp_matches', 'assert_rfc3339_timestamp', 'exception', 'interim'
+]
+
 # vim:ts=4 sw=4 et
