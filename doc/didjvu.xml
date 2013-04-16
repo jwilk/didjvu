@@ -573,7 +573,7 @@
                 <term><varname>page+<replaceable>N</replaceable></varname></term>
                 <term><varname>page-<replaceable>N</replaceable></varname></term>
                 <listitem>
-                    <para>Page number, optionally offseted by a number <replaceable>N</replaceable>.</para>
+                    <para>Page number, optionally shifted by a number <replaceable>N</replaceable>.</para>
                 </listitem>
             </varlistentry>
         </variablelist>
