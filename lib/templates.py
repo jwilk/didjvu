@@ -14,9 +14,7 @@
 '''filename templates'''
 
 import os
-import re
 import string
-import sys
 
 formatter = string.Formatter()
 
