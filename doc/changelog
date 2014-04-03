@@ -1,8 +1,11 @@
 didjvu (0.2.8) UNRELEASED; urgency=low
 
   * Drop support for Python 2.5 completely.
+  * Clarify documentation for the --fg-subsample and --bg-subsample options.
+    Thanks to Janusz S. Bień for the bug report.
+    http://code.google.com/p/didjvu/issues/detail?id=5
 
- -- Jakub Wilk <jwilk@jwilk.net>  Tue, 16 Apr 2013 23:25:47 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Thu, 03 Apr 2014 10:22:19 +0200
 
 didjvu (0.2.7) unstable; urgency=low
 

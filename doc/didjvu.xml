@@ -386,7 +386,7 @@
             <term><option>--fg-subsample=<replaceable>n</replaceable></option></term>
             <listitem>
                 <para>
-                    Specifies the foreground/background subsampling ratio. The default is 6. Valid values are integers
+                    Specifies the foreground subsampling ratio. The default is 6. Valid values are integers
                     between 1 and 12, inclusive.
                 </para>
             </listitem>
@@ -448,7 +448,7 @@
             <term><option>--bg-subsample=<replaceable>n</replaceable></option></term>
             <listitem>
                 <para>
-                    Specifies the foreground/background subsampling ratio. The default is 3. Valid values are integers
+                    Specifies the background subsampling ratio. The default is 3. Valid values are integers
                     between 1 and 12, inclusive.
                 </para>
             </listitem>
