@@ -147,7 +147,7 @@ def init():
     test_string = test_image._to_raw_string()
     refcount = sys.getrefcount(test_string)
     if refcount == 3:
-        # See: http://tech.groups.yahoo.com/group/gamera-devel/message/2068
+        # See: https://tech.groups.yahoo.com/group/gamera-devel/message/2068
         warnings.warn(RuntimeWarning('Working around memory leak in the Gamera library'), stacklevel=2)
         _monkeypatch_to_raw_string()
         fixed_test_string = test_image._to_raw_string()

@@ -26,7 +26,7 @@ from .. import version
 from . import namespaces as ns
 
 def xmp_register_namespace(prefix, uri):
-    # work-around for <http://bugs.debian.org/662878>
+    # work-around for <https://bugs.debian.org/662878>
     class fool_pyexiv2(str):
         def endswith(self, suffix, *args, **kwargs):
             return True

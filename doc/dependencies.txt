@@ -26,7 +26,7 @@ For XMP support one of the following libraries is needed:
   Python bindings to Exiv2_
 
 .. _Python:
-   http://python.org/
+   https://www.python.org/
 .. _Gamera:
    http://gamera.informatik.hsnr.de/
 .. _PIL:
@@ -38,9 +38,9 @@ For XMP support one of the following libraries is needed:
 .. _DjVu:
    http://djvu.org/
 .. _argparse:
-   http://code.google.com/p/argparse/
+   https://code.google.com/p/argparse/
 .. _python-xmp-toolkit:
-   http://code.google.com/p/python-xmp-toolkit/
+   https://code.google.com/p/python-xmp-toolkit/
 .. _pyexiv2:
    http://tilloy.net/dev/pyexiv2/
 .. _Exiv2:

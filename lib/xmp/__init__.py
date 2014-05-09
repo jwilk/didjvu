@@ -26,7 +26,7 @@ except ImportError, exc:
     try:
         from . import pyexiv2_backend as default_backend
     except ImportError:
-        utils.enhance_import_error(exc, 'python-xmp-toolkit', 'python-libxmp', 'http://code.google.com/p/python-xmp-toolkit/')
+        utils.enhance_import_error(exc, 'python-xmp-toolkit', 'python-libxmp', 'https://code.google.com/p/python-xmp-toolkit/')
         raise exc
 
 def gen_uuid():
