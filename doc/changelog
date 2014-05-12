@@ -1,4 +1,4 @@
-didjvu (0.2.8) UNRELEASED; urgency=low
+didjvu (0.2.8) unstable; urgency=low
 
   * Drop support for Python 2.5 completely.
   * Clarify documentation for the --fg-subsample and --bg-subsample options.
@@ -9,7 +9,7 @@ didjvu (0.2.8) UNRELEASED; urgency=low
     https://code.google.com/p/didjvu/issues/detail?id=6
   * Use HTTPS URLs when they are available, in documentation and code.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Mon, 12 May 2014 10:10:05 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Mon, 12 May 2014 14:00:48 +0200
 
 didjvu (0.2.7) unstable; urgency=low
 
