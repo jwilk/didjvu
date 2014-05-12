@@ -1,3 +1,9 @@
+didjvu (0.2.9) UNRELEASED; urgency=medium
+
+  * 
+
+ -- Jakub Wilk <jwilk@jwilk.net>  Mon, 12 May 2014 14:06:10 +0200
+
 didjvu (0.2.8) unstable; urgency=low
 
   * Drop support for Python 2.5 completely.
