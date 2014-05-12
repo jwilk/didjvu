@@ -38,7 +38,7 @@ except ImportError, ex:
 from gamera import __version__ as version
 from gamera.core import load_image as _load_image
 from gamera.core import init_gamera as _init
-from gamera.core import Image, RGB, GREYSCALE, ONEBIT, Dim, RGBPixel
+from gamera.core import Image, RGB, GREYSCALE, ONEBIT, Point, Dim, RGBPixel
 from gamera.plugins.pil_io import from_pil as _from_pil
 
 def has_version(*req_version):

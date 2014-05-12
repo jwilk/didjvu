@@ -4,9 +4,12 @@ didjvu (0.2.8) UNRELEASED; urgency=low
   * Clarify documentation for the --fg-subsample and --bg-subsample options.
     Thanks to Janusz S. Bień for the bug report.
     https://code.google.com/p/didjvu/issues/detail?id=5
+  * Work around a memory leak in Gamera.
+    Thanks to Janusz S. Bień for the bug report.
+    https://code.google.com/p/didjvu/issues/detail?id=6
   * Use HTTPS URLs when they are available, in documentation and code.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Fri, 09 May 2014 12:55:39 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Mon, 12 May 2014 10:10:05 +0200
 
 didjvu (0.2.7) unstable; urgency=low
 

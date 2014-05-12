@@ -105,7 +105,7 @@ def subsample_fg(image, mask, options):
                 for dx in xrange(ratio):
                     if x >= width:
                         break
-                    pt = (x, y)
+                    pt = gamera.Point(x, y)
                     if mask_get(pt):
                         n += 1
                         pixel = image_get(pt)
@@ -114,13 +114,14 @@ def subsample_fg(image, mask, options):
                         b += pixel.blue
                     x += 1
                 y += 1
+            pt = gamera.Point(sx, sy)
             if n > 0:
                 r = (r + n // 2) // n
                 g = (g + n // 2) // n
                 b = (b + n // 2) // n
-                subsampled_image_set((sx, sy), gamera.RGBPixel(r, g , b))
+                subsampled_image_set(pt, gamera.RGBPixel(r, g , b))
             else:
-                subsampled_mask_set((sx, sy), 1)
+                subsampled_mask_set(pt, 1)
             x0 += ratio
         y0 += ratio
     return subsampled_image, subsampled_mask
