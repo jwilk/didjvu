@@ -77,7 +77,7 @@ class build_doc(distutils_build):
             file.write(contents)
 
     def run(self):
-        for xmlname in glob.glob(os.path.join('doc', '*.xml')):
+        for xmlname in glob.iglob(os.path.join('doc', '*.xml')):
             manname = os.path.splitext(xmlname)[0] + '.1'
             command = [
                 'xsltproc', '--nonet',
@@ -98,7 +98,7 @@ class clean(distutils_clean):
         distutils_clean.run(self)
         if not self.all:
             return
-        for manname in glob.glob(os.path.join('doc', '*.1')):
+        for manname in glob.iglob(os.path.join('doc', '*.1')):
             with open(manname, 'r') as file:
                 stamp = file.readline()
             if stamp != sdist.manpage_stamp:
@@ -122,7 +122,7 @@ class sdist(distutils_sdist):
 
     def make_release_tree(self, base_dir, files):
         distutils_sdist.make_release_tree(self, base_dir, files)
-        for manname in glob.glob(os.path.join(base_dir, 'doc', '*.1')):
+        for manname in glob.iglob(os.path.join(base_dir, 'doc', '*.1')):
             self.execute(self._rewrite_manpage, [manname], 'rewriting %s' % manname)
 
 distutils.core.setup(
