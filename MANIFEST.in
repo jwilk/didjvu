@@ -1,10 +1,10 @@
-include COPYING
 include MANIFEST.in
 include didjvu
 include didjvu.py
 include doc/*.1
 include doc/*.txt
 include doc/*.xml
+include doc/COPYING
 include doc/changelog
 recursive-include lib *.py
 recursive-include tests *.py *.xmp
