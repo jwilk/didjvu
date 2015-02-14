@@ -3,8 +3,7 @@ Things to do
 
  * Make sure that very small images are subsampled correctly.
    See the DjVuLibre bug report for details:
-   http://sf.net/tracker/?func=detail&aid=1972089&group_id=32953&atid=406583
-   for details.
+   http://sourceforge.net/p/djvu/bugs/106/
 
  * Allow running *didjvu* in parallel (``-j``/``--jobs``).
 
