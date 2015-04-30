@@ -9,10 +9,10 @@ didjvu (0.2.8) unstable; urgency=low
   * Drop support for Python 2.5 completely.
   * Clarify documentation for the --fg-subsample and --bg-subsample options.
     Thanks to Janusz S. Bień for the bug report.
-    https://code.google.com/p/didjvu/issues/detail?id=5
+    https://bitbucket.org/jwilk/didjvu/issue/5
   * Work around a memory leak in Gamera.
     Thanks to Janusz S. Bień for the bug report.
-    https://code.google.com/p/didjvu/issues/detail?id=6
+    https://bitbucket.org/jwilk/didjvu/issue/6
   * Use HTTPS URLs when they are available, in documentation and code.
 
  -- Jakub Wilk <jwilk@jwilk.net>  Mon, 12 May 2014 14:00:48 +0200
