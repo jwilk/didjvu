@@ -40,7 +40,7 @@ For XMP support one of the following libraries is needed:
 .. _argparse:
    https://pypi.python.org/pypi/argparse
 .. _python-xmp-toolkit:
-   https://code.google.com/p/python-xmp-toolkit/
+   https://github.com/python-xmp-toolkit/python-xmp-toolkit
 .. _pyexiv2:
    http://tilloy.net/dev/pyexiv2/
 .. _Exiv2:
