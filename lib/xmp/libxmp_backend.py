@@ -1,6 +1,6 @@
 # encoding=UTF-8
 
-# Copyright © 2012 Jakub Wilk <jwilk@jwilk.net>
+# Copyright © 2012, 2015 Jakub Wilk <jwilk@jwilk.net>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -66,7 +66,7 @@ class MetadataBase(object):
             if isinstance(value, timestamp.Timestamp):
                 value = str(value)
             rc = backend.set_property(namespace, key, value)
-        if rc is None:
+        if rc is False:
             raise XmpError('Cannot set property')
 
     def add_to_history(self, event, index):
