@@ -1,6 +1,6 @@
 # encoding=UTF-8
 
-# Copyright © 2009-2014 Jakub Wilk <jwilk@jwilk.net>
+# Copyright © 2009-2015 Jakub Wilk <jwilk@jwilk.net>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -34,6 +34,7 @@ try:
 except ImportError, ex:
     utils.enhance_import_error(ex, 'Gamera', 'python-gamera', 'http://gamera.sourceforge.net/')
     raise
+del gamera  # quieten pyflakes
 
 from gamera import __version__ as version
 from gamera.core import load_image as _load_image
