@@ -220,9 +220,13 @@ class main():
 
     def check_multi_output(self, o):
         self.check_common(o)
+        pageid_memo = {}
         if o.output is None:
             if o.output_template is not None:
-                o.output = [templates.expand(o.output_template, f, n) for n, f in enumerate(o.input)]
+                o.output = [
+                    templates.expand(o.output_template, f, n, pageid_memo)
+                    for n, f in enumerate(o.input)
+                ]
                 o.xmp_output = [s + '.xmp' if o.xmp else None for s in o.output]
             elif len(o.input) == 1:
                 o.output = [sys.stdout]
@@ -364,10 +368,10 @@ class main():
         with temporary.directory() as tmpdir:
             bytes_in = 0
             component_filenames = []
+            pageid_memo = {}
             for page, (input, mask) in enumerate(zip(o.input, o.masks)):
                 bytes_in += os.path.getsize(input)
-                pageid = templates.expand(o.pageid_template, input, page)
-                # TODO: Check for filename conflicts.
+                pageid = templates.expand(o.pageid_template, input, page, pageid_memo)
                 check_pageid_sanity(pageid)
                 component_filenames += os.path.join(tmpdir, pageid),
             parallel_for(o, self._bundle_simple_page, o.input, o.masks, component_filenames)
@@ -407,13 +411,13 @@ class main():
             bytes_in = 0
             pixels = [0]
             page_info = []
+            pageid_memo = {}
             for pageno, (image_filename, mask_filename) in enumerate(zip(o.input, o.masks)):
                 page = namespace()
                 page_info += page,
                 bytes_in += os.path.getsize(image_filename)
-                page.pageid = templates.expand(o.pageid_template, image_filename, pageno)
+                page.pageid = templates.expand(o.pageid_template, image_filename, pageno, pageid_memo)
                 check_pageid_sanity(page.pageid)
-                # TODO: Check for filename conflicts.
             parallel_for(o, self._bundle_complex_page,
                 page_info,
                 itertools.repeat(minidjvu_in_dir),

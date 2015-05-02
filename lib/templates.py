@@ -18,26 +18,27 @@ import string
 
 formatter = string.Formatter()
 
-def expand(template, name, page):
+def expand(template, name, page, memo):
     '''
     >>> path = '/path/to/eggs.png'
-    >>> expand('{name}', path, 0)
+    >>> memo = {}
+    >>> expand('{name}', path, 0, memo)
     '/path/to/eggs.png'
-    >>> expand('{base}', path, 0)
+    >>> expand('{base}', path, 0, memo)
     'eggs.png'
-    >>> expand('{name-ext}.djvu', path, 0)
+    >>> expand('{name-ext}.djvu', path, 0, memo)
     '/path/to/eggs.djvu'
-    >>> expand('{base-ext}.djvu', path, 0)
+    >>> expand('{base-ext}.djvu', path, 0, memo)
     'eggs.djvu'
-    >>> expand('{page}', path, 0)
+    >>> expand('{page}', path, 0, memo)
     '1'
-    >>> expand('{page:04}', path, 0)
+    >>> expand('{page:04}', path, 0, memo)
     '0001'
-    >>> expand('{page}', path, 42)
+    >>> expand('{page}', path, 42, memo)
     '43'
-    >>> expand('{page+26}', path, 42)
+    >>> expand('{page+26}', path, 42, memo)
     '69'
-    >>> expand('{page-26}', path, 42)
+    >>> expand('{page-26}', path, 42, memo)
     '17'
     '''
     base = os.path.basename(name)
@@ -70,6 +71,16 @@ def expand(template, name, page):
         if not isinstance(base_value, int):
             continue
         d[var] = d[base_var] + offset
-    return formatter.vformat(template, (), d)
+    ident = formatter.vformat(template, (), d)
+    while True:
+        n = memo.get(ident, 0)
+        if n == 0:
+            break
+        memo[ident] += 1
+        ident_base, ident_ext = os.path.splitext(ident)
+        ident = '{base}.{n}{ext}'.format(base=ident_base, n=n, ext=ident_ext)
+    assert ident not in memo
+    memo[ident] = 1
+    return ident
 
 # vim:ts=4 sw=4 et
