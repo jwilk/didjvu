@@ -2,7 +2,7 @@ Generated automatically by private/update-coverage. Do not edit.
 
 Name                      Stmts   Miss Branch BrMiss  Cover   Missing
 ---------------------------------------------------------------------
-lib                           5      2      4      2    56%   17, 19
+lib                           3      0      0      0   100%
 lib.ipc                      89     30     30     14    63%   41-42, 46-47, 57, 60-61, 69-71, 74, 93, 105, 109-111, 118, 131-133, 136-140, 143-147
 lib.templates                41      4     14      1    91%   40, 47-48, 50
 lib.temporary                16      6      0      0    63%   27-33
@@ -14,4 +14,4 @@ lib.xmp.libxmp_backend       68      6     24      4    89%   31, 51-54, 73
 lib.xmp.namespaces            6      0      0      0   100%
 lib.xmp.pyexiv2_backend     136     17     24      4    87%   38-43, 59-61, 72, 113-115, 119, 130-131, 144-145
 ---------------------------------------------------------------------
-TOTAL                       460     80    106     28    81%
+TOTAL                       458     78    102     26    81%
