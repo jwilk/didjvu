@@ -1,6 +1,7 @@
 syntax: glob
 
 *.py[co]
+.coverage
 MANIFEST
 doc/*.1
 secret/
