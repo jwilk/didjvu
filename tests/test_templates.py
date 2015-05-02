@@ -13,6 +13,7 @@
 
 from . common import (
     assert_equal,
+    assert_raises,
 )
 
 from lib import templates
@@ -42,6 +43,21 @@ def test_page():
     assert_equal(s, '69')
     s = templates.expand('{page-26}', path, 42, memo)
     assert_equal(s, '17')
+
+def test_bad_offset():
+    path = '/path/to/eggs.png'
+    with assert_raises(KeyError):
+        templates.expand('{page+ham}', path, 42, {})
+
+def test_bad_type_offset():
+    path = '/path/to/eggs.png'
+    with assert_raises(KeyError):
+        templates.expand('{base-37}', path, 42, {})
+
+def test_bad_var_offset():
+    path = '/path/to/eggs.png'
+    with assert_raises(KeyError):
+        templates.expand('{eggs-37}', path, 42, {})
 
 def test_duplicates():
     path = '/path/to/eggs.png'
