@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # encoding=UTF-8
 
-# Copyright © 2009-2014 Jakub Wilk <jwilk@jwilk.net>
+# Copyright © 2009-2015 Jakub Wilk <jwilk@jwilk.net>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,6 +19,9 @@ separate foreground/background layers, which it can then encode into a `DjVu
 '''
 
 from __future__ import with_statement
+# Let's keep this __future__ import here, even though Python 2.5 is no longer
+# supported, so that people running setup.py against the unsupported version
+# get a nice error message instead of SyntaxError.
 
 classifiers = '''
 Development Status :: 4 - Beta

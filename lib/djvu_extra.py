@@ -1,6 +1,6 @@
 # encoding=UTF-8
 
-# Copyright © 2009-2012 Jakub Wilk <jwilk@jwilk.net>
+# Copyright © 2009-2015 Jakub Wilk <jwilk@jwilk.net>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,8 +12,6 @@
 # General Public License for more details.
 
 '''wrappers for the DjVuLibre utilities'''
-
-from __future__ import with_statement
 
 import os
 import re
