@@ -57,4 +57,18 @@ def test_simple():
         '17'
     )
 
+def test_duplicates():
+    path = '/path/to/eggs.png'
+    memo = {}
+    s = templates.expand('{base-ext}.djvu', path, 0, memo)
+    assert_equal(s, 'eggs.djvu')
+    s = templates.expand('{base-ext}.djvu', path, 0, memo)
+    assert_equal(s, 'eggs.1.djvu')
+    s = templates.expand('{base-ext}.djvu', path, 0, memo)
+    assert_equal(s, 'eggs.2.djvu')
+    s = templates.expand('{base-ext}.2.djvu', path, 0, memo)
+    assert_equal(s, 'eggs.2.1.djvu')
+    s = templates.expand('{base-ext}.2.djvu', path, 0, memo)
+    assert_equal(s, 'eggs.2.2.djvu')
+
 # vim:ts=4 sw=4 et
