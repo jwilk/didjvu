@@ -1,6 +1,6 @@
 # encoding=UTF-8
 
-# Copyright © 2008-2014 Jakub Wilk <jwilk@jwilk.net>
+# Copyright © 2008-2015 Jakub Wilk <jwilk@jwilk.net>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ import subprocess
 # CalledProcessError, CalledProcessInterrupted
 # ============================================
 
-# Protect from scanadf[0] and possibly other brain-dead software that set
+# Protect from scanadf[0] and possibly other software that sets
 # SIGCHLD to SIG_IGN.
 # [0] https://bugs.debian.org/596232
 if os.name == 'posix':
