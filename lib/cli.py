@@ -232,4 +232,4 @@ def dump_options(o, multipage=False):
 
 __all__ = ['ArgumentParser', 'dump_options']
 
-# vim:ts=4 sw=4 et
+# vim:ts=4 sts=4 sw=4 et

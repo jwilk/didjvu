@@ -19,4 +19,4 @@ tiff = 'http://ns.adobe.com/tiff/1.0/'
 xmp = 'http://ns.adobe.com/xap/1.0/'
 xmpmm = 'http://ns.adobe.com/xap/1.0/mm/'
 
-# vim:ts=4 sw=4 et
+# vim:ts=4 sts=4 sw=4 et

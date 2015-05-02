@@ -71,4 +71,4 @@ def test_duplicates():
     s = templates.expand('{base-ext}.2.djvu', path, 0, memo)
     assert_equal(s, 'eggs.2.2.djvu')
 
-# vim:ts=4 sw=4 et
+# vim:ts=4 sts=4 sw=4 et

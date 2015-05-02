@@ -70,4 +70,4 @@ __all__ = [
     'assert_regexp_matches', 'assert_rfc3339_timestamp', 'exception', 'interim'
 ]
 
-# vim:ts=4 sw=4 et
+# vim:ts=4 sts=4 sw=4 et

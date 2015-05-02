@@ -46,4 +46,4 @@ class test_enhance_import():
                     raise
                 nonexistent.f() # quieten pyflakes
 
-# vim:ts=4 sw=4 et
+# vim:ts=4 sts=4 sw=4 et

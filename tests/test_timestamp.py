@@ -23,4 +23,4 @@ def test_explicit_construct():
     result = timestamp.Timestamp(100000)
     assert_rfc3339_timestamp(str(result))
 
-# vim:ts=4 sw=4 et
+# vim:ts=4 sts=4 sw=4 et

@@ -464,4 +464,4 @@ class main():
         percent_saved = (1.0 * bytes_in - bytes_out) * 100 / bytes_in
         logger.nosy('%s', self.compression_info_template % locals())
 
-# vim:ts=4 sw=4 et
+# vim:ts=4 sts=4 sw=4 et

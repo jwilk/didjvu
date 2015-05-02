@@ -61,4 +61,4 @@ def expand(template, name, page, memo):
     memo[ident] = 1
     return ident
 
-# vim:ts=4 sw=4 et
+# vim:ts=4 sts=4 sw=4 et

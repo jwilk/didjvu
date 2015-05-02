@@ -26,4 +26,4 @@ def enhance_import_error(exception, package, debian_package, homepage):
         format += ' <%(homepage)s>'
     exception.args = [format % locals()]
 
-# vim:ts=4 sw=4 et
+# vim:ts=4 sts=4 sw=4 et

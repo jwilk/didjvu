@@ -157,4 +157,4 @@ def init():
         assert refcount == 2
     return result
 
-# vim:ts=4 sw=4 et
+# vim:ts=4 sts=4 sw=4 et
