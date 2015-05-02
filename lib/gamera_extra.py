@@ -158,4 +158,22 @@ def init():
         assert refcount == 2
     return result
 
+__all__ = [
+# classes:
+    'Dim',
+    'Image',
+    'Point',
+    'RGBPixel',
+# pixel types:
+    'ONEBIT',
+    'GREYSCALE',
+    'RGB',
+# functions:
+    'init',
+    'load_image',
+    'methods',
+    'to_pil_1bpp',
+    'to_pil_rgb',
+]
+
 # vim:ts=4 sts=4 sw=4 et
