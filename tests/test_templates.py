@@ -59,6 +59,13 @@ def test_bad_var_offset():
     with assert_raises(KeyError):
         templates.expand('{eggs-37}', path, 42, {})
 
+def test_multi_offset():
+    path = '/path/to/eggs.png'
+    with assert_raises(KeyError):
+        templates.expand('{eggs+bacon+ham}', path, 42, {})
+    with assert_raises(KeyError):
+        templates.expand('{eggs-bacon-ham}', path, 42, {})
+
 def test_duplicates():
     path = '/path/to/eggs.png'
     memo = {}

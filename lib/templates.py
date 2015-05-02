@@ -32,10 +32,10 @@ def expand(template, name, page, memo):
             continue
         if '+' in var:
             sign = +1
-            base_var, offset = var.split('+')
+            base_var, offset = var.split('+', 1)
         elif '-' in var:
             sign = -1
-            base_var, offset = var.split('-')
+            base_var, offset = var.split('-', 1)
         else:
             continue
         try:
