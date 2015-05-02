@@ -39,7 +39,10 @@ class MetadataBase(object):
     def get(self, key, fallback=None):
         namespace, key = self._expand_key(key)
         backend = self._backend
-        result = backend.get_property(namespace, key)
+        if backend.does_property_exist(namespace, key):
+            result = backend.get_property(namespace, key)
+        else:
+            result = None
         if result is None:
             result = fallback
         return result
