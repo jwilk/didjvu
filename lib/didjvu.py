@@ -389,7 +389,7 @@ class main():
         logger.info('%s:', image_filename)
         ftype = filetype.check(image_filename)
         if ftype.like(filetype.djvu):
-            # TODO: Allow to merge existing documents (even multi-page ones).
+            # TODO: Allow merging existing documents (even multi-page ones).
             raise NotImplementedError("I don't know what to do with this file")
         logger.info('- reading image')
         image = gamera.load_image(image_filename)
