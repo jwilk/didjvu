@@ -67,8 +67,15 @@ def interim(obj, **override):
             setattr(obj, key, value)
 
 __all__ = [
-    'SkipTest', 'assert_equal', 'assert_not_equal', 'assert_true',
-    'assert_regexp_matches', 'assert_rfc3339_timestamp', 'exception', 'interim'
+    'SkipTest',
+    'assert_equal',
+    'assert_not_equal',
+    'assert_raises',
+    'assert_rfc3339_timestamp',
+    'assert_true',
+    'exception',
+    'interim',
+    'assert_regexp_matches',
 ]
 
 # vim:ts=4 sts=4 sw=4 et
