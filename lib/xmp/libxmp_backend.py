@@ -28,7 +28,7 @@ class MetadataBase(object):
         backend = self._backend = libxmp.XMPMeta()
         prefix = backend.register_namespace(ns.didjvu, 'didjvu')
         if prefix is None:
-            raise XmpError('Cannot register namespace for didjvu internal properties') # <no-coverage>
+            raise XmpError('Cannot register namespace for didjvu internal properties')  # <no-coverage>
 
     @classmethod
     def _expand_key(cls, key):
@@ -70,7 +70,7 @@ class MetadataBase(object):
                 value = str(value)
             rc = backend.set_property(namespace, key, value)
         if rc is False:
-            raise XmpError('Cannot set property') # <no-coverage>
+            raise XmpError('Cannot set property')  # <no-coverage>
 
     def add_to_history(self, event, index):
         for key, value in event.items:

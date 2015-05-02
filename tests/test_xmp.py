@@ -69,11 +69,13 @@ def tag_backend(backend):
     return tag()
 
 class tag_exiv2(object):
-    def __repr__(self): return 'exiv2_checker'
+    def __repr__(self):
+        return 'exiv2_checker'
 tag_exiv2 = tag_exiv2()
 
 class tag_libxmp(object):
-    def __repr__(self): return 'libxmp_checker'
+    def __repr__(self):
+        return 'libxmp_checker'
 tag_libxmp = tag_libxmp()
 
 def run_exiv2(filename, fail_ok=False):
@@ -150,7 +152,7 @@ class test_metadata():
             xml_meta = meta.serialize_to_str(omit_all_formatting=True, omit_packet_wrapper=True)
             xml_meta = io.StringIO(xml_meta)
             iterator = etree.iterparse(xml_meta, events=('start', 'end'))
-            iterator = iter(iterator) # odd, but needed for Python 2.6
+            iterator = iter(iterator)  # odd, but needed for Python 2.6
             pop = lambda: next(iterator)
             event, element = pop()
             assert_equal(event, 'start')

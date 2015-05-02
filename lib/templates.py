@@ -37,7 +37,7 @@ def expand(template, name, page, memo):
             sign = -1
             base_var, offset = var.split('-', 1)
         else:
-            continue # <no-coverage>
+            continue  # <no-coverage>
             # https://bitbucket.org/ned/coveragepy/issue/198
         try:
             offset = sign * int(offset, 10)

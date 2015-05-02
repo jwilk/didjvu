@@ -127,8 +127,8 @@ class Multichunk(object):
         self.height = _int_or_none(height)
         self.dpi = _int_or_none(dpi)
         self._chunks = {}
-        self._dirty = set() # Chunks that need to be re-read from the file.
-        self._pristine = False # Should save() be a no-op?
+        self._dirty = set()  # Chunks that need to be re-read from the file.
+        self._pristine = False  # Should save() be a no-op?
         self._file = None
         for (k, v) in chunks.iteritems():
             self[k] = v

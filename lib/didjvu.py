@@ -117,7 +117,7 @@ def subsample_fg(image, mask, options):
                 r = (r + n // 2) // n
                 g = (g + n // 2) // n
                 b = (b + n // 2) // n
-                subsampled_image_set(pt, gamera.RGBPixel(r, g , b))
+                subsampled_image_set(pt, gamera.RGBPixel(r, g, b))
             else:
                 subsampled_mask_set(pt, 1)
             x0 += ratio
@@ -379,7 +379,7 @@ class main():
                 bytes_out = copy_file(djvu_file, output)
             finally:
                 djvu_file.close()
-        bits_per_pixel = float('nan') # FIXME!
+        bits_per_pixel = float('nan')  # FIXME!
         ratio = 1.0 * bytes_in / bytes_out
         percent_saved = (1.0 * bytes_in - bytes_out) * 100 / bytes_in
         logger.nosy(self.compression_info_template % locals())
@@ -435,7 +435,7 @@ class main():
                 ]
                 arguments += [page.sjbz_symlink for page in page_info]
                 index_filename = temporary.name(prefix='__index__.', suffix='.djvu', dir=minidjvu_out_dir)
-                index_filename = os.path.basename(index_filename) # FIXME: Name conflicts are still possible!
+                index_filename = os.path.basename(index_filename)  # FIXME: Name conflicts are still possible!
                 arguments += [index_filename]
                 ipc.Subprocess(arguments, preexec_fn=chdir).wait()
                 os.remove(os.path.join(minidjvu_out_dir, index_filename))

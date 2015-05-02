@@ -24,7 +24,7 @@ class Timestamp(object):
 
     def _str_tz(self):
         offset = time.timezone if not self._localtime.tm_isdst else time.altzone
-        hours, minutes  = divmod(abs(offset) // 60, 60)
+        hours, minutes = divmod(abs(offset) // 60, 60)
         return '%s%02d:%02d' % ('+' if offset < 0 else '-', hours, minutes)
 
     def __str__(self):
