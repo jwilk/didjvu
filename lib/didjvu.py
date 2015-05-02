@@ -190,10 +190,11 @@ class namespace():
 
 class main():
 
-    compression_info_template = \
-        '%(bits_per_pixel).3f bits/pixel; ' \
-        '%(ratio).3f:1, %(percent_saved).2f%% saved, ' \
+    compression_info_template = (
+        '%(bits_per_pixel).3f bits/pixel; '
+        '%(ratio).3f:1, %(percent_saved).2f%% saved, '
         '%(bytes_in)d bytes in, %(bytes_out)d bytes out'
+    )
 
     def __init__(self):
         setup_logging()
