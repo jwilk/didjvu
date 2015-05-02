@@ -114,10 +114,22 @@ class ArgumentParser(argparse.ArgumentParser):
                     help='naming scheme for output file (e.g. "%s")' % default.pageid_template
                 )
             p.add_argument('--losslevel', dest='loss_level', type=losslevel_type, help=argparse.SUPPRESS)
-            p.add_argument('--loss-level', dest='loss_level', type=losslevel_type, metavar='N', help='aggressiveness of lossy compression')
-            p.add_argument('--lossless', dest='loss_level', action='store_const', const=djvu.LOSS_LEVEL_MIN, help='lossless compression (default)')
-            p.add_argument('--clean', dest='loss_level', action='store_const', const=djvu.LOSS_LEVEL_CLEAN, help='lossy compression: remove flyspecks')
-            p.add_argument('--lossy', dest='loss_level', action='store_const', const=djvu.LOSS_LEVEL_LOSSY, help='lossy compression: substitute patterns with small variations')
+            p.add_argument(
+                '--loss-level', dest='loss_level', type=losslevel_type, metavar='N',
+                help='aggressiveness of lossy compression'
+            )
+            p.add_argument(
+                '--lossless', dest='loss_level', action='store_const', const=djvu.LOSS_LEVEL_MIN,
+                help='lossless compression (default)'
+            )
+            p.add_argument(
+                '--clean', dest='loss_level', action='store_const', const=djvu.LOSS_LEVEL_CLEAN,
+                help='lossy compression: remove flyspecks'
+            )
+            p.add_argument(
+                '--lossy', dest='loss_level', action='store_const', const=djvu.LOSS_LEVEL_LOSSY,
+                help='lossy compression: substitute patterns with small variations'
+            )
             if p is not p_separate:
                 p.add_argument('--masks', nargs='+', metavar='MASK', help='use pre-generated masks')
                 p.add_argument('--mask', action='append', dest='masks', metavar='MASK', help='use a pre-generated mask')

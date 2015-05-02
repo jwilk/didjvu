@@ -28,7 +28,8 @@ class test_enhance_import():
 
     def test_debian(self):
         with interim(utils, debian=True):
-            with exception(ImportError, 'No module named nonexistent; please install the python-nonexistent package'):
+            msg = 'No module named nonexistent; please install the python-nonexistent package'
+            with exception(ImportError, msg):
                 try:
                     import nonexistent
                 except ImportError, ex:
@@ -38,7 +39,8 @@ class test_enhance_import():
 
     def test_nondebian(self):
         with interim(utils, debian=False):
-            with exception(ImportError, 'No module named nonexistent; please install the PyNonexistent package <http://pynonexistent.example.net/>'):
+            msg = 'No module named nonexistent; please install the PyNonexistent package <http://pynonexistent.example.net/>'
+            with exception(ImportError, msg):
                 try:
                     import nonexistent
                 except ImportError, ex:
