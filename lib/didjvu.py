@@ -416,6 +416,7 @@ class main():
                 bytes_in += os.path.getsize(image_filename)
                 page.pageid = templates.expand(o.pageid_template, image_filename, pageno, pageid_memo)
                 check_pageid_sanity(page.pageid)
+            del page  # quieten pyflakes
             parallel_for(o, self._bundle_complex_page,
                 page_info,
                 itertools.repeat(minidjvu_in_dir),
