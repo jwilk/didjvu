@@ -3,3 +3,4 @@ syntax: glob
 *.py[co]
 MANIFEST
 doc/*.1
+secret/
