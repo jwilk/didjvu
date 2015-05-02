@@ -17,45 +17,31 @@ from . common import (
 
 from lib import templates
 
-def test_simple():
+def test_name():
     path = '/path/to/eggs.png'
     memo = {}
-    assert_equal(
-        templates.expand('{name}', path, 0, memo),
-        '/path/to/eggs.png'
-    )
-    assert_equal(
-        templates.expand('{base}', path, 0, memo),
-        'eggs.png'
-    )
-    assert_equal(
-        templates.expand('{name-ext}.djvu', path, 0, memo),
-        '/path/to/eggs.djvu'
-    )
-    assert_equal(
-        templates.expand('{base-ext}.djvu', path, 0, memo),
-        'eggs.djvu'
-    )
-    assert_equal(
-        templates.expand('{page}', path, 0, memo),
-        '1'
-    )
-    assert_equal(
-        templates.expand('{page:04}', path, 0, memo),
-        '0001'
-    )
-    assert_equal(
-        templates.expand('{page}', path, 42, memo),
-        '43'
-    )
-    assert_equal(
-        templates.expand('{page+26}', path, 42, memo),
-        '69'
-    )
-    assert_equal(
-        templates.expand('{page-26}', path, 42, memo),
-        '17'
-    )
+    s = templates.expand('{name}', path, 0, memo)
+    assert_equal(s, '/path/to/eggs.png')
+    s = templates.expand('{base}', path, 0, memo)
+    assert_equal(s, 'eggs.png')
+    s = templates.expand('{name-ext}.djvu', path, 0, memo)
+    assert_equal(s, '/path/to/eggs.djvu')
+    s = templates.expand('{base-ext}.djvu', path, 0, memo)
+    assert_equal(s, 'eggs.djvu')
+
+def test_page():
+    path = '/path/to/eggs.png'
+    memo = {}
+    s = templates.expand('{page}', path, 0, memo)
+    assert_equal(s, '1')
+    s = templates.expand('{page:04}', path, 0, memo)
+    assert_equal(s, '0001')
+    s = templates.expand('{page}', path, 42, memo)
+    assert_equal(s, '43')
+    s = templates.expand('{page+26}', path, 42, memo)
+    assert_equal(s, '69')
+    s = templates.expand('{page-26}', path, 42, memo)
+    assert_equal(s, '17')
 
 def test_duplicates():
     path = '/path/to/eggs.png'
