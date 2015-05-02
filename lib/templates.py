@@ -19,28 +19,6 @@ import string
 formatter = string.Formatter()
 
 def expand(template, name, page, memo):
-    '''
-    >>> path = '/path/to/eggs.png'
-    >>> memo = {}
-    >>> expand('{name}', path, 0, memo)
-    '/path/to/eggs.png'
-    >>> expand('{base}', path, 0, memo)
-    'eggs.png'
-    >>> expand('{name-ext}.djvu', path, 0, memo)
-    '/path/to/eggs.djvu'
-    >>> expand('{base-ext}.djvu', path, 0, memo)
-    'eggs.djvu'
-    >>> expand('{page}', path, 0, memo)
-    '1'
-    >>> expand('{page:04}', path, 0, memo)
-    '0001'
-    >>> expand('{page}', path, 42, memo)
-    '43'
-    >>> expand('{page+26}', path, 42, memo)
-    '69'
-    >>> expand('{page-26}', path, 42, memo)
-    '17'
-    '''
     base = os.path.basename(name)
     name_ext, _ = os.path.splitext(name)
     base_ext, _ = os.path.splitext(base)
