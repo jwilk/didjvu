@@ -22,11 +22,12 @@ Things to do
 
  * Allow running ``didjvu bundle`` on DjVu files.
 
- * Make sure that ``--pageid-template`` never provokes page-id
-   conflicts.
-
  * Make ``didjvu bundle`` display correct “bits-per-pixel” information.
 
  * Add support for ``--fg-slices 0``.
+   https://bitbucket.org/jwilk/didjvu/issue/4
+
+ * DPI from the original file should be preserved when no ``--dpi``
+   option was specified.
 
 .. vim:ft=rst ts=3 sw=3 et tw=72
