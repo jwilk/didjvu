@@ -35,7 +35,8 @@ xmp_register_namespace('didjvu', ns.didjvu)
 
 try:
     etree.register_namespace
-except AttributeError:
+except AttributeError:  # <no-coverage>
+    # Python 2.6
     def et_register_namespace(prefix, uri):
         import xml.etree.ElementTree as etree
         etree._namespace_map[uri] = prefix
@@ -110,7 +111,7 @@ class MetadataBase(object):
         description = None
         try:
             xmp_find = xmp.iterfind
-        except AttributeError:
+        except AttributeError:  # <no-coverage>
             # Python 2.6
             xmp_find = xmp.findall
         for description in xmp_find('.//{%s}Description' % ns.rdf):
