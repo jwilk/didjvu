@@ -1,9 +1,9 @@
-didjvu (0.2.9) UNRELEASED; urgency=low
+didjvu (0.2.9) unstable; urgency=low
 
   * Fix error handling in the python-xmp-toolkit XML backend.
   * Fix compatibility with python-xmp-toolkit ≥ 2.0.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Sat, 02 May 2015 09:39:54 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Sat, 02 May 2015 09:58:13 +0200
 
 didjvu (0.2.8) unstable; urgency=low
 
