@@ -1,6 +1,6 @@
 # encoding=UTF-8
 
-# Copyright © 2010-2013 Jakub Wilk <jwilk@jwilk.net>
+# Copyright © 2010-2015 Jakub Wilk <jwilk@jwilk.net>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@ import sys
 from nose import SkipTest
 from nose.tools import (
     assert_equal,
+    assert_is_instance,
     assert_not_equal,
     assert_raises,
     assert_true,
