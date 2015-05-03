@@ -137,6 +137,12 @@ def fork_isolation(f):
 
     return wrapper
 
+if 'coverage' in sys.modules:
+    def fork_isolation(f):
+        # Fork isolation would break coverage measurements.
+        # Oh well. FIXME.
+        return f
+
 __all__ = [
     'SkipTest',
     'assert_equal',
