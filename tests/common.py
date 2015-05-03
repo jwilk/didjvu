@@ -142,7 +142,6 @@ __all__ = [
     'assert_equal',
     'assert_is_instance',
     'assert_not_equal',
-    'assert_raises',
     'assert_rfc3339_timestamp',
     'assert_true',
     'exception',
