@@ -49,6 +49,7 @@ def load_image(filename):
     try:
         # Natively, Gamera supports only TIFF and PNG formats. However, it
         # supports wider variety of TIFFs than PIL.
+        # https://mail.python.org/pipermail/image-sig/2003-July/002354.html
         return _load_image(filename)
     except IOError:
         pil_image = PIL.open(filename)
