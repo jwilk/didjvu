@@ -131,6 +131,7 @@ def fork_isolation(f):
 __all__ = [
     'SkipTest',
     'assert_equal',
+    'assert_is_instance',
     'assert_not_equal',
     'assert_raises',
     'assert_rfc3339_timestamp',
