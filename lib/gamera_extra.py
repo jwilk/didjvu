@@ -116,7 +116,7 @@ def to_pil_rgb(image):
 def to_pil_1bpp(image):
     return image.to_greyscale().to_pil()
 
-def _decref(o):
+def _decref(o):  # <no-coverage>
     '''
     Forcibly decrease refcount of the object by 1.
     '''
@@ -126,7 +126,7 @@ def _decref(o):
     memmove.restype = ctypes.py_object
     return memmove(o, None, 0)
 
-def _monkeypatch_to_raw_string():
+def _monkeypatch_to_raw_string():  # <no-coverage>
     '''
     Monkey-patch to _to_raw_string plugin function to return objects with
     correct refcounts.
@@ -148,7 +148,7 @@ def init():
     test_image = Image((0, 0), (5, 5), RGB)
     test_string = test_image._to_raw_string()
     refcount = sys.getrefcount(test_string)
-    if refcount == 3:
+    if refcount == 3:  # <no-coverage>
         # See: https://tech.groups.yahoo.com/group/gamera-devel/message/2068
         warnings.warn(RuntimeWarning('Working around memory leak in the Gamera library'), stacklevel=2)
         _monkeypatch_to_raw_string()
