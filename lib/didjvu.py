@@ -140,8 +140,18 @@ def make_layer(image, mask, subsampler, options):
         slices=options.slices, crcb=options.crcb
     )
 
-def image_to_djvu(width, height, image, mask, options):
+def image_dpi(image, options):
     dpi = options.dpi
+    if dpi is None:
+        dpi = image.dpi
+    if dpi is None:
+        dpi = djvu.DPI_DEFAULT
+    dpi = max(dpi, djvu.DPI_MIN)
+    dpi = min(dpi, djvu.DPI_MAX)
+    return dpi
+
+def image_to_djvu(width, height, image, mask, options):
+    dpi = image_dpi(image, options)
     loss_level = options.loss_level
     if options.pages_per_dict > 1:
         # XXX This should probably go the other way round: we run minidjvu
@@ -393,6 +403,7 @@ class main():
             raise NotImplementedError("I don't know what to do with this file")
         logger.info('- reading image')
         image = gamera.load_image(image_filename)
+        dpi = image_dpi(image, o)
         width, height = image.ncols, image.nrows
         pixels[0] += width * height
         logger.nosy('- image size: %d x %d', width, height)
@@ -400,7 +411,7 @@ class main():
         logger.info('- converting to DjVu')
         page.djvu = image_to_djvu(width, height, image, mask, options=o)
         image = mask = None
-        page.sjbz = djvu.Multichunk(width, height, o.dpi, sjbz=page.djvu['sjbz'])
+        page.sjbz = djvu.Multichunk(width, height, dpi, sjbz=page.djvu['sjbz'])
         page.sjbz_symlink = os.path.join(minidjvu_in_dir, page.pageid)
         os.symlink(page.sjbz.save().name, page.sjbz_symlink)
 

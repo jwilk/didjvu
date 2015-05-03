@@ -3,7 +3,7 @@ Generated automatically by private/update-coverage. Do not edit.
 Name                      Stmts   Miss Branch BrMiss  Cover   Missing
 ---------------------------------------------------------------------
 lib                           3      0      0      0   100%
-lib.gamera_extra             84     14     20     13    74%   59-60, 69-76, 112-114, 117
+lib.gamera_extra             91     14     22     13    76%   69-70, 81-88, 124-126, 129
 lib.ipc                      89     30     30     14    63%   41-42, 46-47, 57, 60-61, 69-71, 74, 93, 105, 109-111, 118, 131-133, 136-140, 143-147
 lib.templates                40      0     14      0   100%
 lib.temporary                16      6      0      0    63%   27-33
@@ -15,4 +15,4 @@ lib.xmp.libxmp_backend       66      4     20      2    93%   51-54
 lib.xmp.namespaces            6      0      0      0   100%
 lib.xmp.pyexiv2_backend     128      9     24      4    91%   60-62, 73, 120, 131-132, 145-146
 ---------------------------------------------------------------------
-TOTAL                       531     78    118     36    82%
+TOTAL                       538     78    120     36    83%

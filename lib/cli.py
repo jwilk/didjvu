@@ -83,7 +83,7 @@ class ArgumentParser(argparse.ArgumentParser):
     class defaults:
         pageid_template = '{base-ext}.djvu'
         pages_per_dict = 1
-        dpi = djvu.DPI_DEFAULT
+        dpi = None
         fg_slices = [100]
         fg_crcb = djvu.CRCB.full
         fg_subsample = 6
@@ -158,7 +158,7 @@ class ArgumentParser(argparse.ArgumentParser):
             if p is not p_separate:
                 p.add_argument(
                     '-d', '--dpi', type=dpi_type, metavar='N',
-                    help='image resolution (default: %d)' % default.dpi
+                    help='image resolution (default: %d)' % djvu.DPI_DEFAULT
                 )
             if p is p_bundle:
                 p.add_argument(

@@ -36,6 +36,16 @@ except ImportError:  # <no-coverage>
             msg='{0!r} is not an instance of {1!r}'.format(obj, cls)
         )
 
+try:
+    from nose.tools import assert_is_none
+except ImportError:
+    # Python 2.6:
+    def assert_is_none(obj):
+        assert_true(
+            obj is None,
+            msg='{0!r} is not None'.format(obj)
+        )
+
 def assert_regexp_matches(regexp, text):
     if isinstance(regexp, basestring):
         regexp = re.compile(regexp)
@@ -147,6 +157,7 @@ __all__ = [
     'SkipTest',
     'assert_equal',
     'assert_is_instance',
+    'assert_is_none',
     'assert_not_equal',
     'assert_rfc3339_timestamp',
     'assert_true',

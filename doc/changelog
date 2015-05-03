@@ -3,8 +3,10 @@ didjvu (0.4) UNRELEASED; urgency=low
   * Automatically rename duplicate page identifiers.
     Thanks to Thomas Enderle for the bug report.
     https://bitbucket.org/jwilk/didjvu/issue/7
+  * Preserve resolution from the input file when this metadata is present and
+    no -d/--dpi option is specified.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Sun, 03 May 2015 22:52:09 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Sun, 03 May 2015 23:01:01 +0200
 
 didjvu (0.2.9) unstable; urgency=low
 

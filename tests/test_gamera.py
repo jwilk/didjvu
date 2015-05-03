@@ -12,10 +12,13 @@
 # General Public License for more details.
 
 import glob
+import re
 import os
 
 from . common import (
+    assert_equal,
     assert_is_instance,
+    assert_is_none,
     fork_isolation,
 )
 
@@ -30,10 +33,17 @@ def test_load_image():
         )
     @fork_isolation
     def t(path):
+        dpi_match = re.search('dpi([0-9]+)', path)
         path = os.path.join(datadir, path)
         gamera.init()
         image = gamera.load_image(path)
         assert_is_instance(image, gamera.Image)
+        if dpi_match is None:
+            assert_is_none(image.dpi)
+        else:
+            dpi = int(dpi_match.group(1))
+            assert_is_instance(image.dpi, int)
+            assert_equal(image.dpi, dpi)
     for path in paths:
         yield t, path
 

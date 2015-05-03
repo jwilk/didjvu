@@ -14,6 +14,7 @@
 '''bridge to the Gamera framework'''
 
 import ctypes
+import math
 import re
 import sys
 import warnings
@@ -46,20 +47,31 @@ def has_version(*req_version):
     return tuple(map(int, version.split('.'))) >= req_version
 
 def load_image(filename):
+    pil_image = PIL.open(filename)
+    [xdpi, ydpi] = pil_image.info.get('dpi', (0, 0))
+    if xdpi <= 1 or ydpi <= 1:
+        # not reliable
+        dpi = None
+    else:
+        dpi = int(round(
+            math.hypot(xdpi, ydpi) /
+            math.hypot(1, 1)
+        ))
     try:
         # Natively, Gamera supports only TIFF and PNG formats. However, it
         # supports wider variety of TIFFs than PIL.
         # https://mail.python.org/pipermail/image-sig/2003-July/002354.html
-        return _load_image(filename)
+        image = _load_image(filename)
     except IOError:
-        pil_image = PIL.open(filename)
         # Gamera supports importing only 8-bit and RGB from PIL:
         if pil_image.mode == '1':
             pil_image = pil_image.convert('L')
         elif pil_image.mode not in ('RGB', 'L'):
             pil_image = pil_image.convert('RGB')
         assert pil_image.mode in ('RGB', 'L')
-        return _from_pil(pil_image)
+        image = _from_pil(pil_image)
+    image.dpi = dpi
+    return image
 
 def colorspace_wrapper(plugin):
 

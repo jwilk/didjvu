@@ -27,9 +27,6 @@ Things to do
  * Add support for ``--fg-slices 0``.
    https://bitbucket.org/jwilk/didjvu/issue/4
 
- * DPI from the original file should be preserved when no ``--dpi``
-   option was specified.
-
  * Check if the required DjVuLibre/minidjvu tools exist before starting
    the conversion.
 
