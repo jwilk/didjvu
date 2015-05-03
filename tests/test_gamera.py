@@ -16,6 +16,7 @@ import os
 
 from . common import (
     assert_is_instance,
+    fork_isolation,
 )
 
 from lib import gamera_extra as gamera
@@ -25,6 +26,7 @@ def test_load_image():
     paths = map(os.path.basename,
         glob.glob(os.path.join(datadir, '*.tiff'))
     )
+    @fork_isolation
     def t(path):
         path = os.path.join(datadir, path)
         gamera.init()
