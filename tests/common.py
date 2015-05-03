@@ -22,7 +22,6 @@ from nose import SkipTest
 from nose.tools import (
     assert_equal,
     assert_not_equal,
-    assert_raises,
     assert_true,
 )
 
