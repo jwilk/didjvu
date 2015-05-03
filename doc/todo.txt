@@ -30,4 +30,7 @@ Things to do
  * DPI from the original file should be preserved when no ``--dpi``
    option was specified.
 
+ * Check if the required DjVuLibre/minidjvu tools exist before starting
+   the conversion.
+
 .. vim:ft=rst ts=3 sw=3 et tw=72
