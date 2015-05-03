@@ -1,6 +1,6 @@
 # encoding=UTF-8
 
-# Copyright © 2012 Jakub Wilk <jwilk@jwilk.net>
+# Copyright © 2012-2015 Jakub Wilk <jwilk@jwilk.net>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -274,7 +274,7 @@ class test_metadata():
         return test
 
     def test_updated(self):
-        image_path = os.path.join(os.path.dirname(__file__), 'example.png')
+        image_path = os.path.join(os.path.dirname(__file__), 'data', 'example.png')
         for backend in xmp_backends:
             with temporary.file() as xmp_file:
                 exc = None
