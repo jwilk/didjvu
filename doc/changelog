@@ -1,10 +1,10 @@
-didjvu (0.2.10) UNRELEASED; urgency=low
+didjvu (0.4) UNRELEASED; urgency=low
 
   * Automatically rename duplicate page identifiers.
     Thanks to Thomas Enderle for the bug report.
     https://bitbucket.org/jwilk/didjvu/issue/7
 
- -- Jakub Wilk <jwilk@jwilk.net>  Sat, 02 May 2015 15:00:14 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Sun, 03 May 2015 22:52:09 +0200
 
 didjvu (0.2.9) unstable; urgency=low
 
