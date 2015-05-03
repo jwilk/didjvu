@@ -23,9 +23,11 @@ from lib import gamera_extra as gamera
 
 def test_load_image():
     datadir = os.path.join(os.path.dirname(__file__), 'data')
-    paths = map(os.path.basename,
-        glob.glob(os.path.join(datadir, '*.tiff'))
-    )
+    paths = []
+    for ext in ['tiff', 'bmp']:
+        paths += map(os.path.basename,
+            glob.glob(os.path.join(datadir, '*.' + ext))
+        )
     @fork_isolation
     def t(path):
         path = os.path.join(datadir, path)
