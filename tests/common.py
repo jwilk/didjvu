@@ -21,11 +21,20 @@ import sys
 from nose import SkipTest
 from nose.tools import (
     assert_equal,
-    assert_is_instance,
     assert_not_equal,
     assert_raises,
     assert_true,
 )
+
+try:
+    from nose.tools import assert_is_instance
+except ImportError:  # <no-coverage>
+    # Python 2.6:
+    def assert_is_instance(obj, cls):
+        assert_true(
+            isinstance(obj, cls),
+            msg='{0!r} is not an instance of {1!r}'.format(obj, cls)
+        )
 
 def assert_regexp_matches(regexp, text):
     if isinstance(regexp, basestring):
