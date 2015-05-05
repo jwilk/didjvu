@@ -58,8 +58,11 @@ def load_image(filename):
             math.hypot(1, 1)
         ))
     try:
-        # Natively, Gamera supports only TIFF and PNG formats. However, it
-        # supports wider variety of TIFFs than PIL.
+        # Gamera handles only a few TIFF color modes correctly.
+        # https://bugs.debian.org/784374
+        if pil_image.mode not in ['1', 'I;16', 'L', 'RGB']:
+            raise IOError
+        # Gamera supports more TIFF compression formats that PIL.
         # https://mail.python.org/pipermail/image-sig/2003-July/002354.html
         image = _load_image(filename)
     except IOError:
