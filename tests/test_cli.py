@@ -145,4 +145,11 @@ def test_replace_underscores():
         'eggs-ham-spam'
     )
 
+class test_argument_parser():
+
+    def test_init(self):
+        methods = dict(abutaleb=None, djvu=None)
+        cli.ArgumentParser(methods, 'djvu')
+        # TODO: Check if the argument parser was created correctly.
+
 # vim:ts=4 sts=4 sw=4 et
