@@ -142,7 +142,7 @@ class ArgumentParser(argparse.ArgumentParser):
                     else:
                         p.add_argument(
                             '--bg-slices', type=slice_type(), metavar='N+...+N',
-                            help='number of slices in each forgeground chunk (default: %s)' % get_slice_repr(default.bg_slices)
+                            help='number of slices in each foreground chunk (default: %s)' % get_slice_repr(default.bg_slices)
                         )
                     default_crcb = getattr(default, '%s_crcb' % layer)
                     p.add_argument(
