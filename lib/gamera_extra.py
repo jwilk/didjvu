@@ -24,7 +24,11 @@ from . import utils
 try:
     from PIL import Image as PIL
 except ImportError as ex:  # <no-coverage>
-    utils.enhance_import_error(ex, 'Python Imaging Library', 'python-imaging', 'http://www.pythonware.com/products/pil/')
+    utils.enhance_import_error(ex,
+        'Python Imaging Library',
+        'python-imaging',
+        'http://www.pythonware.com/products/pil/'
+    )
     raise
 else:
     # Gamera (<< 3.4.0) still expects that PIL can be imported as Image
@@ -33,7 +37,11 @@ else:
 try:
     import gamera
 except ImportError as ex:  # <no-coverage>
-    utils.enhance_import_error(ex, 'Gamera', 'python-gamera', 'http://gamera.sourceforge.net/')
+    utils.enhance_import_error(ex,
+        'Gamera',
+        'python-gamera',
+        'http://gamera.sourceforge.net/'
+    )
     raise
 del gamera  # quieten pyflakes
 
