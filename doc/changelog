@@ -5,6 +5,7 @@ didjvu (0.4) UNRELEASED; urgency=low
     https://bugs.debian.org/784374
   * Add support for discarding foreground (--fg-slices=0) and background
     (--bg-slices=0) layers.
+    This feature requires DjVuLibre ≥ 3.5.22.
     https://bitbucket.org/jwilk/didjvu/issue/4
 
  -- Jakub Wilk <jwilk@jwilk.net>  Wed, 06 May 2015 11:45:30 +0200
