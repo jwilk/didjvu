@@ -27,7 +27,7 @@ from nose.tools import (
 
 try:
     from nose.tools import assert_is
-except ImportError:  # <no-coverage>
+except ImportError:
     # Python 2.6:
     def assert_is(obj, cls):
         assert_true(
@@ -37,7 +37,7 @@ except ImportError:  # <no-coverage>
 
 try:
     from nose.tools import assert_is_instance
-except ImportError:  # <no-coverage>
+except ImportError:
     # Python 2.6:
     def assert_is_instance(obj, cls):
         assert_true(
