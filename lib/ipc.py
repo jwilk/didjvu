@@ -13,6 +13,7 @@
 
 '''interprocess communication'''
 
+import errno
 import logging
 import os
 import re
@@ -145,6 +146,21 @@ class Proxy(object):
         self._wait_fn()
         self._wait_fn = int
         setattr(self._object, name, value)
+
+# require()
+# =========
+
+def _require(command):
+    directories = os.environ['PATH'].split(os.pathsep)
+    for directory in directories:
+        path = os.path.join(directory, command)
+        if os.access(path, os.X_OK):
+            return
+    raise OSError(errno.ENOENT, 'command not found', command)
+
+def require(*commands):
+    for command in commands:
+        _require(command)
 
 # logging support
 # ===============

@@ -239,6 +239,7 @@ class main():
         }.get(o.verbosity, logging.DEBUG)
         logger.setLevel(log_level)
         ipc_logger.setLevel(log_level)
+        djvu.require_cli()
         gamera.init()
 
     def check_multi_output(self, o):
@@ -370,6 +371,7 @@ class main():
         if o.pages_per_dict <= 1:
             self.bundle_simple(o)
         else:
+            ipc.require('minidjvu')
             self.bundle_complex(o)
         [xmp_output] = o.xmp_output
         if xmp_output:

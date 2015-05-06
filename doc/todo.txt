@@ -24,7 +24,4 @@ Things to do
 
  * Make ``didjvu bundle`` display correct “bits-per-pixel” information.
 
- * Check if the required DjVuLibre/minidjvu tools exist before starting
-   the conversion.
-
 .. vim:ft=rst ts=3 sw=3 et tw=72
