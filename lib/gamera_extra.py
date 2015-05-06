@@ -79,8 +79,9 @@ def load_image(filename):
 def colorspace_wrapper(plugin):
 
     pixel_types = plugin.self_type.pixel_types
+    method=[None]
 
-    def new_plugin(image, method=[None]):
+    def new_plugin(image):
         if image.data.pixel_type not in pixel_types:
             if RGB in pixel_types:
                 image = image.to_rgb()
