@@ -139,4 +139,10 @@ def test_intact():
     intact_x = cli.intact(x)
     assert_is(intact_x(), x)
 
+def test_replace_underscores():
+    assert_equal(
+        cli.replace_underscores('eggs_ham_spam'),
+        'eggs-ham-spam'
+    )
+
 # vim:ts=4 sts=4 sw=4 et
