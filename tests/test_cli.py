@@ -121,4 +121,16 @@ class test_slice_type():
         with exception(ValueError, string='non-increasing slice value'):
             t('42+-5')
 
+def test_slice_repr():
+
+    def t(inp, exp):
+        t = cli.slice_type()
+        r = cli.get_slice_repr(inp)
+        assert_equal(r, exp)
+        assert_equal(t(r), inp)
+
+    t([0], '0')
+    t([42], '42')
+    t([23, 37, 42], '23+14+5')
+
 # vim:ts=4 sts=4 sw=4 et
