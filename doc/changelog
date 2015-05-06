@@ -3,8 +3,11 @@ didjvu (0.4) UNRELEASED; urgency=low
   * Fix loading TIFF files in color modes that Gamera doesn't handle
     correctly.
     https://bugs.debian.org/784374
+  * Add support for discarding forgeground (--fg-slices=0) and background
+    (--bg-slices=0) layers.
+    https://bitbucket.org/jwilk/didjvu/issue/4
 
- -- Jakub Wilk <jwilk@jwilk.net>  Wed, 06 May 2015 11:40:59 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Wed, 06 May 2015 11:45:30 +0200
 
 didjvu (0.3) unstable; urgency=low
 

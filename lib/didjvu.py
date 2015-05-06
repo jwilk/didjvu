@@ -140,6 +140,24 @@ def make_layer(image, mask, subsampler, options):
         slices=options.slices, crcb=options.crcb
     )
 
+def make_dummy_layer(image, pixel, options):
+    subsampled_size = get_subsampled_dim(image, djvu.SUBSAMPLE_MAX)
+    simage = gamera.Image((0, 0), (0, 0), pixel_type=gamera.RGB)
+    simage.set(gamera.Point(0, 0), pixel)
+    simage = gamera.to_pil_rgb(simage)
+    simage = simage.resize((subsampled_size.ncols, subsampled_size.nrows))
+    return djvu.photo_to_djvu(
+        image=simage,
+        slices=djvu.IW44_SLICES_SOLID,
+        crcb=options.crcb,
+    )
+
+def make_dummy_fg_layer(image, options):
+    return make_dummy_layer(image, gamera.RGBPixel(0, 0, 0), options)
+
+def make_dummy_bg_layer(image, options):
+    return make_dummy_layer(image, gamera.RGBPixel(0xFF, 0xFF, 0xFF), options)
+
 def image_dpi(image, options):
     dpi = options.dpi
     if dpi is None:
@@ -158,12 +176,22 @@ def image_to_djvu(width, height, image, mask, options):
         # first, and then reuse its masks.
         loss_level = 0
     sjbz = djvu.bitonal_to_djvu(gamera.to_pil_1bpp(mask), loss_level=loss_level)
+    discard_fg = options.fg_options.slices == [0]
+    discard_bg = options.bg_options.slices == [0]
     if options.fg_bg_defaults:
         image = gamera.to_pil_rgb(image)
         return djvu.Multichunk(width, height, dpi, image=image, sjbz=sjbz)
+    elif discard_fg and discard_bg:
+        return djvu.Multichunk(width, height, dpi, sjbz=sjbz)
     else:
-        fg_djvu = make_layer(image, mask, subsample_fg, options.fg_options)
-        bg_djvu = make_layer(image, mask, subsample_bg, options.bg_options)
+        if discard_fg:
+            fg_djvu = make_dummy_fg_layer(image, options.fg_options)
+        else:
+            fg_djvu = make_layer(image, mask, subsample_fg, options.fg_options)
+        if discard_bg:
+            bg_djvu = make_dummy_bg_layer(image, options.bg_options)
+        else:
+            bg_djvu = make_layer(image, mask, subsample_bg, options.bg_options)
         fg44, bg44 = map(djvu.djvu_to_iw44, [fg_djvu, bg_djvu])
         return djvu.Multichunk(width, height, dpi, fg44=fg44, bg44=bg44, sjbz=sjbz)
 
