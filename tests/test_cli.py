@@ -42,18 +42,17 @@ class test_range_int():
 
     def test_non_int(self):
         t = cli.range_int(37, 42, 'eggs')
+        with exception(ValueError, "invalid literal for int() with base 10: ''"):
+            t('')
         with exception(ValueError, "invalid literal for int() with base 10: 'ham'"):
             t('ham')
 
 class test_slice_type():
 
-    def test_empty(self):
+    def test_non_int(self):
         t = cli.slice_type()
         with exception(ValueError, "invalid literal for int() with base 10: ''"):
             t('')
-
-    def test_non_int(self):
-        t = cli.slice_type()
         with exception(ValueError, "invalid literal for int() with base 10: 'ham'"):
             t('ham')
 
