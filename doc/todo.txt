@@ -24,9 +24,6 @@ Things to do
 
  * Make ``didjvu bundle`` display correct “bits-per-pixel” information.
 
- * Add support for ``--fg-slices 0``.
-   https://bitbucket.org/jwilk/didjvu/issue/4
-
  * Check if the required DjVuLibre/minidjvu tools exist before starting
    the conversion.
 
