@@ -11,6 +11,8 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 # General Public License for more details.
 
+from __future__ import print_function
+
 import itertools
 import os
 import re
@@ -54,7 +56,7 @@ def setup_logging():
 def error(message, *args, **kwargs):
     if args or kwargs:
         message = message.format(*args, **kwargs)
-    print >>sys.stderr, 'didjvu: error: ' + message
+    print('didjvu: error: ' + message, file=sys.stderr)
     sys.exit(1)
 
 def parallel_for(o, f, *iterables):
@@ -63,8 +65,7 @@ def parallel_for(o, f, *iterables):
 
 def check_tty():
     if sys.stdout.isatty():
-        print >>sys.stderr, 'I won\'t write binary data to a terminal.'
-        sys.exit(1)
+        error("refusing to write binary data to a terminal")
 
 def copy_file(input_file, output_file):
     length = 0
