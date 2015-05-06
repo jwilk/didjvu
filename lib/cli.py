@@ -41,7 +41,7 @@ dpi_type = range_int(djvu.DPI_MIN, djvu.DPI_MAX, 'dpi')
 losslevel_type = range_int(djvu.LOSS_LEVEL_MIN, djvu.LOSS_LEVEL_MAX, 'loss level')
 subsample_type = range_int(djvu.SUBSAMPLE_MIN, djvu.SUBSAMPLE_MAX, 'subsample')
 
-def slice_type(max_slices=99):
+def slice_type(max_slices=djvu.IW44_N_SLICES_MAX):
 
     def slices(value):
         result = []

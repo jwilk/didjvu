@@ -34,6 +34,8 @@ SUBSAMPLE_DEFAULT = 3
 SUBSAMPLE_MAX = 12
 
 IW44_SLICES_DEFAULT = (74, 89, 99)
+IW44_N_SLICES_MAX = 63
+# http://sourceforge.net/p/djvu/djvulibre-git/ci/release.3.5.27.1/tree/tools/c44.cpp#l246
 
 class Crcb(object):
 
