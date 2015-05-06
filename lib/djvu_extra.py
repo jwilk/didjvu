@@ -69,7 +69,13 @@ def bitonal_to_djvu(image, dpi=300, loss_level=0):
     pbm_file = temporary.file(suffix='.pbm')
     image.save(pbm_file.name)
     djvu_file = temporary.file(suffix='.djvu', mode='r+b')
-    args = ['cjb2', '-losslevel', str(loss_level), pbm_file.name, djvu_file.name]
+    args = [
+        'cjb2',
+        '-dpi', str(dpi),
+        '-losslevel', str(loss_level),
+        pbm_file.name,
+        djvu_file.name
+    ]
     return ipc.Proxy(djvu_file, ipc.Subprocess(args).wait, [pbm_file])
 
 def photo_to_djvu(image, dpi=100, slices=IW44_SLICES_DEFAULT, gamma=2.2, mask_image=None, crcb=CRCB.normal):
