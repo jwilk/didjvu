@@ -13,6 +13,7 @@
 
 from . common import (
     assert_equal,
+    assert_is,
     exception,
 )
 
@@ -132,5 +133,10 @@ def test_slice_repr():
     t([0], '0')
     t([42], '42')
     t([23, 37, 42], '23+14+5')
+
+def test_intact():
+    x = object()
+    intact_x = cli.intact(x)
+    assert_is(intact_x(), x)
 
 # vim:ts=4 sts=4 sw=4 et
