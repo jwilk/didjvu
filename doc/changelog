@@ -9,8 +9,9 @@ didjvu (0.4) UNRELEASED; urgency=low
     https://bitbucket.org/jwilk/didjvu/issue/4
   * Fix compatibility with DjVuLibre > 3.5.27 (with respect to adding INCL
     chunks).
+  * Improve error handling.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Wed, 06 May 2015 11:45:30 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Wed, 06 May 2015 14:50:40 +0200
 
 didjvu (0.3) unstable; urgency=low
 

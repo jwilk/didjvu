@@ -51,6 +51,12 @@ def setup_logging():
     handler.setFormatter(formatter)
     ipc_logger.addHandler(handler)
 
+def error(message, *args, **kwargs):
+    if args or kwargs:
+        message = message.format(*args, **kwargs)
+    print >>sys.stderr, 'didjvu: error: ' + message
+    sys.exit(1)
+
 def parallel_for(o, f, *iterables):
     for args in zip(*iterables):
         f(o, *args)
@@ -185,16 +191,16 @@ _pageid_chars = re.compile('^[A-Za-z0-9_+.-]+$').match
 
 def check_pageid_sanity(pageid):
     if not _pageid_chars(pageid):
-        raise ValueError('Pageid must consist only of lowercase ASCII letters, digits, _, +, - and dot.')
+        raise ValueError('pageid must consist only of lowercase ASCII letters, digits, _, +, - and dot.')
     if pageid[:1] in ('.', '+', '-'):
-        raise ValueError('Pageid cannot start with +, - or a dot.')
+        raise ValueError('pageid cannot start with +, - or a dot.')
     if '..' in pageid:
-        raise ValueError('Pageid cannot contain two consecutive dots.')
+        raise ValueError('pageid cannot contain two consecutive dots.')
     assert pageid == os.path.basename(pageid)
     if pageid.endswith('.djvu'):
         return pageid
     else:
-        raise ValueError('Pageid must end with the .djvu extension.')
+        raise ValueError('pageid must end with the .djvu extension.')
 
 def replace_ext(filename, ext):
     return '%s.%s' % (os.path.splitext(filename)[0], ext)
@@ -219,7 +225,10 @@ class main():
         if len(o.masks) == 0:
             o.masks = [None for x in o.input]
         elif len(o.masks) != len(o.input):
-            raise ValueError('%d input images != %d masks' % (len(o.input), len(o.masks)))
+            error("the number of input images ({0}) does not match the number of masks ({1})",
+                len(o.input),
+                len(o.masks)
+            )
         ipc_logger = logging.getLogger('didjvu.ipc')
         assert logger is not None
         log_level = {
@@ -246,13 +255,13 @@ class main():
                 o.xmp_output = [None]
                 check_tty()
             else:
-                raise ValueError("cannot output multiple files to stdout")
+                error('cannot output multiple files to stdout')
         else:
             if len(o.input) == 1:
                 o.xmp_output = [o.output + '.xmp'] if o.xmp else [None]
                 o.output = [o.output]
             else:
-                raise ValueError("cannot output multiple files to a single file")
+                error('cannot output multiple files to a single file')
         assert len(o.masks) == len(o.output) == len(o.input)
         o.output = (
             open(f, 'wb') if isinstance(f, basestring) else f
@@ -291,7 +300,7 @@ class main():
             else:
                 # TODO: Figure out how many pages the multi-page document
                 # consist of. If it's only one, continue.
-                raise NotImplementedError("I don't know what to do with this file")
+                error('multi-page DjVu documents are not supported as input files')
             return
         logger.info('- reading image')
         image = gamera.load_image(image_filename)
@@ -330,7 +339,7 @@ class main():
         if ftype.like(filetype.djvu):
             # TODO: Figure out how many pages the document consist of.
             # If it's only one, extract the existing mask.
-            raise NotImplementedError("I don't know what to do with this file")
+            error('DjVu documents are not supported as input files')
         logger.info('- reading image')
         image = gamera.load_image(image_filename)
         width, height = image.ncols, image.nrows
@@ -404,7 +413,7 @@ class main():
         ftype = filetype.check(image_filename)
         if ftype.like(filetype.djvu):
             # TODO: Allow merging existing documents (even multi-page ones).
-            raise NotImplementedError("I don't know what to do with this file")
+            error('DjVu documents are not supported as input files')
         logger.info('- reading image')
         image = gamera.load_image(image_filename)
         dpi = image_dpi(image, o)
@@ -431,7 +440,10 @@ class main():
                 page_info += page,
                 bytes_in += os.path.getsize(image_filename)
                 page.pageid = templates.expand(o.pageid_template, image_filename, pageno, pageid_memo)
-                check_pageid_sanity(page.pageid)
+                try:
+                    check_pageid_sanity(page.pageid)
+                except ValueError, exc:
+                    error(str(exc))
             del page  # quieten pyflakes
             parallel_for(o, self._bundle_complex_page,
                 page_info,
