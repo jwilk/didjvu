@@ -31,7 +31,7 @@ from lib.xmp import namespaces as ns
 
 try:
     from lib.xmp import libxmp_backend
-except ImportError, libxmp_backend_import_error:
+except ImportError as libxmp_backend_import_error:
     class libxmp_backend:
         # dummy replacement
         class MetadataBase(object):
@@ -40,7 +40,7 @@ except ImportError, libxmp_backend_import_error:
 
 try:
     from lib.xmp import pyexiv2_backend
-except ImportError, pyexiv2_backend_import_error:
+except ImportError as pyexiv2_backend_import_error:
     class pyexiv2_backend:
         # dummy replacement
         class MetadataBase(object):
@@ -52,7 +52,7 @@ xmp_backends = [libxmp_backend, pyexiv2_backend]
 try:
     import libxmp
     import libxmp.consts
-except ImportError, libxmp_import_error:
+except ImportError as libxmp_import_error:
     libxmp = None
 
 def test_uuid():
@@ -84,7 +84,7 @@ def run_exiv2(filename, fail_ok=False):
             ['exiv2', 'print', '-P', 'Xkt', filename],
             stdout=ipc.PIPE
         )
-    except OSError, ex:
+    except OSError as ex:
         raise SkipTest(ex)
     for line in sorted(child.stdout):
         yield line
@@ -126,7 +126,7 @@ class test_metadata():
                     meta.write(xmp_file)
                     xmp_file.flush()
                     xmp_file.seek(0)
-                except Exception, exc:
+                except Exception as exc:
                     pass
                 yield self._test_empty_exiv2(xmp_file, exception=exc), tag_backend(backend), tag_exiv2
                 yield self._test_empty_libxmp(xmp_file, exception=exc), tag_backend(backend), tag_libxmp
@@ -194,7 +194,7 @@ class test_metadata():
                     meta.write(xmp_file)
                     xmp_file.flush()
                     xmp_file.seek(0)
-                except Exception, exc:
+                except Exception as exc:
                     pass
                 yield self._test_new_exiv2(xmp_file, exception=exc), tag_backend(backend), tag_exiv2
                 yield self._test_new_libxmp(xmp_file, exception=exc), tag_backend(backend), tag_libxmp
@@ -292,7 +292,7 @@ class test_metadata():
                     meta.write(xmp_file)
                     xmp_file.flush()
                     xmp_file.seek(0)
-                except Exception, exc:
+                except Exception as exc:
                     pass
                 yield self._test_updated_exiv2(xmp_file, exception=exc), tag_backend(backend), tag_exiv2
                 yield self._test_updated_libxmp(xmp_file, exception=exc), tag_backend(backend), tag_libxmp

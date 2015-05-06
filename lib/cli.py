@@ -17,7 +17,7 @@ from . import utils
 
 try:
     import argparse
-except ImportError, ex:  # <no-coverage>
+except ImportError as ex:  # <no-coverage>
     utils.enhance_import_error(ex, 'argparse', 'python-argparse', 'https://pypi.python.org/pypi/argparse')
     raise
 
@@ -25,7 +25,7 @@ from . import djvu_extra as djvu
 from . import version as version_module
 try:
     from . import xmp
-except ImportError, xmp_import_error:  # <no-coverage>
+except ImportError as xmp_import_error:  # <no-coverage>
     xmp = None
 
 def range_int(x, y, typename):

@@ -442,7 +442,7 @@ class main():
                 page.pageid = templates.expand(o.pageid_template, image_filename, pageno, pageid_memo)
                 try:
                     check_pageid_sanity(page.pageid)
-                except ValueError, exc:
+                except ValueError as exc:
                     error(str(exc))
             del page  # quieten pyflakes
             parallel_for(o, self._bundle_complex_page,

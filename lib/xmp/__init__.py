@@ -22,7 +22,7 @@ from .. import version
 
 try:
     from . import libxmp_backend as default_backend
-except ImportError, exc:
+except ImportError as exc:
     try:
         from . import pyexiv2_backend as default_backend
     except ImportError:
@@ -87,7 +87,7 @@ def metadata(backend=default_backend):
         def import_(self, image_filename):
             try:
                 file = open(image_filename + '.xmp', 'rb')
-            except (OSError, IOError), ex:
+            except (OSError, IOError) as ex:
                 if ex.errno == errno.ENOENT:
                     return
                 raise

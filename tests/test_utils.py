@@ -32,7 +32,7 @@ class test_enhance_import():
             with exception(ImportError, msg):
                 try:
                     import nonexistent
-                except ImportError, ex:
+                except ImportError as ex:
                     utils.enhance_import_error(ex, 'PyNonexistent', 'python-nonexistent', 'http://pynonexistent.example.net/')
                     raise
                 nonexistent.f()  # quieten pyflakes
@@ -43,7 +43,7 @@ class test_enhance_import():
             with exception(ImportError, msg):
                 try:
                     import nonexistent
-                except ImportError, ex:
+                except ImportError as ex:
                     utils.enhance_import_error(ex, 'PyNonexistent', 'python-nonexistent', 'http://pynonexistent.example.net/')
                     raise
                 nonexistent.f()  # quieten pyflakes
