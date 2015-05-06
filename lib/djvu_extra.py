@@ -294,7 +294,6 @@ def bundle_djvu(*component_filenames):
     if any(c.endswith('.iff') for c in component_filenames):
         # We can't use ``djvm -c``.
         return bundle_djvu_via_indirect(*component_filenames)
-        raise NotImplementedError
     else:
         djvu_file = temporary.file(suffix='.djvu')
         args = ['djvm', '-c', djvu_file.name]
