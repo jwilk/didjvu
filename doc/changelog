@@ -1,10 +1,10 @@
-didjvu (0.3.1) UNRELEASED; urgency=low
+didjvu (0.4) UNRELEASED; urgency=low
 
   * Fix loading TIFF files in color modes that Gamera doesn't handle
     correctly.
     https://bugs.debian.org/784374
 
- -- Jakub Wilk <jwilk@jwilk.net>  Tue, 05 May 2015 23:38:59 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Wed, 06 May 2015 11:40:59 +0200
 
 didjvu (0.3) unstable; urgency=low
 
