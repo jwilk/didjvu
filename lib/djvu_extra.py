@@ -151,7 +151,7 @@ class Multichunk(object):
                     else:
                         keys.add(key.lower())
                 else:
-                    ValueError
+                    raise ValueError
         finally:
             dump.wait()
         self._chunks = dict((key, None) for key in keys)
