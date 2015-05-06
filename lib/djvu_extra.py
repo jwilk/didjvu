@@ -229,19 +229,33 @@ class Multichunk(object):
         if len(self._chunks) == 0:
             raise ValueError
         args = ['djvumake', None, 'INFO=%d,%d,%d' % (self.width, self.height, self.dpi)]
+        incl_dir = None
         for key, value in sorted(self._chunks.iteritems(), key=_chunk_order):
             try:
                 key = self._chunk_names[key]
             except KeyError:
                 pass
+            if key == 'INCL':
+                # This is tricky. DjVuLibre used to require (at least until v3.5.27) full path for INCL,
+                # but now it requires just basename:
+                # http://sourceforge.net/p/djvu/djvulibre-git/ci/2fea3cdd3eb2b9ae60a43a851dbd838b6939af4b/
+                # Let's work around this inconsistency.
+                new_incl_dir = os.path.dirname(value)
+                if incl_dir is None:
+                    incl_dir = new_incl_dir
+                elif incl_dir != new_incl_dir:
+                    raise ValueError
+                value = os.path.basename(value)
             if not isinstance(value, basestring):
                 value = value.name
             if key == 'BG44':
                 value += ':99'
             args += ['%s=%s' % (key, value)]
+        def chdir():
+            os.chdir(incl_dir or '.')
         with temporary.directory() as tmpdir:
             djvu_filename = args[1] = os.path.join(tmpdir, 'result.djvu')
-            ipc.Subprocess(args).wait()
+            ipc.Subprocess(args, preexec_fn=chdir).wait()
             self._chunks.pop('PPM', None)
             assert 'PPM' not in self._dirty
             djvu_new_filename = temporary.name(suffix='.djvu')

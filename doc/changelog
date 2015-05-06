@@ -7,6 +7,8 @@ didjvu (0.4) UNRELEASED; urgency=low
     (--bg-slices=0) layers.
     This feature requires DjVuLibre ≥ 3.5.22.
     https://bitbucket.org/jwilk/didjvu/issue/4
+  * Fix compatibility with DjVuLibre > 3.5.27 (with respect to adding INCL
+    chunks).
 
  -- Jakub Wilk <jwilk@jwilk.net>  Wed, 06 May 2015 11:45:30 +0200
 
