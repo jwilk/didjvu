@@ -10,8 +10,9 @@ didjvu (0.4) UNRELEASED; urgency=low
   * Fix compatibility with DjVuLibre > 3.5.27 (with respect to adding INCL
     chunks).
   * Improve error handling.
+  * Use a bigger buffer (1 MiB) for file copying.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Wed, 06 May 2015 14:50:40 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Wed, 06 May 2015 19:52:42 +0200
 
 didjvu (0.3) unstable; urgency=low
 

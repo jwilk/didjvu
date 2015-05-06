@@ -70,7 +70,7 @@ def check_tty():
 def copy_file(input_file, output_file):
     length = 0
     while 1:
-        block = input_file.read(0x1000)
+        block = input_file.read(1 << 20) # 1 MiB
         if not block:
             break
         length += len(block)
