@@ -21,10 +21,19 @@ import sys
 from nose import SkipTest
 from nose.tools import (
     assert_equal,
-    assert_is,
     assert_not_equal,
     assert_true,
 )
+
+try:
+    from nose.tools import assert_is
+except ImportError:  # <no-coverage>
+    # Python 2.6:
+    def assert_is(obj, cls):
+        assert_true(
+            obj is cls,
+            msg='{0!r} is not {1!r}'.format(obj, cls)
+        )
 
 try:
     from nose.tools import assert_is_instance
