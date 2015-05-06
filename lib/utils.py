@@ -1,6 +1,6 @@
 # encoding=UTF-8
 
-# Copyright © 2011-2013 Jakub Wilk <jwilk@jwilk.net>
+# Copyright © 2011-2015 Jakub Wilk <jwilk@jwilk.net>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,11 +19,11 @@ debian = os.path.exists('/etc/debian_version')
 
 def enhance_import_error(exception, package, debian_package, homepage):
     message = str(exception)
-    format = '%(message)s; please install the %(package)s package'
     if debian:
         package = debian_package
-    else:
-        format += ' <%(homepage)s>'
-    exception.args = [format % locals()]
+    message += '; please install the {pkg} package'.format(pkg=package)
+    if not debian:
+        message += ' <{url}>'.format(url=homepage)
+    exception.args = [message]
 
 # vim:ts=4 sts=4 sw=4 et
