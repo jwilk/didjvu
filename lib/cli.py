@@ -44,18 +44,30 @@ subsample_type = range_int(djvu.SUBSAMPLE_MIN, djvu.SUBSAMPLE_MAX, 'subsample')
 def slice_type(max_slices=99):
 
     def slices(value):
+        result = []
         if ',' in value:
-            result = map(int, value.split(','))
+            prev_slc = 0
+            for slc in value.split(','):
+                slc = int(slc)
+                if slc <= prev_slc:
+                    raise ValueError('non-increasing slice value')
+                result += [slc]
+                prev_slc = slc
+            slc = 0
         elif '+' in value:
-            result = []
-            accum = 0
-            for slice in value.split('+'):
-                accum += int(slice)
-                result += accum,
+            slc = 0
+            for slcinc in value.split('+'):
+                slcinc = int(slcinc)
+                if slcinc <= 0:
+                    raise ValueError('non-increasing slice value')
+                slc += slcinc
+                result += [slc]
         else:
-            result = [int(value)]
-        if not result:
-            raise ValueError('invalid slice specification')
+            slc = int(value)
+            if slc < 0:
+                raise ValueError('invalid slice value')
+            result = [slc]
+        assert len(result) > 0
         if len(result) > max_slices:
             raise ValueError('too many slices')
         return result
