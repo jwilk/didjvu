@@ -13,10 +13,10 @@
 
 import contextlib
 import functools
-import traceback
 import os
 import re
 import sys
+import traceback
 
 from nose import SkipTest
 from nose.tools import (
