@@ -21,12 +21,11 @@ import tempfile
 
 file = functools.partial(tempfile.NamedTemporaryFile, prefix='didjvu.')
 name = functools.partial(tempfile.mktemp, prefix='didjvu.')
-wrapper = tempfile._TemporaryFileWrapper
 
 def hardlink(path, suffix='', prefix='didjvu.', dir=None):
     new_path = name(suffix=suffix, prefix=prefix, dir=dir)
     os.link(path, new_path)
-    return wrapper(
+    return tempfile._TemporaryFileWrapper(
         open(new_path, 'r+b'),
         new_path
     )
@@ -46,7 +45,6 @@ __all__ = [
     'file',
     'hardlink',
     'name',
-    'wrapper',
 ]
 
 # vim:ts=4 sts=4 sw=4 et
