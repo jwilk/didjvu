@@ -1,6 +1,6 @@
 # encoding=UTF-8
 
-# Copyright © 2009-2012 Jakub Wilk <jwilk@jwilk.net>
+# Copyright © 2009-2015 Jakub Wilk <jwilk@jwilk.net>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,12 +15,21 @@
 
 import contextlib
 import functools
+import os
 import shutil
 import tempfile
 
 file = functools.partial(tempfile.NamedTemporaryFile, prefix='didjvu.')
 name = functools.partial(tempfile.mktemp, prefix='didjvu.')
 wrapper = tempfile._TemporaryFileWrapper
+
+def hardlink(path, suffix='', prefix='didjvu.', dir=None):
+    new_path = name(suffix=suffix, prefix=prefix, dir=dir)
+    os.link(path, new_path)
+    return wrapper(
+        open(new_path, 'r+b'),
+        new_path
+    )
 
 @contextlib.contextmanager
 def directory(*args, **kwargs):
@@ -32,6 +41,12 @@ def directory(*args, **kwargs):
     finally:
         shutil.rmtree(tmpdir)
 
-__all__ = ['file', 'directory', 'name', 'wrapper']
+__all__ = [
+    'directory',
+    'file',
+    'hardlink',
+    'name',
+    'wrapper',
+]
 
 # vim:ts=4 sts=4 sw=4 et

@@ -82,25 +82,25 @@ def bitonal_to_djvu(image, dpi=300, loss_level=0):
 
 def photo_to_djvu(image, dpi=100, slices=IW44_SLICES_DEFAULT, gamma=2.2, mask_image=None, crcb=CRCB.normal):
     ppm_file = temporary.file(suffix='.ppm')
-    temporaries = [ppm_file]
     image.save(ppm_file.name)
-    djvu_file = temporary.file(suffix='.djvu', mode='r+b')
     if not isinstance(crcb, Crcb):
         raise TypeError
-    args = [
-        'c44',
-        '-dpi', str(dpi),
-        '-slice', ','.join(map(str, slices)),
-        '-gamma', '%.1f' % gamma,
-        '-crcb%s' % crcb,
-    ]
-    if mask_image is not None:
-        pbm_file = temporary.file(suffix='.pbm')
-        mask_image.save(pbm_file.name)
-        args += ['-mask', pbm_file.name]
-        temporaries += [pbm_file]
-    args += [ppm_file.name, djvu_file.name]
-    return ipc.Proxy(djvu_file, ipc.Subprocess(args).wait, temporaries)
+    with temporary.directory() as djvu_dir:
+        args = [
+            'c44',
+            '-dpi', str(dpi),
+            '-slice', ','.join(map(str, slices)),
+            '-gamma', '%.1f' % gamma,
+            '-crcb%s' % crcb,
+        ]
+        if mask_image is not None:
+            pbm_file = temporary.file(suffix='.pbm')
+            mask_image.save(pbm_file.name)
+            args += ['-mask', pbm_file.name]
+        djvu_path = os.path.join(djvu_dir, 'result.djvu')
+        args += [ppm_file.name, djvu_path]
+        ipc.Subprocess(args).wait()
+        return temporary.hardlink(djvu_path, suffix='.djvu')
 
 def djvu_to_iw44(djvu_file):
     # TODO: Use Multichunk.

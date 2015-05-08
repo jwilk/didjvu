@@ -11,8 +11,9 @@ didjvu (0.4) UNRELEASED; urgency=low
     chunks).
   * Improve error handling.
   * Use a bigger buffer (1 MiB) for file copying.
+  * Fix insecure use of /tmp when calling c44(1).
 
- -- Jakub Wilk <jwilk@jwilk.net>  Wed, 06 May 2015 19:52:42 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Fri, 08 May 2015 13:55:36 +0200
 
 didjvu (0.3) unstable; urgency=low
 

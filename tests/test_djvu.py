@@ -26,6 +26,9 @@ from lib import djvu_extra as djvu
 
 datadir = os.path.join(os.path.dirname(__file__), 'data')
 
+def assert_image_sizes_equal(i1, i2):
+    assert_equal(i1.size, i2.size)
+
 def assert_images_equal(i1, i2):
     assert_equal(i1.size, i2.size)
     assert_true(
@@ -55,5 +58,14 @@ def test_bitonal_to_djvu():
     djvu_file = djvu.bitonal_to_djvu(in_image)
     out_image = ddjvu(djvu_file, fmt='pbm')
     assert_images_equal(in_image, out_image)
+
+def test_photo_to_djvu():
+    path = os.path.join(datadir, 'ycbcr-jpeg.tiff')
+    in_image = pil.open(path)
+    in_image = in_image.convert('RGB')
+    mask_image = in_image.convert('1')
+    djvu_file = djvu.photo_to_djvu(in_image, mask_image=mask_image)
+    out_image = ddjvu(djvu_file, fmt='ppm')
+    assert_image_sizes_equal(in_image, out_image)
 
 # vim:ts=4 sts=4 sw=4 et
