@@ -14,8 +14,8 @@
 import sys
 
 from . common import (
-    interim,
     exception,
+    interim,
 )
 
 from lib import utils
