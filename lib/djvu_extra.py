@@ -260,9 +260,7 @@ class Multichunk(object):
             ipc.Subprocess(args, preexec_fn=chdir).wait()
             self._chunks.pop('PPM', None)
             assert 'PPM' not in self._dirty
-            djvu_new_filename = temporary.name(suffix='.djvu')
-            os.link(djvu_filename, djvu_new_filename)
-            self._file = temporary.wrapper(file(djvu_new_filename, mode='r+b'), djvu_new_filename)
+            self._file = temporary.hardlink(djvu_filename)
             self._pristine = True
             return self._file
 
