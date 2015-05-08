@@ -12,8 +12,8 @@
 # General Public License for more details.
 
 import glob
-import re
 import os
+import re
 
 from . common import (
     assert_equal,
