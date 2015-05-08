@@ -1,17 +1,17 @@
 didjvu (0.4) UNRELEASED; urgency=low
 
-  * Fix loading TIFF files in color modes that Gamera doesn't handle
-    correctly.
-    https://bugs.debian.org/784374
   * Add support for discarding foreground (--fg-slices=0) and background
     (--bg-slices=0) layers.
     This feature requires DjVuLibre ≥ 3.5.22.
     https://bitbucket.org/jwilk/didjvu/issue/4
+  * Fix insecure use of /tmp when calling c44(1).
+  * Fix loading TIFF files in color modes that Gamera doesn't handle
+    correctly.
+    https://bugs.debian.org/784374
   * Fix compatibility with DjVuLibre > 3.5.27 (with respect to adding INCL
     chunks).
   * Improve error handling.
   * Use a bigger buffer (1 MiB) for file copying.
-  * Fix insecure use of /tmp when calling c44(1).
 
  -- Jakub Wilk <jwilk@jwilk.net>  Fri, 08 May 2015 13:55:36 +0200
 
