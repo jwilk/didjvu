@@ -11,8 +11,8 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 # General Public License for more details.
 
-import os
 import StringIO as stringio
+import os
 import shutil
 
 from . common import (
@@ -22,8 +22,8 @@ from . common import (
 
 from PIL import Image as pil
 
-from lib import ipc
 from lib import djvu_extra as djvu
+from lib import ipc
 from lib import temporary
 
 datadir = os.path.join(os.path.dirname(__file__), 'data')
