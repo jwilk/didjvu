@@ -1,3 +1,9 @@
+didjvu (0.4.1) UNRELEASED; urgency=low
+
+  * 
+
+ -- Jakub Wilk <jwilk@jwilk.net>  Sat, 09 May 2015 22:47:44 +0200
+
 didjvu (0.4) unstable; urgency=low
 
   * Add support for discarding foreground (--fg-slices=0) and background
