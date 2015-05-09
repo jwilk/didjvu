@@ -12,8 +12,9 @@ didjvu (0.4) UNRELEASED; urgency=low
     chunks).
   * Improve error handling.
   * Use a bigger buffer (1 MiB) for file copying.
+  * Improve the test suite.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Fri, 08 May 2015 13:55:36 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Sat, 09 May 2015 21:51:58 +0200
 
 didjvu (0.3) unstable; urgency=low
 
@@ -22,6 +23,7 @@ didjvu (0.3) unstable; urgency=low
     https://bitbucket.org/jwilk/didjvu/issue/7
   * Preserve resolution from the input file when this metadata is present and
     no -d/--dpi option is specified.
+  * Improve the test suite.
 
  -- Jakub Wilk <jwilk@jwilk.net>  Mon, 04 May 2015 21:06:11 +0200
 
