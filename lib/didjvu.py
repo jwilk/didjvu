@@ -65,7 +65,7 @@ def parallel_for(o, f, *iterables):
 
 def check_tty():
     if sys.stdout.isatty():
-        error("refusing to write binary data to a terminal")
+        error('refusing to write binary data to a terminal')
 
 def copy_file(input_file, output_file):
     length = 0
@@ -226,7 +226,7 @@ class main():
         if len(o.masks) == 0:
             o.masks = [None for x in o.input]
         elif len(o.masks) != len(o.input):
-            error("the number of input images ({0}) does not match the number of masks ({1})",
+            error('the number of input images ({0}) does not match the number of masks ({1})',
                 len(o.input),
                 len(o.masks)
             )
