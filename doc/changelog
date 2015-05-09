@@ -11,6 +11,7 @@ didjvu (0.4) unstable; urgency=low
     This feature requires DjVuLibre ≥ 3.5.22.
     https://bitbucket.org/jwilk/didjvu/issue/4
   * Fix insecure use of /tmp when calling c44(1).
+    https://bitbucket.org/jwilk/didjvu/issue/8
   * Fix loading TIFF files in color modes that Gamera doesn't handle
     correctly.
     https://bugs.debian.org/784374
