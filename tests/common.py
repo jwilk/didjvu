@@ -98,6 +98,29 @@ def interim(obj, **override):
         for key, value in copy.iteritems():
             setattr(obj, key, value)
 
+@contextlib.contextmanager
+def interim_environ(**override):
+    keys = set(override)
+    copy_keys = keys & set(os.environ)
+    copy = dict((key, value) for key, value in os.environ.iteritems() if key in copy_keys)
+    for key, value in override.iteritems():
+        if value is None:
+            try:
+                del os.environ[key]
+            except KeyError:
+                pass
+        else:
+            os.environ[key] = value
+    try:
+        yield
+    finally:
+        for key in keys:
+            try:
+                del os.environ[key]
+            except KeyError:
+                pass
+        os.environ.update(copy)
+
 class IsolatedError(Exception):
     pass
 
@@ -176,6 +199,7 @@ __all__ = [
     'exception',
     'fork_isolation',
     'interim',
+    'interim_eviron',
 ]
 
 # vim:ts=4 sts=4 sw=4 et
