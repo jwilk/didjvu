@@ -13,6 +13,7 @@
 
 from __future__ import print_function
 
+import fs
 import itertools
 import os
 import re
@@ -66,16 +67,6 @@ def parallel_for(o, f, *iterables):
 def check_tty():
     if sys.stdout.isatty():
         error('refusing to write binary data to a terminal')
-
-def copy_file(input_file, output_file):
-    length = 0
-    while 1:
-        block = input_file.read(1 << 20)  # 1 MiB
-        if not block:
-            break
-        length += len(block)
-        output_file.write(block)
-    return length
 
 def get_subsampled_dim(image, subsample):
     width = (image.ncols + subsample - 1) // subsample
@@ -203,9 +194,6 @@ def check_pageid_sanity(pageid):
     else:
         raise ValueError('pageid must end with the .djvu extension.')
 
-def replace_ext(filename, ext):
-    return '%s.%s' % (os.path.splitext(filename)[0], ext)
-
 class namespace():
     pass
 
@@ -298,7 +286,7 @@ class main():
             if ftype.like(filetype.djvu_single):
                 logger.info('- copying DjVu as is')
                 with open(image_filename, 'rb') as djvu_file:
-                    copy_file(djvu_file, output)
+                    fs.copy_file(djvu_file, output)
             else:
                 # TODO: Figure out how many pages the multi-page document
                 # consist of. If it's only one, continue.
@@ -315,7 +303,7 @@ class main():
         djvu_doc = image_to_djvu(width, height, image, mask, options=o)
         djvu_file = djvu_doc.save()
         try:
-            bytes_out = copy_file(djvu_file, output)
+            bytes_out = fs.copy_file(djvu_file, output)
         finally:
             djvu_file.close()
         bits_per_pixel = 8.0 * bytes_out / (width * height)
@@ -356,7 +344,7 @@ class main():
             tmp_output = temporary.file(suffix='.png')
             try:
                 mask.save_PNG(tmp_output.name)
-                copy_file(tmp_output, output)
+                fs.copy_file(tmp_output, output)
             finally:
                 tmp_output.close()
 
@@ -403,7 +391,7 @@ class main():
             logger.info('bundling')
             djvu_file = djvu.bundle_djvu(*component_filenames)
             try:
-                bytes_out = copy_file(djvu_file, output)
+                bytes_out = fs.copy_file(djvu_file, output)
             finally:
                 djvu_file.close()
         bits_per_pixel = float('nan')  # FIXME!
@@ -474,7 +462,7 @@ class main():
                 component_filenames = []
                 for pageno, page in enumerate(page_info):
                     if pageno % o.pages_per_dict == 0:
-                        iff_name = replace_ext(page_info[pageno].pageid, 'iff')
+                        iff_name = fs.replace_ext(page_info[pageno].pageid, 'iff')
                         iff_name = os.path.join(minidjvu_out_dir, iff_name)
                         component_filenames += [iff_name]
                     sjbz_name = os.path.join(minidjvu_out_dir, page.pageid)
@@ -488,7 +476,7 @@ class main():
                 logger.info('bundling')
                 djvu_file = djvu.bundle_djvu(*component_filenames)
                 try:
-                    bytes_out = copy_file(djvu_file, output)
+                    bytes_out = fs.copy_file(djvu_file, output)
                 finally:
                     djvu_file.close()
         bits_per_pixel = 8.0 * bytes_out / pixels
