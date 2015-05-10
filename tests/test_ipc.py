@@ -11,6 +11,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 # General Public License for more details.
 
+import errno
 import os
 import signal
 import stat
@@ -24,6 +25,8 @@ from tests.common import (
 
 from lib import ipc
 from lib import temporary
+
+nonexistent_command = 'didjvu-nonexistent-command'
 
 class test_exceptions():
 
@@ -153,6 +156,11 @@ class test_environment():
     def test_locale_lang(self):
         with interim_environ(LC_ALL=None, LC_CTYPE=None, LANG='en_US.UTF-8'):
             self._test_locale()
+
+def test_init_exception():
+    exc_message = "[Errno {errno.ENOENT}] No such file or directory: {cmd!r}".format(errno=errno, cmd=nonexistent_command)
+    with exception(OSError, exc_message):
+        ipc.Subprocess([nonexistent_command])
 
 class test_shell_escape():
 
