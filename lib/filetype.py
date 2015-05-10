@@ -11,6 +11,10 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 # General Public License for more details.
 
+'''
+filetype detection
+'''
+
 class generic(object):
 
     def __new__(self, *args, **kwargs):
