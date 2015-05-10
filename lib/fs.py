@@ -15,10 +15,12 @@
 
 import os
 
+_block_size = 1 << 20  # 1 MiB
+
 def copy_file(input_file, output_file):
     length = 0
     while 1:
-        block = input_file.read(1 << 20)  # 1 MiB
+        block = input_file.read(_block_size)
         if not block:
             break
         length += len(block)
