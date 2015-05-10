@@ -154,4 +154,24 @@ class test_environment():
         with interim_environ(LC_ALL=None, LC_CTYPE=None, LANG='en_US.UTF-8'):
             self._test_locale()
 
+class test_shell_escape():
+
+    def test_no_escape(self):
+        s = 'eggs'
+        r = ipc.shell_escape(s)
+        assert_equal(r, s)
+
+    def test_escape(self):
+        s = '$pam'
+        r = ipc.shell_escape(s)
+        assert_equal(r, "'$pam'")
+        s = "s'pam"
+        r = ipc.shell_escape(s)
+        assert_equal(r, "'s'\\''pam'")
+
+    def test_list(self):
+        l = ['$pam', 'eggs', "s'pam"]
+        r = ipc.shell_escape_list(l)
+        assert_equal(r, "'$pam' eggs 's'\\''pam'")
+
 # vim:ts=4 sts=4 sw=4 et
