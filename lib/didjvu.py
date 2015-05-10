@@ -15,9 +15,9 @@ from __future__ import print_function
 
 import fs
 import itertools
+import logging
 import os
 import re
-import logging
 import sys
 
 from . import cli
