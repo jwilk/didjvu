@@ -182,4 +182,14 @@ class test_shell_escape():
         r = ipc.shell_escape_list(l)
         assert_equal(r, "'$pam' eggs 's'\\''pam'")
 
+class test_require():
+
+    def test_ok(self):
+        ipc.require('true', 'false')
+
+    def test_fail(self):
+        exc_message = "[Errno {errno.ENOENT}] command not found: {cmd!r}".format(errno=errno, cmd=nonexistent_command)
+        with exception(OSError, exc_message):
+            ipc.require(nonexistent_command)
+
 # vim:ts=4 sts=4 sw=4 et
