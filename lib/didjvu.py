@@ -40,6 +40,7 @@ def setup_logging():
     logger = logging.getLogger('didjvu.main')
     ipc_logger = logging.getLogger('didjvu.ipc')
     logging.NOSY = (logging.INFO + logging.DEBUG) // 2
+    assert logging.INFO > logging.NOSY > logging.DEBUG
     def nosy(msg, *args, **kwargs):
         logger.log(logging.NOSY, msg, *args, **kwargs)
     logger.nosy = nosy
