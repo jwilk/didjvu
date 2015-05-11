@@ -184,16 +184,16 @@ def init():
     return result
 
 __all__ = [
-# classes:
+    # classes:
     'Dim',
     'Image',
     'Point',
     'RGBPixel',
-# pixel types:
+    # pixel types:
     'ONEBIT',
     'GREYSCALE',
     'RGB',
-# functions:
+    # functions:
     'init',
     'load_image',
     'methods',
