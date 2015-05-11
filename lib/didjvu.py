@@ -13,7 +13,6 @@
 
 from __future__ import print_function
 
-import fs
 import itertools
 import logging
 import os
@@ -23,6 +22,7 @@ import sys
 from . import cli
 from . import djvu_extra as djvu
 from . import filetype
+from . import fs
 from . import gamera_extra as gamera
 from . import ipc
 from . import templates
