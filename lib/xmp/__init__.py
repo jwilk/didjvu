@@ -65,7 +65,7 @@ def metadata(backend=default_backend):
 
     class Metadata(backend.MetadataBase):
 
-        def update(self, media_type, internal_properties={}):
+        def update(self, media_type, internal_properties=()):
             instance_id = gen_uuid()
             now = timestamp.now()
             original_media_type = self.get('dc.format')
