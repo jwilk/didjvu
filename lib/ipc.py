@@ -128,8 +128,8 @@ PIPE = subprocess.PIPE
 
 class Proxy(object):
 
-    def __init__(self, object, wait_fn, temporaries):
-        self._object = object
+    def __init__(self, obj, wait_fn, temporaries):
+        self._object = obj
         self._wait_fn = wait_fn
         self._temporaries = temporaries
 
