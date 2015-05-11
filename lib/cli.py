@@ -18,7 +18,11 @@ from . import utils
 try:
     import argparse
 except ImportError as ex:  # <no-coverage>
-    utils.enhance_import_error(ex, 'argparse', 'python-argparse', 'https://pypi.python.org/pypi/argparse')
+    utils.enhance_import_error(ex,
+        'argparse',
+        'python-argparse',
+        'https://pypi.python.org/pypi/argparse'
+    )
     raise
 
 from . import djvu_extra as djvu
@@ -183,8 +187,14 @@ class ArgumentParser(argparse.ArgumentParser):
             )
             if p is p_encode or p is p_bundle:
                 p.add_argument('--xmp', action='store_true', help='create sidecar XMP metadata (experimental!)')
-            p.add_argument('-v', '--verbose', dest='verbosity', action='append_const', const=None, help='more informational messages')
-            p.add_argument('-q', '--quiet', dest='verbosity', action='store_const', const=[], help='no informational messages')
+            p.add_argument(
+                '-v', '--verbose', dest='verbosity', action='append_const', const=None,
+                help='more informational messages'
+            )
+            p.add_argument(
+                '-q', '--quiet', dest='verbosity', action='store_const', const=[],
+                help='no informational messages'
+            )
             p.add_argument('input', metavar='<input-image>', nargs='+')
             p.set_defaults(
                 masks=[],
@@ -192,8 +202,12 @@ class ArgumentParser(argparse.ArgumentParser):
                 loss_level=djvu.LOSS_LEVEL_MIN,
                 pages_per_dict=default.pages_per_dict,
                 dpi=default.dpi,
-                fg_slices=intact(default.fg_slices), fg_crcb=intact(default.fg_crcb), fg_subsample=intact(default.fg_subsample),
-                bg_slices=intact(default.bg_slices), bg_crcb=intact(default.bg_crcb), bg_subsample=intact(default.bg_subsample),
+                fg_slices=intact(default.fg_slices),
+                bg_slices=intact(default.bg_slices),
+                fg_crcb=intact(default.fg_crcb),
+                bg_crcb=intact(default.bg_crcb),
+                fg_subsample=intact(default.fg_subsample),
+                bg_subsample=intact(default.bg_subsample),
                 verbosity=[None],
                 xmp=False,
             )
