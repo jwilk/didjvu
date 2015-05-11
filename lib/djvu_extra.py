@@ -212,7 +212,8 @@ class Multichunk(object):
             chunk_file = temporary.file(suffix='.%s-chunk' % key)
             args += ['%s=%s' % (self._chunk_names[key], chunk_file.name)]
             chunk_files[key] = chunk_file
-        djvuextract = ipc.Subprocess(args, stderr=open(os.devnull, 'wb'))
+        with open(os.devnull, 'wb') as dev_null:
+            djvuextract = ipc.Subprocess(args, stderr=dev_null)
         for key in self._chunks:
             self._chunks[key] = ipc.Proxy(chunk_files[key], djvuextract.wait, [self._file])
             self._dirty.discard(key)
