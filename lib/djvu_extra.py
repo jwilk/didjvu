@@ -106,7 +106,8 @@ def djvu_to_iw44(djvu_file):
     # TODO: Use Multichunk.
     iw44_file = temporary.file(suffix='.iw44')
     args = ['djvuextract', djvu_file.name, 'BG44=%s' % iw44_file.name]
-    return ipc.Proxy(iw44_file, ipc.Subprocess(args).wait, [djvu_file])
+    with open(os.devnull, 'w') as dev_null:
+        return ipc.Proxy(iw44_file, ipc.Subprocess(args, stderr=dev_null).wait, [djvu_file])
 
 def _int_or_none(x):
     if x is None:
