@@ -28,23 +28,37 @@ class test_enhance_import():
 
     def test_debian(self):
         with interim(utils, debian=True):
-            msg = 'No module named nonexistent; please install the python-nonexistent package'
+            msg = (
+                'No module named nonexistent; '
+                'please install the python-nonexistent package'
+            )
             with exception(ImportError, msg):
                 try:
                     import nonexistent
                 except ImportError as ex:
-                    utils.enhance_import_error(ex, 'PyNonexistent', 'python-nonexistent', 'http://pynonexistent.example.net/')
+                    utils.enhance_import_error(ex,
+                        'PyNonexistent',
+                        'python-nonexistent',
+                        'http://pynonexistent.example.net/'
+                    )
                     raise
                 nonexistent.f()  # quieten pyflakes
 
     def test_nondebian(self):
         with interim(utils, debian=False):
-            msg = 'No module named nonexistent; please install the PyNonexistent package <http://pynonexistent.example.net/>'
+            msg = (
+                'No module named nonexistent; '
+                'please install the PyNonexistent package <http://pynonexistent.example.net/>'
+            )
             with exception(ImportError, msg):
                 try:
                     import nonexistent
                 except ImportError as ex:
-                    utils.enhance_import_error(ex, 'PyNonexistent', 'python-nonexistent', 'http://pynonexistent.example.net/')
+                    utils.enhance_import_error(ex,
+                        'PyNonexistent',
+                        'python-nonexistent',
+                        'http://pynonexistent.example.net/'
+                    )
                     raise
                 nonexistent.f()  # quieten pyflakes
 
