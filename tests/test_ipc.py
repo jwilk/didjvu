@@ -158,7 +158,10 @@ class test_environment():
             self._test_locale()
 
 def test_init_exception():
-    exc_message = "[Errno {errno.ENOENT}] No such file or directory: {cmd!r}".format(errno=errno, cmd=nonexistent_command)
+    exc_message = "[Errno {errno.ENOENT}] No such file or directory: {cmd!r}".format(
+        errno=errno,
+        cmd=nonexistent_command,
+    )
     with exception(OSError, exc_message):
         ipc.Subprocess([nonexistent_command])
 
