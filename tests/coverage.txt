@@ -13,9 +13,9 @@ lib.temporary                20      0      0      0   100%
 lib.timestamp                23      1      0      0    96%   40
 lib.utils                    11      0      4      0   100%
 lib.version                  12      4      0      0    67%   19-20, 24-25
-lib.xmp                      54     10      8      3    79%   25-34, 94-97
+lib.xmp                      48      4      8      3    88%   94-97
 lib.xmp.libxmp_backend       66      4     20      2    93%   51-54
 lib.xmp.namespaces            6      0      0      0   100%
 lib.xmp.pyexiv2_backend     128      9     24      4    91%   60-62, 73, 120, 131-132, 145-146
 ---------------------------------------------------------------------
-TOTAL                       977    206    269    101    75%
+TOTAL                       971    200    269    101    76%

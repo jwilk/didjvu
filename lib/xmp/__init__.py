@@ -22,7 +22,7 @@ from .. import version
 
 try:
     from . import libxmp_backend as default_backend
-except ImportError as exc:
+except ImportError as exc:  # <no-coverage>
     try:
         from . import pyexiv2_backend as default_backend
     except ImportError:
