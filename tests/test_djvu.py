@@ -17,6 +17,7 @@ import shutil
 
 from . common import (
     assert_equal,
+    assert_greater,
     assert_true
 )
 
@@ -76,6 +77,19 @@ def test_photo_to_djvu():
     djvu_file = djvu.photo_to_djvu(in_image, mask_image=mask_image)
     out_image = ddjvu(djvu_file, fmt='ppm')
     assert_image_sizes_equal(in_image, out_image)
+
+def test_djvu_iw44():
+    path = os.path.join(datadir, 'ycbcr.djvu')
+    in_djvu = open(path, 'rb')
+    out_djvu = djvu.djvu_to_iw44(in_djvu)
+    in_image = ddjvu(in_djvu, fmt='ppm')
+    out_image = ddjvu(out_djvu, fmt='ppm')
+    assert_image_sizes_equal(in_image, out_image)
+    in_djvu.seek(0)
+    in_data = in_djvu.read()
+    out_djvu.seek(0)
+    out_data = out_djvu.read()
+    assert_greater(len(in_data), len(out_data))
 
 class test_multichunk():
 
