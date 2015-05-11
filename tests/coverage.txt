@@ -3,7 +3,7 @@ Generated automatically by private/update-coverage. Do not edit.
 Name                      Stmts   Miss Branch BrMiss  Cover   Missing
 ---------------------------------------------------------------------
 lib                           3      0      0      0   100%
-lib.cli                     166     39     56     22    73%   213-241, 244-255
+lib.cli                     166     39     56     22    73%   227-255, 258-269
 lib.djvu_extra              244    123     81     52    46%   47-49, 55, 87, 107-109, 113, 116, 125, 145-167, 171-174, 177-179, 183-186, 190, 196-204, 207-220, 224, 226, 228, 230, 232, 238-239, 248-249, 252, 254, 257, 270-310, 313-321
 lib.fs                       14      0      2      0   100%
 lib.gamera_extra             94     12     24     11    81%   93-100, 136-138, 141
@@ -13,7 +13,7 @@ lib.temporary                20      0      0      0   100%
 lib.timestamp                23      1      0      0    96%   40
 lib.utils                    11      0      4      0   100%
 lib.version                  12      4      0      0    67%   19-20, 24-25
-lib.xmp                      54     10      8      3    79%   25-30, 90-93
+lib.xmp                      54     10      8      3    79%   25-34, 94-97
 lib.xmp.libxmp_backend       66      4     20      2    93%   51-54
 lib.xmp.namespaces            6      0      0      0   100%
 lib.xmp.pyexiv2_backend     128      9     24      4    91%   60-62, 73, 120, 131-132, 145-146
