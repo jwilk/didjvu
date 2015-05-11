@@ -201,7 +201,7 @@ __all__ = [
     'exception',
     'fork_isolation',
     'interim',
-    'interim_eviron',
+    'interim_environ',
 ]
 
 # vim:ts=4 sts=4 sw=4 et
