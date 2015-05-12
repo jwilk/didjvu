@@ -1,6 +1,6 @@
 # encoding=UTF-8
 
-# Copyright © 2012 Jakub Wilk <jwilk@jwilk.net>
+# Copyright © 2012-2015 Jakub Wilk <jwilk@jwilk.net>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,6 +24,10 @@ class Timestamp(object):
 
     def _str_tz(self):
         offset = time.timezone if not self._localtime.tm_isdst else time.altzone
+        if offset == 0:
+            # Apparently, pyexiv2 automatically converts 00:00 offsets to “Z”.
+            # Let's always use “Z” for consistency.
+            return 'Z'
         hours, minutes = divmod(abs(offset) // 60, 60)
         return '%s%02d:%02d' % ('+' if offset < 0 else '-', hours, minutes)
 
