@@ -1,6 +1,6 @@
 # encoding=UTF-8
 
-# Copyright © 2011-2014 Jakub Wilk <jwilk@jwilk.net>
+# Copyright © 2011-2015 Jakub Wilk <jwilk@jwilk.net>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,12 +16,12 @@ __version__ = '0.4.2'
 def get_software_agent():
     try:
         import gamera
-    except ImportError:
+    except ImportError:  # <no-coverage>
         gamera = None
     result = 'didjvu ' + __version__
     try:
         result += ' (Gamera %s)' % gamera.__version__
-    except (AttributeError, TypeError, ValueError):
+    except (AttributeError, TypeError, ValueError):  # <no-coverage>
         pass
     return result
 
