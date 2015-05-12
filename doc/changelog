@@ -1,11 +1,11 @@
-didjvu (0.4.1) UNRELEASED; urgency=low
+didjvu (0.4.1) unstable; urgency=low
 
   * Improve the test suite.
   * In XMP timestamps, use “Z” as timezone offset instead of “-00:00”.
     Thanks to Daniel Stender for the bug report.
     https://bitbucket.org/jwilk/didjvu/issue/9
 
- -- Jakub Wilk <jwilk@jwilk.net>  Tue, 12 May 2015 13:40:12 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Tue, 12 May 2015 19:05:57 +0200
 
 didjvu (0.4) unstable; urgency=low
 
