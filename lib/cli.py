@@ -94,6 +94,31 @@ class intact(object):
 def replace_underscores(s):
     return s.replace('_', '-')
 
+def _get_method_params_help(methods):
+    result = ['binarization methods and their parameters:']
+    for name, method in sorted(methods.iteritems()):
+        result += ['  ' + name]
+        for arg in method.args.itervalues():
+            arg_help = arg.name
+            if arg.type in (int, float):
+                arg_help += '=' + 'NX'[arg.type is float]
+                arg_help_paren = []
+                if (arg.min is None) != (arg.max is None):
+                    raise NotImplementedError
+                if arg.min is not None:
+                    arg_help_paren += ['{0} .. {1}'.format(arg.min, arg.max)]
+                if arg.default is not None:
+                    arg_help_paren += ['default: {0}'.format(arg.default)]
+                if arg_help_paren:
+                    arg_help += ' ({0})'.format(', '.join(arg_help_paren))
+            elif arg.type is bool:
+                if arg.default is not False:
+                    raise NotImplementedError
+            else:
+                raise NotImplementedError
+            result += ['  - ' + arg_help]
+    return '\n'.join(result)
+
 class ArgumentParser(argparse.ArgumentParser):
 
     class defaults:
@@ -182,8 +207,12 @@ class ArgumentParser(argparse.ArgumentParser):
                     help='how many pages to compress in one pass (default: %d)' % default.pages_per_dict
                 )
             p.add_argument(
-                '-m', '--method', choices=methods, type=replace_underscores, default=default_method,
+                '-m', '--method', choices=methods, metavar='METHOD', type=replace_underscores, default=default_method,
                 help='binarization method (default: %s)' % default_method
+            )
+            p.add_argument(
+                '-x', '--param', action='append', dest='params', metavar='NAME[=VALUE]',
+                help='binarization method parameter (can be given more than once)'
             )
             if p is p_encode or p is p_bundle:
                 p.add_argument('--xmp', action='store_true', help='create sidecar XMP metadata (experimental!)')
@@ -211,6 +240,7 @@ class ArgumentParser(argparse.ArgumentParser):
                 verbosity=[None],
                 xmp=False,
             )
+            p.epilog = _get_method_params_help(methods)
         self.epilog = 'more help:\n  ' + '\n  '.join(epilog)
         self.__methods = methods
 
@@ -219,9 +249,37 @@ class ArgumentParser(argparse.ArgumentParser):
             self.__subparsers
         except AttributeError:
             self.__subparsers = self.add_subparsers(parser_class=argparse.ArgumentParser)
+        kwargs.setdefault('formatter_class', argparse.RawDescriptionHelpFormatter)
         p = self.__subparsers.add_parser(name, **kwargs)
         p.set_defaults(_action_=name)
         return p
+
+    def _parse_params(self, options):
+        o = options
+        result = {}
+        if o.params is None:
+            return result
+        for param in o.params:
+            if '=' not in param:
+                pname = param
+                pvalue = True
+            else:
+                [pname, pvalue] = param.split('=', 1)
+            pname = replace_underscores(pname)
+            try:
+                arg = o.method.args[pname]
+            except KeyError:
+                self.error('invalid parameter name {0!r}'.format(pname))
+            try:
+                pvalue = arg.type(pvalue)
+            except ValueError as exc:
+                self.error('invalid parameter {0} value: {1!r}'.format(pname, pvalue))
+            if (arg.min is not None) and pvalue < arg.min:
+                self.error('parameter {0} must be >= {1}'.format(pname, arg.min))
+            if (arg.max is not None) and pvalue > arg.max:
+                self.error('parameter {0} must be <= {1}'.format(pname, arg.max))
+            result[arg.name] = pvalue
+        return result
 
     def parse_args(self, actions):
         o = argparse.ArgumentParser.parse_args(self)
@@ -247,6 +305,7 @@ class ArgumentParser(argparse.ArgumentParser):
             o.pages_per_dict = 1
         action = getattr(actions, vars(o).pop('_action_'))
         o.method = self.__methods[o.method]
+        o.params = self._parse_params(o)
         try:
             if not xmp and o.xmp:
                 raise xmp_import_error
@@ -255,7 +314,15 @@ class ArgumentParser(argparse.ArgumentParser):
         return action(o)
 
 def dump_options(o, multipage=False):
-    yield ('method', o.method.didjvu_name)
+    method_name = o.method.name
+    if o.params:
+        method_name += ' '
+        method_name += ' '.join(
+            '{0}={1}'.format(pname, pvalue)
+            for pname, pvalue
+            in sorted(o.params.iteritems())
+        )
+    yield ('method', method_name)
     if multipage:
         yield ('pages-per-dict', o.pages_per_dict)
     yield ('loss-level', o.loss_level)

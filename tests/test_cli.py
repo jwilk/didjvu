@@ -148,7 +148,9 @@ def test_replace_underscores():
 class test_argument_parser():
 
     def test_init(self):
-        methods = dict(abutaleb=None, djvu=None)
+        class dummy_method():
+            args = {}
+        methods = dict(abutaleb=dummy_method, djvu=dummy_method)
         cli.ArgumentParser(methods, 'djvu')
         # TODO: Check if the argument parser was created correctly.
 

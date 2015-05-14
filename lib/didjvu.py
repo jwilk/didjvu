@@ -170,13 +170,13 @@ def image_to_djvu(width, height, image, mask, options):
             chunks.update(bg44=djvu.djvu_to_iw44(bg_djvu))
         return djvu.Multichunk(width, height, dpi, **chunks)
 
-def generate_mask(filename, image, method):
+def generate_mask(filename, image, method, params):
     '''
     Generate mask using the provided method (if filename is not None);
     or simply load it from file (if filename is not None).
     '''
     if filename is None:
-        return method(image)
+        return method(image, **params)
     else:
         return gamera.load_image(filename)
 
@@ -297,7 +297,7 @@ class main():
         image = gamera.load_image(image_filename)
         width, height = image.ncols, image.nrows
         logger.nosy('- image size: %d x %d', width, height)
-        mask = generate_mask(mask_filename, image, o.method)
+        mask = generate_mask(mask_filename, image, o.method, o.params)
         if xmp_output:
             n_connected_components = len(mask.cc_analysis())
         logger.info('- converting to DjVu')
@@ -336,7 +336,7 @@ class main():
         width, height = image.ncols, image.nrows
         logger.nosy('- image size: %d x %d' % (width, height))
         logger.info('- thresholding')
-        mask = generate_mask(None, image, o.method)
+        mask = generate_mask(None, image, o.method. o.params)
         logger.info('- saving')
         if output is not sys.stdout:
             # A real file
@@ -412,7 +412,7 @@ class main():
         width, height = image.ncols, image.nrows
         pixels[0] += width * height
         logger.nosy('- image size: %d x %d', width, height)
-        mask = generate_mask(mask_filename, image, o.method)
+        mask = generate_mask(mask_filename, image, o.method, o.params)
         logger.info('- converting to DjVu')
         page.djvu = image_to_djvu(width, height, image, mask, options=o)
         image = mask = None

@@ -13,6 +13,7 @@
 
 '''bridge to the Gamera framework'''
 
+import collections
 import ctypes
 import math
 import re
@@ -50,6 +51,7 @@ from gamera.core import load_image as _load_image
 from gamera.core import init_gamera as _init
 from gamera.core import Image, RGB, GREYSCALE, ONEBIT, Point, Dim, RGBPixel
 from gamera.plugins.pil_io import from_pil as _from_pil
+import gamera.args
 
 def has_version(*req_version):
     return tuple(map(int, version.split('.'))) >= req_version
@@ -84,23 +86,74 @@ def load_image(filename):
     image.dpi = dpi
     return image
 
-def colorspace_wrapper(plugin):
+class Argument(object):
 
-    pixel_types = plugin.self_type.pixel_types
-    method = [None]
+    _type_map = {
+        gamera.args.Int: int,
+        gamera.args.Real: float,
+        gamera.args.Check: bool,
+    }
 
-    def new_plugin(image):
+    def __init__(self, arg):
+        self.name = arg.name.replace(' ', '-').replace('_', '-')
+        if not arg.has_default:
+            raise NotImplementedError(
+                'argument {0}: no default value'.format(self.name)
+            )  # <no-coverage>
+        for gtype, ptype in self._type_map.iteritems():
+            if isinstance(arg, gtype):
+                self.type = ptype
+                break
+        else:
+            raise NotImplementedError(
+                'argument {0}: unsupported type {1!r}' + repr(self.name, arg)
+            )  # <no-coverage>
+        self.default = arg.default
+        if self.type in (int, float):
+            [self.min, self.max] = arg.rng
+            if self.min == -gamera.args.DEFAULT_MAX_ARG_NUMBER:
+                self.min = None
+            if self.max == gamera.args.DEFAULT_MAX_ARG_NUMBER:
+                self.max = None
+        else:
+            self.min = self.max = None
+        if isinstance(self.default, gamera.args.CNoneDefault):
+            self.default = None
+        else:
+            if not isinstance(self.default, self.type):
+                raise TypeError(
+                    'argument {0}: type({1!r}) should be {2}'.format(self.name, self.default, self.type.__name__)
+                )  # <no-coverage>
+
+class Plugin(object):
+
+    def __init__(self, plugin, name):
+        self._plugin = plugin
+        self._pixel_types = plugin.self_type.pixel_types
+        self._method = None
+        self.name = name
+        self.args = collections.OrderedDict()
+        for arg in plugin.args:
+            if arg.name == 'storage format':
+                continue
+            arg = Argument(arg)
+            self.args[arg.name] = arg
+
+    def __call__(self, image, **kwargs):
+        kwargs = dict(
+            (key.replace('-', '_'), value)
+            for key, value
+            in kwargs.iteritems()
+        )
+        pixel_types = self._pixel_types
         if image.data.pixel_type not in pixel_types:
             if RGB in pixel_types:
                 image = image.to_rgb()
             elif GREYSCALE in pixel_types:
                 image = image.to_greyscale()
-        if method[0] is None:
-            method[0] = plugin()
-        return method[0](image)
-
-    new_plugin.__name__ = plugin.__name__
-    return new_plugin
+        if self._method is None:
+            self._method = self._plugin()
+        return self._method(image, **kwargs)
 
 def _load_methods():
     replace_suffix = re.compile('_threshold$').sub
@@ -124,8 +177,7 @@ def _load_methods():
             continue
         name = replace_suffix('', name)
         name = name.replace('_', '-')
-        method = colorspace_wrapper(plugin)
-        method.didjvu_name = name
+        method = Plugin(plugin, name)
         methods[name] = method
     return methods
 
