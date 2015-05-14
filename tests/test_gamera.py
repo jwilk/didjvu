@@ -24,8 +24,9 @@ from . common import (
 
 from lib import gamera_extra as gamera
 
+datadir = os.path.join(os.path.dirname(__file__), 'data')
+
 def test_load_image():
-    datadir = os.path.join(os.path.dirname(__file__), 'data')
     paths = []
     for ext in ['tiff', 'bmp']:
         paths += map(os.path.basename,
@@ -46,5 +47,21 @@ def test_load_image():
             assert_equal(image.dpi, dpi)
     for path in paths:
         yield t, path
+
+def test_methods():
+
+    @fork_isolation
+    def t(method):
+        method = gamera.methods[method]
+        path = os.path.join(datadir, 'ycbcr-jpeg.tiff')
+        gamera.init()
+        in_image = gamera.load_image(path)
+        bin_image = method(in_image)
+        assert_is_instance(bin_image, gamera.Image)
+        assert_equal(bin_image.data.pixel_type, gamera.ONEBIT)
+        assert_equal(in_image.dim, bin_image.dim)
+
+    for method in gamera.methods:
+        yield t, method
 
 # vim:ts=4 sts=4 sw=4 et
