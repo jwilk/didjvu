@@ -272,7 +272,7 @@ class ArgumentParser(argparse.ArgumentParser):
                 self.error('invalid parameter name {0!r}'.format(pname))
             try:
                 pvalue = arg.type(pvalue)
-            except ValueError as exc:
+            except ValueError:
                 self.error('invalid parameter {0} value: {1!r}'.format(pname, pvalue))
             if (arg.min is not None) and pvalue < arg.min:
                 self.error('parameter {0} must be >= {1}'.format(pname, arg.min))
