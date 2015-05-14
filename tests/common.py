@@ -25,31 +25,31 @@ from nose.tools import (
     assert_true,
 )
 
-try:
-    from nose.tools import assert_is
-except ImportError:
+if sys.version_info >= (2, 7):
+    from nose.tools import (
+        assert_greater,
+        assert_is,
+        assert_is_instance,
+        assert_is_none,
+        assert_is_not_none,
+    )
+else:
     # Python 2.6:
+    def assert_greater(x, y):
+        assert_true(
+            x > y,
+            msg='{0!r} not greater than {1!r}'.format(x, y)
+        )
     def assert_is(obj, cls):
         assert_true(
             obj is cls,
             msg='{0!r} is not {1!r}'.format(obj, cls)
         )
-
-try:
-    from nose.tools import assert_is_instance
-except ImportError:
-    # Python 2.6:
     def assert_is_instance(obj, cls):
         assert_true(
             isinstance(obj, cls),
             msg='{0!r} is not an instance of {1!r}'.format(obj, cls)
         )
-
-try:
-    from nose.tools import assert_is_none
-    from nose.tools import assert_is_not_none
-except ImportError:
-    # Python 2.6:
     def assert_is_none(obj):
         assert_true(
             obj is None,
@@ -59,16 +59,6 @@ except ImportError:
         assert_true(
             obj is not None,
             msg='{0!r} is not None'.format(obj)
-        )
-
-try:
-    from nose.tools import assert_greater
-except ImportError:
-    # Python 2.6:
-    def assert_greater(x, y):
-        assert_true(
-            x > y,
-            msg='{0!r} not greater than {1!r}'.format(x, y)
         )
 
 def assert_regexp_matches(regexp, text):
