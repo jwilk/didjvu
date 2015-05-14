@@ -21,7 +21,6 @@ import traceback
 from nose import SkipTest
 from nose.tools import (
     assert_equal,
-    assert_greater,
     assert_not_equal,
     assert_true,
 )
@@ -48,12 +47,28 @@ except ImportError:
 
 try:
     from nose.tools import assert_is_none
+    from nose.tools import assert_is_not_none
 except ImportError:
     # Python 2.6:
     def assert_is_none(obj):
         assert_true(
             obj is None,
             msg='{0!r} is not None'.format(obj)
+        )
+    def assert_is_not_none(obj):
+        assert_true(
+            obj is not None,
+            msg='{0!r} is not None'.format(obj)
+        )
+
+try:
+    from nose.tools import assert_greater
+except ImportError:
+    # Python 2.6:
+    def assert_greater(x, y):
+        assert_true(
+            x > y,
+            msg='{0!r} not greater than {1!r}'.format(x, y)
         )
 
 def assert_regexp_matches(regexp, text):

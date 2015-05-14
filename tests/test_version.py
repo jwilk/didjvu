@@ -15,7 +15,7 @@ import os
 import re
 import xml.etree.cElementTree as etree
 
-from nose.tools import (
+from . common import (
     assert_equal,
     assert_is_instance,
     assert_is_not_none,
