@@ -1,9 +1,9 @@
-didjvu (0.5) UNRELEASED; urgency=low
+didjvu (0.5) unstable; urgency=low
 
   * Add the -x/--param option.
   * Improve the test suite.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Thu, 14 May 2015 22:33:48 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Thu, 14 May 2015 23:47:32 +0200
 
 didjvu (0.4.1) unstable; urgency=low
 
