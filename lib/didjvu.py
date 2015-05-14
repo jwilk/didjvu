@@ -336,7 +336,7 @@ class main():
         width, height = image.ncols, image.nrows
         logger.nosy('- image size: %d x %d' % (width, height))
         logger.info('- thresholding')
-        mask = generate_mask(None, image, o.method. o.params)
+        mask = generate_mask(None, image, o.method, o.params)
         logger.info('- saving')
         if output is not sys.stdout:
             # A real file
