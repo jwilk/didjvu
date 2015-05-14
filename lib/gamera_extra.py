@@ -132,7 +132,11 @@ class Plugin(object):
         self._pixel_types = plugin.self_type.pixel_types
         self._method = None
         self.name = name
-        self.args = collections.OrderedDict()
+        if sys.version_info >= (2, 7):
+            self.args = collections.OrderedDict()
+        else:  # <no-coverage>
+            # Oh well.
+            self.args = {}
         for arg in plugin.args:
             if arg.name == 'storage format':
                 continue
