@@ -294,6 +294,22 @@
             </listitem>
         </varlistentry>
         <varlistentry>
+            <term><option>-x</option></term>
+            <term><option>--param=<replaceable>name</replaceable>=<replaceable>value</replaceable></option></term>
+            <listitem>
+                <para>
+                    Set parameter for the binarization method.
+                </para>
+                <para>
+                    This option can be used more than once.
+                </para>
+                <para>
+                    Please consult the <ulink url='http://gamera.sourceforge.net/doc/html/binarization.html'>Gamera
+                    documentation</ulink> for details.
+                </para>
+            </listitem>
+        </varlistentry>
+        <varlistentry>
             <term><option>-p</option></term>
             <term><option>--pages-per-dict=<replaceable>n</replaceable></option></term>
             <listitem>
