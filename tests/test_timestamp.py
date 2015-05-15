@@ -26,16 +26,20 @@ def test_now():
     result = timestamp.now()
     assert_rfc3339_timestamp(str(result))
 
-@fork_isolation
-def test_utc():
-    with interim_environ(TZ='UTC'):
-        time.tzset()
-        result = timestamp.now()
-        assert_rfc3339_timestamp(str(result))
-        assert_equal(str(result)[-1], 'Z')
 
-def test_explicit_construct():
-    result = timestamp.Timestamp(100000)
-    assert_rfc3339_timestamp(str(result))
+def test_timezones():
+    uts = 1261171514
+    @fork_isolation
+    def t(tz, expected):
+        with interim_environ(TZ=tz):
+            time.tzset()
+            result = timestamp.Timestamp(uts)
+            assert_rfc3339_timestamp(str(result))
+            assert_equal(str(result), expected)
+    t('UTC', '2009-12-18T21:25:14Z')
+    t('Europe/Warsaw', '2009-12-18T22:25:14+01:00')
+    t('America/New_York', '2009-12-18T16:25:14-05:00')
+    t('Asia/Kathmandu', '2009-12-19T03:10:14+05:45')
+    t('HAM+4:37', '2009-12-18T16:48:14-04:37')
 
 # vim:ts=4 sts=4 sw=4 et
