@@ -29,7 +29,8 @@ class Timestamp(object):
             # Let's always use “Z” for consistency.
             return 'Z'
         hours, minutes = divmod(abs(offset) // 60, 60)
-        return '%s%02d:%02d' % ('+' if offset < 0 else '-', hours, minutes)
+        sign = '+' if offset < 0 else '-'
+        return '{s}{h:02}:{m:02}'.format(s=sign, h=hours, m=minutes)
 
     def __str__(self):
         '''Format the timestamp object in accordance with RFC 3339.'''
