@@ -65,7 +65,7 @@ def assert_regexp_matches(regexp, text):
     if isinstance(regexp, basestring):
         regexp = re.compile(regexp)
     if not regexp.search(text):
-        message = '''Regexp didn't match: %r not found in %r''' % (regexp.pattern, text)
+        message = "Regexp didn't match: {0!r} not found in {1!r}".format(regexp.pattern, text)
         raise AssertionError(message)
 
 def assert_rfc3339_timestamp(timestamp):
@@ -90,7 +90,7 @@ def exception(exc_type, string=None, regex=None, callback=None):
         _, exc, _ = sys.exc_info()
         callback(exc)
     else:
-        message = '%s was not raised' % exc_type.__name__
+        message = '{0} was not raised'.format(exc_type.__name__)
         raise AssertionError(message)
 
 @contextlib.contextmanager
