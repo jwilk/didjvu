@@ -28,9 +28,10 @@ def test_now():
 
 @fork_isolation
 def test_utc():
-    result = timestamp.now()
     with interim_environ(TZ='UTC'):
         time.tzset()
+        result = timestamp.now()
+        assert_rfc3339_timestamp(str(result))
         assert_equal(str(result)[-1], 'Z')
 
 def test_explicit_construct():
