@@ -20,7 +20,7 @@ def get_software_agent():
         gamera = None
     result = 'didjvu ' + __version__
     try:
-        result += ' (Gamera %s)' % gamera.__version__
+        result += ' (Gamera {0})'.format(gamera.__version__)
     except (AttributeError, TypeError, ValueError):  # <no-coverage>
         pass
     return result
