@@ -72,9 +72,9 @@ def metadata(backend=default_backend):
             # TODO: try to guess original media type
             self['dc.format'] = media_type
             if original_media_type is not None:
-                event_params = 'from %s to %s' % (original_media_type, media_type)
+                event_params = 'from {0} to {1}'.format(original_media_type, media_type)
             else:
-                event_params = 'to %s' % (media_type,)
+                event_params = 'to {0}'.format(media_type)
             self['xmp.ModifyDate'] = now
             self['xmp.MetadataDate'] = now
             self['xmpMM.InstanceID'] = instance_id
