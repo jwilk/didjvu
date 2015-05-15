@@ -28,6 +28,9 @@ def copy_file(input_file, output_file):
     return length
 
 def replace_ext(filename, ext):
-    return '%s.%s' % (os.path.splitext(filename)[0], ext)
+    return '{0}.{1}'.format(
+        os.path.splitext(filename)[0],
+        ext
+    )
 
 # vim:ts=4 sts=4 sw=4 et
