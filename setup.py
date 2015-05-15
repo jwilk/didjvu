@@ -67,12 +67,12 @@ class build_doc(distutils_build):
             contents = file.read()
             # Format URLs consistently:
             contents = self._url_regex.sub(
-                lambda m: r'\m[blue]\fI%s\fR\m[]' % m.groups(),
+                lambda m: r'\m[blue]\fI{0}\fR\m[]'.format(*m.groups()),
                 contents,
             )
             # Use RFC 3339 date format:
             contents = self._date_regex.sub(
-                lambda m: '%(year)s-%(month)s-%(day)s' % m.groupdict(),
+                lambda m: '{year}-{month}-{day}'.format(**m.groupdict()),
                 contents
             )
             file.seek(0)
