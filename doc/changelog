@@ -1,8 +1,9 @@
 didjvu (0.5.1) UNRELEASED; urgency=low
 
   * Improve the test suite.
+  * Fix formatting of HTTPS links in the manual page.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Wed, 20 May 2015 18:21:16 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Mon, 25 May 2015 12:46:44 +0200
 
 didjvu (0.5) unstable; urgency=low
 
