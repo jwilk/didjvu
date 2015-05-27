@@ -87,8 +87,8 @@ def photo_to_djvu(image, dpi=100, slices=IW44_SLICES_DEFAULT, gamma=2.2, mask_im
             'c44',
             '-dpi', str(dpi),
             '-slice', ','.join(map(str, slices)),
-            '-gamma', '%.1f' % gamma,
-            '-crcb%s' % crcb,
+            '-gamma', '{0:.1f}'.format(gamma),
+            '-crcb{0}'.format(crcb),
         ]
         if mask_image is not None:
             pbm_file = temporary.file(suffix='.pbm')
@@ -102,7 +102,7 @@ def photo_to_djvu(image, dpi=100, slices=IW44_SLICES_DEFAULT, gamma=2.2, mask_im
 def djvu_to_iw44(djvu_file):
     # TODO: Use Multichunk.
     iw44_file = temporary.file(suffix='.iw44')
-    args = ['djvuextract', djvu_file.name, 'BG44=%s' % iw44_file.name]
+    args = ['djvuextract', djvu_file.name, 'BG44=' + iw44_file.name]
     with open(os.devnull, 'wb') as dev_null:
         return ipc.Proxy(iw44_file, ipc.Subprocess(args, stderr=dev_null).wait, [djvu_file])
 
@@ -206,8 +206,8 @@ class Multichunk(object):
         args = ['djvuextract', self._file.name]
         chunk_files = {}
         for key in self._dirty:
-            chunk_file = temporary.file(suffix='.%s-chunk' % key)
-            args += ['%s=%s' % (self._chunk_names[key], chunk_file.name)]
+            chunk_file = temporary.file(suffix='.{key}-chunk'.format(key=key))
+            args += ['{key}={path}'.format(key=self._chunk_names[key], path=chunk_file.name)]
             chunk_files[key] = chunk_file
         with open(os.devnull, 'wb') as dev_null:
             djvuextract = ipc.Subprocess(args, stderr=dev_null)
@@ -229,7 +229,7 @@ class Multichunk(object):
             raise ValueError
         if len(self._chunks) == 0:
             raise ValueError
-        args = ['djvumake', None, 'INFO=%d,%d,%d' % (self.width, self.height, self.dpi)]
+        args = ['djvumake', None, 'INFO={w},{h},{r}'.format(w=self.width, h=self.height, r=self.dpi)]
         incl_dir = None
         for key, value in sorted(self._chunks.iteritems(), key=_chunk_order):
             try:
@@ -251,7 +251,7 @@ class Multichunk(object):
                 value = value.name
             if key == 'BG44':
                 value += ':99'
-            args += ['%s=%s' % (key, value)]
+            args += ['{key}={value}'.format(key=key, value=value)]
         def chdir():
             os.chdir(incl_dir or '.')
         with temporary.directory() as tmpdir:
