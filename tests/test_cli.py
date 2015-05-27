@@ -17,8 +17,10 @@ import sys
 from . common import (
     assert_equal,
     assert_is,
+    assert_is_none,
     assert_multi_line_equal,
     assert_regexp_matches,
+    assert_true,
     exception,
     interim,
 )
@@ -151,11 +153,18 @@ def test_replace_underscores():
         'eggs-ham-spam'
     )
 
+class MockActions(object):
+    def __getattr__(self, name):
+        def f(options):
+            return (name, options)
+        return f
+
 class test_argument_parser():
 
     class dummy_method():
         args = {}
     methods = dict(abutaleb=dummy_method, djvu=dummy_method)
+    actions = MockActions()
 
     def test_init(self):
         cli.ArgumentParser(self.methods, 'djvu')
@@ -203,5 +212,34 @@ class test_argument_parser():
             'usage: didjvu [-h] [--version] {separate,encode,bundle} ...\n'
             "didjvu: error: invalid choice: 'eggs' (choose from 'separate', 'encode', 'bundle')\n"
         )
+
+    def _test_action_with_input(self, action):
+        stderr = io.StringIO()
+        path = 'eggs.png'
+        with interim(sys, argv=['didjvu', action, path], stderr=stderr):
+            ap = cli.ArgumentParser(self.methods, 'djvu')
+            [selected_action, options] = ap.parse_args(self.actions)
+        assert_equal(selected_action, action)
+        assert_equal(options.input, [path])
+        assert_equal(options.masks, [])
+        assert_is_none(options.output)
+        if action == 'bundle':
+            assert_equal(options.pageid_template, '{base-ext}.djvu')
+        else:
+            assert_is_none(options.output_template)
+        assert_is_none(options.dpi)
+        assert_true(options.fg_bg_defaults)
+        assert_equal(options.loss_level, 0)
+        assert_equal(options.pages_per_dict, 1)
+        assert_is(options.method, self.dummy_method)
+        assert_equal(options.params, {})
+        assert_equal(options.verbosity, 1)
+        assert_is(options.xmp, False)
+
+    def test_action_with_input(self):
+        t = self._test_action_with_input
+        yield t, 'separate'
+        yield t, 'bundle'
+        yield t, 'encode'
 
 # vim:ts=4 sts=4 sw=4 et
