@@ -159,11 +159,16 @@ class MockActions(object):
             return (name, options)
         return f
 
+class MockMethod(object):
+    def __init__(self):
+        self.args = {}
+
 class test_argument_parser():
 
-    class dummy_method():
-        args = {}
-    methods = dict(abutaleb=dummy_method, djvu=dummy_method)
+    methods = dict(
+        abutaleb=MockMethod(),
+        djvu=MockMethod(),
+    )
     actions = MockActions()
 
     def test_init(self):
@@ -238,7 +243,7 @@ class test_argument_parser():
         assert_true(options.fg_bg_defaults)
         assert_equal(options.loss_level, 0)
         assert_equal(options.pages_per_dict, 1)
-        assert_is(options.method, self.dummy_method)
+        assert_is(options.method, self.methods['djvu'])
         assert_equal(options.params, {})
         assert_equal(options.verbosity, 1)
         assert_is(options.xmp, False)
