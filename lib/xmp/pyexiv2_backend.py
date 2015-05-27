@@ -88,6 +88,9 @@ class datetime_for_pyexiv2(datetime.datetime):
         # Let's fool it into thinking it's always non-zero.
         return self.__second or self.__almost_zero
 
+def nstag(ns, tag):
+    return '{{{ns}}}{tag}'.format(ns=ns, tag=tag)
+
 class MetadataBase(object):
 
     def _reload(self):
@@ -114,12 +117,12 @@ class MetadataBase(object):
         except AttributeError:  # <no-coverage>
             # Python 2.6
             xmp_find = xmp.findall
-        for description in xmp_find('.//{%s}Description' % ns.rdf):
+        for description in xmp_find('.//' + nstag(ns.rdf, 'Description')):
             pass
         if description is None:
             raise XmpError('Cannot add xmpMM:History')
-        e_description = etree.SubElement(description, '{%s}History' % ns.xmpmm)
-        etree.SubElement(e_description, '{%s}Seq' % ns.rdf)
+        e_description = etree.SubElement(description, nstag(ns.xmpmm, 'History'))
+        etree.SubElement(e_description, nstag(ns.rdf, 'Seq'))
         fp.seek(0)
         fp.truncate()
         xmp.write(fp, encoding='UTF-8')
@@ -133,8 +136,10 @@ class MetadataBase(object):
 
     def __init__(self):
         self._fp = fp = temporary.file(suffix='.xmp')
-        fp.write('<x:xmpmeta xmlns:x="adobe:ns:meta/" xmlns:rdf="%s">'
-            '<rdf:RDF/></x:xmpmeta>' % ns.rdf
+        fp.write(
+            '<x:xmpmeta xmlns:x="adobe:ns:meta/" xmlns:rdf="{ns.rdf}">'
+            '<rdf:RDF/>'
+            '</x:xmpmeta>'.format(ns=ns)
         )
         self._reload()
         self._original_meta = self._meta
@@ -174,13 +179,13 @@ class MetadataBase(object):
         for key, value in event.items:
             if value is None:
                 continue
-            self['xmpMM.History[%d]/stEvt:%s' % (index, key)] = value
+            self['xmpMM.History[{i}]/stEvt:{key}'.format(i=index, key=key)] = value
 
     def append_to_history(self, event):
         self._add_history()
         keys = self._meta.xmp_keys
         for i in itertools.count(1):
-            key = 'Xmp.xmpMM.History[%d]' % i
+            key = 'Xmp.xmpMM.History[{i}]'.format(i=i)
             if key not in keys:
                 break
         return self.add_to_history(event, i)
