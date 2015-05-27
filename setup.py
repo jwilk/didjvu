@@ -105,7 +105,7 @@ class clean(distutils_clean):
             with open(manname, 'r') as file:
                 stamp = file.readline()
             if stamp != sdist.manpage_stamp:
-                self.execute(os.unlink, [manname], 'removing %s' % manname)
+                self.execute(os.unlink, [manname], 'removing {0}'.format(manname))
 
 class sdist(distutils_sdist):
 
@@ -126,7 +126,7 @@ class sdist(distutils_sdist):
     def make_release_tree(self, base_dir, files):
         distutils_sdist.make_release_tree(self, base_dir, files)
         for manname in glob.iglob(os.path.join(base_dir, 'doc', '*.1')):
-            self.execute(self._rewrite_manpage, [manname], 'rewriting %s' % manname)
+            self.execute(self._rewrite_manpage, [manname], 'rewriting {0}'.format(manname))
 
 distutils.core.setup(
     name='didjvu',
