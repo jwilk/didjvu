@@ -11,10 +11,15 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 # General Public License for more details.
 
+import cStringIO as io
+import sys
+
 from . common import (
     assert_equal,
     assert_is,
+    assert_multi_line_equal,
     exception,
+    interim,
 )
 
 from lib import cli
@@ -147,11 +152,23 @@ def test_replace_underscores():
 
 class test_argument_parser():
 
+    class dummy_method():
+        args = {}
+    methods = dict(abutaleb=dummy_method, djvu=dummy_method)
+
     def test_init(self):
-        class dummy_method():
-            args = {}
-        methods = dict(abutaleb=dummy_method, djvu=dummy_method)
-        cli.ArgumentParser(methods, 'djvu')
-        # TODO: Check if the argument parser was created correctly.
+        cli.ArgumentParser(self.methods, 'djvu')
+
+    def test_parse_args(self):
+        stderr = io.StringIO()
+        with interim(sys, argv=['didjvu'], stderr=stderr):
+            ap = cli.ArgumentParser(self.methods, 'djvu')
+            with exception(SystemExit, '2'):
+                ap.parse_args({})
+            assert_multi_line_equal(
+                stderr.getvalue(),
+                'usage: didjvu [-h] [--version] {separate,encode,bundle} ...\n'
+                'didjvu: error: too few arguments\n'
+            )
 
 # vim:ts=4 sts=4 sw=4 et

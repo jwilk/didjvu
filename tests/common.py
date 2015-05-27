@@ -32,6 +32,7 @@ if sys.version_info >= (2, 7):
         assert_is_instance,
         assert_is_none,
         assert_is_not_none,
+        assert_multi_line_equal,
     )
 else:
     # Python 2.6:
@@ -60,6 +61,7 @@ else:
             obj is not None,
             msg='{0!r} is not None'.format(obj)
         )
+    assert_multi_line_equal = assert_equal
 
 def assert_regexp_matches(regexp, text):
     if isinstance(regexp, basestring):
