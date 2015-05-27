@@ -213,13 +213,19 @@ class test_argument_parser():
             "didjvu: error: invalid choice: 'eggs' (choose from 'separate', 'encode', 'bundle')\n"
         )
 
-    def _test_action_with_input(self, action):
+    def _test_action(self, action, *args):
         stderr = io.StringIO()
-        path = 'eggs.png'
-        with interim(sys, argv=['didjvu', action, path], stderr=stderr):
+        argv = ['didjvu', action]
+        argv += args
+        with interim(sys, argv=argv, stderr=stderr):
             ap = cli.ArgumentParser(self.methods, 'djvu')
             [selected_action, options] = ap.parse_args(self.actions)
         assert_equal(selected_action, action)
+        return options
+
+    def _test_action_with_input(self, action):
+        path = 'eggs.png'
+        options = self._test_action(action, path)
         assert_equal(options.input, [path])
         assert_equal(options.masks, [])
         assert_is_none(options.output)
