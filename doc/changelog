@@ -1,3 +1,9 @@
+didjvu (0.6.1) UNRELEASED; urgency=low
+
+  * 
+
+ -- Jakub Wilk <jwilk@jwilk.net>  Wed, 27 May 2015 23:05:59 +0200
+
 didjvu (0.6) unstable; urgency=low
 
   * Add support for splitting along a given global threshold value
