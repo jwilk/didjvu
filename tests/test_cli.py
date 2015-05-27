@@ -16,6 +16,7 @@ import sys
 
 from . common import (
     assert_equal,
+    assert_greater,
     assert_is,
     assert_is_none,
     assert_multi_line_equal,
@@ -250,6 +251,23 @@ class test_argument_parser():
 
     def test_action_defaults(self):
         t = self._test_action_defaults
+        yield t, 'separate'
+        yield t, 'bundle'
+        yield t, 'encode'
+
+    def _test_help(self, action=None):
+        argv = ['didjvu', action, '--help']
+        argv = filter(None, argv)
+        stdout = io.StringIO()
+        with interim(sys, argv=argv, stdout=stdout):
+            ap = cli.ArgumentParser(self.methods, 'djvu')
+            with exception(SystemExit, '0'):
+                ap.parse_args({})
+        assert_greater(len(stdout.getvalue()), 0)
+
+    def test_help(self):
+        t = self._test_help
+        yield t
         yield t, 'separate'
         yield t, 'bundle'
         yield t, 'encode'
