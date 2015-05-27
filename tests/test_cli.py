@@ -160,7 +160,7 @@ class test_argument_parser():
     def test_init(self):
         cli.ArgumentParser(self.methods, 'djvu')
 
-    def test_parse_no_args(self):
+    def test_no_args(self):
         stderr = io.StringIO()
         with interim(sys, argv=['didjvu'], stderr=stderr):
             ap = cli.ArgumentParser(self.methods, 'djvu')
@@ -172,7 +172,7 @@ class test_argument_parser():
             'didjvu: error: too few arguments\n'
         )
 
-    def _test_parse_action_no_args(self, action):
+    def _test_action_no_args(self, action):
         stderr = io.StringIO()
         with interim(sys, argv=['didjvu', action], stderr=stderr):
             ap = cli.ArgumentParser(self.methods, 'djvu')
@@ -186,8 +186,8 @@ class test_argument_parser():
             stderr.getvalue()
         )
 
-    def test_parse_separate_no_args(self):
-        t = self._test_parse_action_no_args
+    def test_separate_no_args(self):
+        t = self._test_action_no_args
         yield t, 'separate'
         yield t, 'bundle'
         yield t, 'encode'
