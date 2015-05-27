@@ -62,7 +62,6 @@ def test_methods():
         assert_equal(in_image.dim, bin_image.dim)
 
     for method in gamera.methods:
-        args = {}
         if method == 'global':
             yield t, method, dict(threshold=42)
         else:
