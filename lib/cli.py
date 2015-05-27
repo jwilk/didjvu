@@ -273,6 +273,8 @@ class ArgumentParser(argparse.ArgumentParser):
             except KeyError:
                 self.error('invalid parameter name {0!r}'.format(pname))
             try:
+                if (pvalue is True) and (arg.type is not bool):
+                    raise ValueError
                 pvalue = arg.type(pvalue)
             except ValueError:
                 self.error('invalid parameter {0} value: {1!r}'.format(pname, pvalue))
