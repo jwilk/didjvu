@@ -76,7 +76,7 @@ class MetadataBase(object):
         for key, value in event.items:
             if value is None:
                 continue
-            self['xmpMM.History[%d]/stEvt:%s' % (index, key)] = value
+            self['xmpMM.History[{i}]/stEvt:{key}'.format(i=index, key=key)] = value
 
     def append_to_history(self, event):
         backend = self._backend
