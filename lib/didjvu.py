@@ -358,7 +358,7 @@ class main():
 
     def bundle(self, o):
         self.check_single_output(o)
-        if o.pages_per_dict <= 1:
+        if (o.pages_per_dict <= 1) or (len(o.input) <= 1):
             self.bundle_simple(o)
         else:
             ipc.require('minidjvu')
@@ -456,6 +456,7 @@ class main():
                     '--aggression', str(o.loss_level),
                     '--pages-per-dict', str(o.pages_per_dict),
                 ]
+                assert len(page_info) > 1  # minidjvu won't create single-page indirect documents
                 arguments += [page.sjbz_symlink for page in page_info]
                 index_filename = temporary.name(prefix='__index__.', suffix='.djvu', dir=minidjvu_out_dir)
                 index_filename = os.path.basename(index_filename)  # FIXME: Name conflicts are still possible!
