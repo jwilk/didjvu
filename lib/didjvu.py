@@ -201,9 +201,9 @@ class namespace():
 class main():
 
     compression_info_template = (
-        '%(bits_per_pixel).3f bits/pixel; '
-        '%(ratio).3f:1, %(percent_saved).2f%% saved, '
-        '%(bytes_in)d bytes in, %(bytes_out)d bytes out'
+        '{bits_per_pixel:.3f} bits/pixel; '
+        '{ratio:.3f}:1, {percent_saved:.2f}% saved, '
+        '{bytes_in} bytes in, {bytes_out} bytes out'
     )
 
     def __init__(self):
@@ -281,7 +281,7 @@ class main():
 
     def encode_one(self, o, image_filename, mask_filename, output, xmp_output):
         bytes_in = os.path.getsize(image_filename)
-        logger.info('%s:' % image_filename)
+        logger.info(image_filename + ':')
         ftype = filetype.check(image_filename)
         if ftype.like(filetype.djvu):
             if ftype.like(filetype.djvu_single):
@@ -296,7 +296,7 @@ class main():
         logger.info('- reading image')
         image = gamera.load_image(image_filename)
         width, height = image.ncols, image.nrows
-        logger.nosy('- image size: %d x %d', width, height)
+        logger.nosy('- image size: {w} x {h}'.format(w=width, h=height))
         mask = generate_mask(mask_filename, image, o.method, o.params)
         if xmp_output:
             n_connected_components = len(mask.cc_analysis())
@@ -310,7 +310,8 @@ class main():
         bits_per_pixel = 8.0 * bytes_out / (width * height)
         ratio = 1.0 * bytes_in / bytes_out
         percent_saved = (1.0 * bytes_in - bytes_out) * 100 / bytes_in
-        logger.info('- %s', self.compression_info_template % locals())
+        compression_info = self.compression_info_template.format(**locals())
+        logger.info('- ' + compression_info)
         if xmp_output:
             logger.info('- saving XMP metadata')
             metadata = xmp.metadata()
@@ -325,7 +326,7 @@ class main():
             metadata.write(xmp_output)
 
     def separate_one(self, o, image_filename, output):
-        logger.info('%s:', image_filename)
+        logger.info(image_filename + ':')
         ftype = filetype.check(image_filename)
         if ftype.like(filetype.djvu):
             # TODO: Figure out how many pages the document consist of.
@@ -334,7 +335,7 @@ class main():
         logger.info('- reading image')
         image = gamera.load_image(image_filename)
         width, height = image.ncols, image.nrows
-        logger.nosy('- image size: %d x %d' % (width, height))
+        logger.nosy('- image size: {w} x {h}'.format(w=width, h=height))
         logger.info('- thresholding')
         mask = generate_mask(None, image, o.method, o.params)
         logger.info('- saving')
@@ -398,10 +399,11 @@ class main():
         bits_per_pixel = float('nan')  # FIXME!
         ratio = 1.0 * bytes_in / bytes_out
         percent_saved = (1.0 * bytes_in - bytes_out) * 100 / bytes_in
-        logger.nosy(self.compression_info_template % locals())
+        compression_info = self.compression_info_template.format(**locals())
+        logger.nosy(compression_info)
 
     def _bundle_complex_page(self, o, page, minidjvu_in_dir, image_filename, mask_filename, pixels):
-        logger.info('%s:', image_filename)
+        logger.info(image_filename + ':')
         ftype = filetype.check(image_filename)
         if ftype.like(filetype.djvu):
             # TODO: Allow merging existing documents (even multi-page ones).
@@ -411,7 +413,7 @@ class main():
         dpi = image_dpi(image, o)
         width, height = image.ncols, image.nrows
         pixels[0] += width * height
-        logger.nosy('- image size: %d x %d', width, height)
+        logger.nosy('- image size: {w} x {h}'.format(w=width, h=height))
         mask = generate_mask(mask_filename, image, o.method, o.params)
         logger.info('- converting to DjVu')
         page.djvu = image_to_djvu(width, height, image, mask, options=o)
@@ -483,6 +485,7 @@ class main():
         bits_per_pixel = 8.0 * bytes_out / pixels
         ratio = 1.0 * bytes_in / bytes_out
         percent_saved = (1.0 * bytes_in - bytes_out) * 100 / bytes_in
-        logger.nosy('%s', self.compression_info_template % locals())
+        compression_info = self.compression_info_template.format(**locals())
+        logger.nosy(compression_info)
 
 # vim:ts=4 sts=4 sw=4 et
