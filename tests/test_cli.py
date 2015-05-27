@@ -166,11 +166,11 @@ class test_argument_parser():
             ap = cli.ArgumentParser(self.methods, 'djvu')
             with exception(SystemExit, '2'):
                 ap.parse_args({})
-            assert_multi_line_equal(
-                stderr.getvalue(),
-                'usage: didjvu [-h] [--version] {separate,encode,bundle} ...\n'
-                'didjvu: error: too few arguments\n'
-            )
+        assert_multi_line_equal(
+            stderr.getvalue(),
+            'usage: didjvu [-h] [--version] {separate,encode,bundle} ...\n'
+            'didjvu: error: too few arguments\n'
+        )
 
     def _test_parse_action_no_args(self, action):
         stderr = io.StringIO()
