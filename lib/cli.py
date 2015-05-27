@@ -142,17 +142,17 @@ class ArgumentParser(argparse.ArgumentParser):
         epilog = []
         default = self.defaults
         for p in p_separate, p_encode, p_bundle:
-            epilog += ['%s --help' % p.prog]
+            epilog += ['{prog} --help'.format(prog=p.prog)]
             p.add_argument('-o', '--output', metavar='FILE', help='output filename')
             if p is p_bundle:
                 p.add_argument(
                     '--pageid-template', metavar='TEMPLATE', default=default.pageid_template,
-                    help='naming scheme for page identifiers (default: "%s")' % default.pageid_template
+                    help='naming scheme for page identifiers (default: "{template}")'.format(template=default.pageid_template)
                 )
             else:
                 p.add_argument(
                     '--output-template', metavar='TEMPLATE',
-                    help='naming scheme for output file (e.g. "%s")' % default.pageid_template
+                    help='naming scheme for output file (e.g. "{template}")'.format(template=default.pageid_template)
                 )
             p.add_argument('--losslevel', dest='loss_level', type=losslevel_type, help=argparse.SUPPRESS)
             p.add_argument(
@@ -178,37 +178,37 @@ class ArgumentParser(argparse.ArgumentParser):
                     if layer == 'fg':
                         p.add_argument(
                             '--fg-slices', type=slice_type(1), metavar='N',
-                            help='number of slices for background (default: %s)' % get_slice_repr(default.fg_slices)
+                            help='number of slices for background (default: {slices})'.format(slices=get_slice_repr(default.fg_slices))
                         )
                     else:
                         p.add_argument(
                             '--bg-slices', type=slice_type(), metavar='N+...+N',
-                            help='number of slices in each foreground chunk (default: %s)' % get_slice_repr(default.bg_slices)
+                            help='number of slices in each foreground chunk (default: {slices})'.format(slices=get_slice_repr(default.bg_slices))
                         )
-                    default_crcb = getattr(default, '%s_crcb' % layer)
+                    default_crcb = getattr(default, '{lr}_crcb'.format(lr=layer))
                     p.add_argument(
-                        '--%s-crcb' % layer, choices=map(str, djvu.CRCB.values),
-                        help='chrominance encoding for %s (default: %s)' % (layer_name, default_crcb)
+                        '--{lr}-crcb'.format(lr=layer), choices=map(str, djvu.CRCB.values),
+                        help='chrominance encoding for {layer} (default: {crcb})'.format(layer=layer_name, crcb=default_crcb)
                     )
-                    default_subsample = getattr(default, '%s_subsample' % layer)
+                    default_subsample = getattr(default, '{lr}_subsample'.format(lr=layer))
                     p.add_argument(
-                        '--%s-subsample' % layer, type=subsample_type, metavar='N',
-                        help='subsample ratio for %s (default: %d)' % (layer_name, default_subsample)
+                        '--{lr}-subsample'.format(lr=layer), type=subsample_type, metavar='N',
+                        help='subsample ratio for {layer} (default: {n})'.format(layer=layer_name, n=default_subsample)
                     )
                 p.add_argument('--fg-bg-defaults', help=argparse.SUPPRESS, action='store_const', const=1)
             if p is not p_separate:
                 p.add_argument(
                     '-d', '--dpi', type=dpi_type, metavar='N',
-                    help='image resolution (default: %d)' % djvu.DPI_DEFAULT
+                    help='image resolution (default: {dpi})'.format(dpi=djvu.DPI_DEFAULT)
                 )
             if p is p_bundle:
                 p.add_argument(
                     '-p', '--pages-per-dict', type=int, metavar='N',
-                    help='how many pages to compress in one pass (default: %d)' % default.pages_per_dict
+                    help='how many pages to compress in one pass (default: {n})'.format(n=default.pages_per_dict)
                 )
             p.add_argument(
                 '-m', '--method', choices=methods, metavar='METHOD', type=replace_underscores, default=default_method,
-                help='binarization method (default: %s)' % default_method
+                help='binarization method (default: {method})'.format(method=default_method)
             )
             p.add_argument(
                 '-x', '--param', action='append', dest='params', metavar='NAME[=VALUE]',
@@ -293,9 +293,9 @@ class ArgumentParser(argparse.ArgumentParser):
         if o.fg_bg_defaults is None:
             for layer in 'fg', 'bg':
                 namespace = argparse.Namespace()
-                setattr(o, '%s_options' % layer, namespace)
+                setattr(o, '{lr}_options'.format(lr=layer), namespace)
                 for facet in 'slices', 'crcb', 'subsample':
-                    attrname = '%s_%s' % (layer, facet)
+                    attrname = '{lr}_{facet}'.format(lr=layer, facet=facet)
                     value = getattr(o, attrname)
                     if isinstance(value, intact):
                         value = value()
