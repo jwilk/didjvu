@@ -220,6 +220,7 @@ class test_argument_parser():
         with interim(sys, argv=argv, stderr=stderr):
             ap = cli.ArgumentParser(self.methods, 'djvu')
             [selected_action, options] = ap.parse_args(self.actions)
+        assert_multi_line_equal(stderr.getvalue(), '')
         assert_equal(selected_action, action)
         return options
 
