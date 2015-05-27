@@ -186,7 +186,7 @@ class test_argument_parser():
             stderr.getvalue()
         )
 
-    def test_separate_no_args(self):
+    def test_action_no_args(self):
         t = self._test_action_no_args
         yield t, 'separate'
         yield t, 'bundle'
