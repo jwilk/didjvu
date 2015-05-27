@@ -259,8 +259,12 @@ class ArgumentParser(argparse.ArgumentParser):
         result = {}
         for param in o.params or ():
             if '=' not in param:
-                pname = param
-                pvalue = True
+                if param.isdigit() and len(o.method.args) == 1:
+                    [pname] = o.method.args
+                    pvalue = param
+                else:
+                    pname = param
+                    pvalue = True
             else:
                 [pname, pvalue] = param.split('=', 1)
             pname = replace_underscores(pname)
