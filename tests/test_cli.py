@@ -192,4 +192,16 @@ class test_argument_parser():
         yield t, 'bundle'
         yield t, 'encode'
 
+    def test_bad_action(self, action='eggs'):
+        stderr = io.StringIO()
+        with interim(sys, argv=['didjvu', action], stderr=stderr):
+            ap = cli.ArgumentParser(self.methods, 'djvu')
+            with exception(SystemExit, '2'):
+                ap.parse_args({})
+        assert_multi_line_equal(
+            stderr.getvalue(),
+            'usage: didjvu [-h] [--version] {separate,encode,bundle} ...\n'
+            "didjvu: error: invalid choice: 'eggs' (choose from 'separate', 'encode', 'bundle')\n"
+        )
+
 # vim:ts=4 sts=4 sw=4 et
