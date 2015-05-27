@@ -257,9 +257,7 @@ class ArgumentParser(argparse.ArgumentParser):
     def _parse_params(self, options):
         o = options
         result = {}
-        if o.params is None:
-            return result
-        for param in o.params:
+        for param in o.params or ():
             if '=' not in param:
                 pname = param
                 pvalue = True
@@ -279,6 +277,9 @@ class ArgumentParser(argparse.ArgumentParser):
             if (arg.max is not None) and pvalue > arg.max:
                 self.error('parameter {0} must be <= {1}'.format(pname, arg.max))
             result[arg.name] = pvalue
+        for arg in o.method.args.itervalues():
+            if (not arg.has_default) and (arg.name not in result):
+                self.error('parameter {0} is not set'.format(arg.name))
         return result
 
     def parse_args(self, actions):

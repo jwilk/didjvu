@@ -2,8 +2,10 @@ didjvu (0.6) UNRELEASED; urgency=low
 
   * Improve the test suite.
   * Fix formatting of HTTPS links in the manual page.
+  * Add support for splitting along a given global threshold value
+    (--method global --param threshold=N).
 
- -- Jakub Wilk <jwilk@jwilk.net>  Wed, 27 May 2015 17:53:33 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Wed, 27 May 2015 17:57:19 +0200
 
 didjvu (0.5) unstable; urgency=low
 

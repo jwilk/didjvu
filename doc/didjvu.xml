@@ -259,6 +259,10 @@
                         <listitem><para>DjVu thresholding algorithm</para></listitem>
                     </varlistentry>
                     <varlistentry>
+                        <term><literal>global</literal></term>
+                        <listitem><para>splitting along a global threshold value</para></listitem>
+                    </varlistentry>
+                    <varlistentry>
                         <term><literal>niblack</literal></term>
                         <listitem><para>Niblack adaptive thresholding algorithm</para></listitem>
                     </varlistentry>

@@ -96,10 +96,6 @@ class Argument(object):
 
     def __init__(self, arg):
         self.name = arg.name.replace(' ', '-').replace('_', '-')
-        if not arg.has_default:
-            raise NotImplementedError(
-                'argument {0}: no default value'.format(self.name)
-            )  # <no-coverage>
         for gtype, ptype in self._type_map.iteritems():
             if isinstance(arg, gtype):
                 self.type = ptype
@@ -108,7 +104,6 @@ class Argument(object):
             raise NotImplementedError(
                 'argument {0}: unsupported type {1!r}' + repr(self.name, arg)
             )  # <no-coverage>
-        self.default = arg.default
         if self.type in (int, float):
             [self.min, self.max] = arg.rng
             if self.min == -gamera.args.DEFAULT_MAX_ARG_NUMBER:
@@ -117,13 +112,17 @@ class Argument(object):
                 self.max = None
         else:
             self.min = self.max = None
+        self.has_default = arg.has_default
+        self.default = arg.default
         if isinstance(self.default, gamera.args.CNoneDefault):
             self.default = None
-        else:
+        elif self.has_default:
             if not isinstance(self.default, self.type):
                 raise TypeError(
                     'argument {0}: type({1!r}) should be {2}'.format(self.name, self.default, self.type.__name__)
                 )  # <no-coverage>
+        else:
+            self.default = None
 
 class Plugin(object):
 
@@ -166,6 +165,7 @@ def _load_methods():
         from gamera.plugins.threshold import bernsen_threshold
         from gamera.plugins.threshold import djvu_threshold
         from gamera.plugins.threshold import otsu_threshold
+        from gamera.plugins.threshold import threshold as global_threshold
         from gamera.plugins.threshold import tsai_moment_preserving_threshold as tsai
         # TODO: from gamera.plugins.binarization import gatos_threshold
         from gamera.plugins.binarization import niblack_threshold

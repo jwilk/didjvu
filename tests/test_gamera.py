@@ -51,17 +51,21 @@ def test_load_image():
 def test_methods():
 
     @fork_isolation
-    def t(method):
+    def t(method, args={}):
         method = gamera.methods[method]
         path = os.path.join(datadir, 'ycbcr-jpeg.tiff')
         gamera.init()
         in_image = gamera.load_image(path)
-        bin_image = method(in_image)
+        bin_image = method(in_image, **args)
         assert_is_instance(bin_image, gamera.Image)
         assert_equal(bin_image.data.pixel_type, gamera.ONEBIT)
         assert_equal(in_image.dim, bin_image.dim)
 
     for method in gamera.methods:
-        yield t, method
+        args = {}
+        if method == 'global':
+            yield t, method, dict(threshold=42)
+        else:
+            yield t, method
 
 # vim:ts=4 sts=4 sw=4 et
