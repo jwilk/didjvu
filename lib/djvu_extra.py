@@ -51,9 +51,6 @@ class Crcb(object):
     def __str__(self):
         return self._name
 
-    def __repr__(self):
-        return '%s.CRCB.%s' % (type(self).__module__, self._name)
-
 class CRCB:
 
     values = [
