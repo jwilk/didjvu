@@ -224,7 +224,7 @@ class test_argument_parser():
         assert_equal(selected_action, action)
         return options
 
-    def _test_action_with_input(self, action):
+    def _test_action_defaults(self, action):
         path = 'eggs.png'
         options = self._test_action(action, path)
         assert_equal(options.input, [path])
@@ -243,8 +243,8 @@ class test_argument_parser():
         assert_equal(options.verbosity, 1)
         assert_is(options.xmp, False)
 
-    def test_action_with_input(self):
-        t = self._test_action_with_input
+    def test_action_defaults(self):
+        t = self._test_action_defaults
         yield t, 'separate'
         yield t, 'bundle'
         yield t, 'encode'
