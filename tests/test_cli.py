@@ -251,9 +251,9 @@ class test_argument_parser():
 
     def test_action_defaults(self):
         t = self._test_action_defaults
-        yield t, 'separate'
         yield t, 'bundle'
         yield t, 'encode'
+        yield t, 'separate'
 
     def _test_help(self, action=None):
         argv = ['didjvu', action, '--help']
@@ -268,8 +268,8 @@ class test_argument_parser():
     def test_help(self):
         t = self._test_help
         yield t
-        yield t, 'separate'
         yield t, 'bundle'
         yield t, 'encode'
+        yield t, 'separate'
 
 # vim:ts=4 sts=4 sw=4 et
