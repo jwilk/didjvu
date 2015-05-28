@@ -11,9 +11,6 @@ Things to do
 
  * Allow customizing gamma value (``--gamma``).
 
- * Allow using other than PIL imaging libraries (e.g. GraphicsMagick,
-   ExactImage). Or not to use any (apart from Gamera) library at all.
-
  * Optimize the ``subsample_fg()`` function, which is called if
    non-standard image quality options are used.
 
