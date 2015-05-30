@@ -151,6 +151,7 @@ class test_metadata():
             meta = libxmp.XMPMeta()
             meta.parse_from_str(xmp_file.read())
             xml_meta = meta.serialize_to_str(omit_all_formatting=True, omit_packet_wrapper=True)
+            xml_meta = str(xml_meta)  # StringIO might not handle Unicode strings: https://bugs.python.org/issue1548891
             logging.debug(repr(xml_meta))
             xml_meta = io.StringIO(xml_meta)
             iterator = etree.iterparse(xml_meta, events=('start', 'end'))
