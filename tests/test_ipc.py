@@ -14,11 +14,13 @@
 from __future__ import print_function
 
 import errno
+import locale
 import os
 import signal
 import stat
 
 from tests.common import (
+    SkipTest,
     assert_equal,
     assert_true,
     exception,
@@ -65,6 +67,22 @@ class test_wait():
     def test_wait_signal(self):
         for name in 'SIGINT', 'SIGABRT', 'SIGSEGV':
             yield self._test_signal, name
+
+utf8_locale_candidates = ['C.UTF-8', 'en_US.UTF-8']
+
+def get_utf8_locale():
+    old_locale = locale.setlocale(locale.LC_ALL)
+    try:
+        for new_locale in utf8_locale_candidates:
+            try:
+                locale.setlocale(locale.LC_ALL, new_locale)
+            except locale.Error:
+                continue
+            return new_locale
+    finally:
+        locale.setlocale(locale.LC_ALL, old_locale)
+
+utf8_locale = get_utf8_locale()
 
 class test_environment():
 
@@ -135,7 +153,12 @@ class test_environment():
                 assert_equal(value, '')
             elif key == 'LC_CTYPE':
                 has_lc_ctype = 1
-                assert_equal(value, 'en_US.UTF-8')
+                if utf8_locale is None:
+                    raise SkipTest(
+                        'UTF-8 locale missing '
+                        '({0})'.format(' or '.join(utf8_locale_candidates))
+                    )
+                assert_equal(value, utf8_locale)
             elif key == 'LANG':
                 has_lang = 1
                 assert_equal(value, '')
@@ -148,15 +171,15 @@ class test_environment():
         assert_true(has_lang)
 
     def test_locale_lc_all(self):
-        with interim_environ(LC_ALL='en_US.UTF-8'):
+        with interim_environ(LC_ALL=utf8_locale):
             self._test_locale()
 
     def test_locale_lc_ctype(self):
-        with interim_environ(LC_ALL=None, LC_CTYPE='en_US.UTF-8'):
+        with interim_environ(LC_ALL=None, LC_CTYPE=utf8_locale):
             self._test_locale()
 
     def test_locale_lang(self):
-        with interim_environ(LC_ALL=None, LC_CTYPE=None, LANG='en_US.UTF-8'):
+        with interim_environ(LC_ALL=None, LC_CTYPE=None, LANG=utf8_locale):
             self._test_locale()
 
 def test_init_exception():
