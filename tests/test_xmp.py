@@ -12,6 +12,7 @@
 # General Public License for more details.
 
 import os
+import logging
 
 from . common import (
     SkipTest,
@@ -150,6 +151,7 @@ class test_metadata():
             meta = libxmp.XMPMeta()
             meta.parse_from_str(xmp_file.read())
             xml_meta = meta.serialize_to_str(omit_all_formatting=True, omit_packet_wrapper=True)
+            logging.debug(xml_meta)
             xml_meta = io.StringIO(xml_meta)
             iterator = etree.iterparse(xml_meta, events=('start', 'end'))
             iterator = iter(iterator)  # odd, but needed for Python 2.6
