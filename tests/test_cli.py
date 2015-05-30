@@ -12,6 +12,7 @@
 # General Public License for more details.
 
 import cStringIO as io
+import collections
 import sys
 
 from . common import (
@@ -172,6 +173,14 @@ class test_argument_parser():
     )
     actions = MockActions()
 
+    if sys.version_info >= (2, 7):
+        anames = collections.OrderedDict()
+    else:
+        anames = {}
+    anames['separate'] = 1
+    anames['encode'] = 1
+    anames['bundle'] = 1
+
     def test_init(self):
         cli.ArgumentParser(self.methods, 'djvu')
 
@@ -183,8 +192,8 @@ class test_argument_parser():
                 ap.parse_args({})
         assert_multi_line_equal(
             stderr.getvalue(),
-            'usage: didjvu [-h] [--version] {separate,encode,bundle} ...\n'
-            'didjvu: error: too few arguments\n'
+            'usage: didjvu [-h] [--version] {{{actions}}} ...\n'
+            'didjvu: error: too few arguments\n'.format(actions=','.join(self.anames))
         )
 
     def _test_action_no_args(self, action):
@@ -215,8 +224,8 @@ class test_argument_parser():
                 ap.parse_args({})
         assert_multi_line_equal(
             stderr.getvalue(),
-            'usage: didjvu [-h] [--version] {separate,encode,bundle} ...\n'
-            "didjvu: error: invalid choice: 'eggs' (choose from 'separate', 'encode', 'bundle')\n"
+            'usage: didjvu [-h] [--version] {{{actions}}} ...\n'.format(actions=','.join(self.anames)) +
+            "didjvu: error: invalid choice: 'eggs' (choose from {actions})\n".format(actions=', '.join(map(repr, self.anames)))
         )
 
     def _test_action(self, action, *args):
