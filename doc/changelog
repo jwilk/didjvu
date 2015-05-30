@@ -1,8 +1,8 @@
 didjvu (0.6.1) UNRELEASED; urgency=low
 
-  * 
+  * Improve the test suite.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Wed, 27 May 2015 23:05:59 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Sat, 30 May 2015 15:41:06 +0200
 
 didjvu (0.6) unstable; urgency=low
 
