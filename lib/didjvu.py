@@ -58,7 +58,7 @@ def setup_logging():
 def error(message, *args, **kwargs):
     if args or kwargs:
         message = message.format(*args, **kwargs)
-    print('didjvu: error: ' + message, file=sys.stderr)
+    print('didjvu: error: {msg}'.format(msg=message), file=sys.stderr)
     sys.exit(1)
 
 def parallel_for(o, f, *iterables):
