@@ -18,7 +18,8 @@ import shutil
 from . common import (
     assert_equal,
     assert_greater,
-    assert_true
+    assert_true,
+    exception,
 )
 
 from PIL import Image as pil
@@ -118,5 +119,31 @@ class test_multichunk():
             shutil.copyfile(incl_path, tmp_incl_path)
             out_image = ddjvu(tmp_djvu_path, fmt='pbm')
             assert_images_equal(in_image, out_image)
+
+class test_validate_pageid():
+
+    def test_empty(self):
+        with exception(ValueError, string='page identifier must end with the .djvu extension'):
+            djvu.validate_pageid('')
+
+    def test_bad_char(self):
+        with exception(ValueError, string='page identifier must consist only of lowercase ASCII letters, digits, _, +, - and dot'):
+            djvu.validate_pageid('eggs/ham.djvu')
+
+    def test_leading_bad_char(self):
+        with exception(ValueError, string='page identifier cannot start with +, - or a dot'):
+            djvu.validate_pageid('.eggs.djvu')
+
+    def test_dot_dot(self):
+        with exception(ValueError, string='page identifier cannot contain two consecutive dots'):
+            djvu.validate_pageid('eggs..djvu')
+
+    def test_bad_extension(self):
+        with exception(ValueError, string='page identifier must end with the .djvu extension'):
+            djvu.validate_pageid('eggs.png')
+
+    def test_ok(self):
+        n = 'eggs.djvu'
+        assert_equal(djvu.validate_pageid(n), n)
 
 # vim:ts=4 sts=4 sw=4 et
