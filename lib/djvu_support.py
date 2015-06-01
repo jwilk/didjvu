@@ -330,7 +330,7 @@ def require_cli():
         'djvmcvt',
     )
 
-_pageid_chars = re.compile('^[A-Za-z0-9_+.-]+$').match
+_pageid_chars = re.compile('^[A-Za-z0-9_+.-]*$').match
 
 def validate_pageid(pageid):
     if not _pageid_chars(pageid):
