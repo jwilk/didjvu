@@ -1,10 +1,6 @@
 Things to do
 ============
 
- * Make sure that very small images are subsampled correctly.
-   See the DjVuLibre bug report for details:
-   http://sourceforge.net/p/djvu/bugs/106/
-
  * Allow running *didjvu* in parallel (``-j``/``--jobs``).
 
  * Allow specifying page titles (``--page-title-template``).
