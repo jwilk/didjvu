@@ -25,7 +25,7 @@ except ImportError as ex:  # <no-coverage>
     )
     raise
 
-from . import djvu_extra as djvu
+from . import djvu_support as djvu
 from . import version as version_module
 try:
     from . import xmp

@@ -23,7 +23,7 @@ from . common import (
 
 from PIL import Image as pil
 
-from lib import djvu_extra as djvu
+from lib import djvu_support as djvu
 from lib import ipc
 from lib import temporary
 

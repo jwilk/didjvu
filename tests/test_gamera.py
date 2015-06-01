@@ -22,7 +22,7 @@ from . common import (
     fork_isolation,
 )
 
-from lib import gamera_extra as gamera
+from lib import gamera_support as gamera
 
 datadir = os.path.join(os.path.dirname(__file__), 'data')
 

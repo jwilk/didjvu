@@ -20,10 +20,10 @@ import re
 import sys
 
 from . import cli
-from . import djvu_extra as djvu
+from . import djvu_support as djvu
 from . import filetype
 from . import fs
-from . import gamera_extra as gamera
+from . import gamera_support as gamera
 from . import ipc
 from . import templates
 from . import temporary
