@@ -23,3 +23,4 @@ install:
  - pip install -vvv https://github.com/escaped/pyexiv2/archive/master.zip
 script:
  - nosetests -v
+ - grep -r -l ft=rst doc/ | xargs -t -n1 -I{} rst2pseudoxml.py --strict {} /dev/null
