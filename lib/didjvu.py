@@ -184,16 +184,16 @@ _pageid_chars = re.compile('^[A-Za-z0-9_+.-]+$').match
 
 def check_pageid_sanity(pageid):
     if not _pageid_chars(pageid):
-        raise ValueError('pageid must consist only of lowercase ASCII letters, digits, _, +, - and dot.')
+        raise ValueError('page identifier must consist only of lowercase ASCII letters, digits, _, +, - and dot')
     if pageid[:1] in ('.', '+', '-'):
-        raise ValueError('pageid cannot start with +, - or a dot.')
+        raise ValueError('page identifier cannot start with +, - or a dot')
     if '..' in pageid:
-        raise ValueError('pageid cannot contain two consecutive dots.')
+        raise ValueError('page identifier cannot contain two consecutive dots')
     assert pageid == os.path.basename(pageid)
     if pageid.endswith('.djvu'):
         return pageid
     else:
-        raise ValueError('pageid must end with the .djvu extension.')
+        raise ValueError('page identifier must end with the .djvu extension')
 
 class namespace():
     pass
@@ -387,7 +387,10 @@ class main():
             for page, (input, mask) in enumerate(zip(o.input, o.masks)):
                 bytes_in += os.path.getsize(input)
                 pageid = templates.expand(o.pageid_template, input, page, pageid_memo)
-                check_pageid_sanity(pageid)
+                try:
+                    check_pageid_sanity(pageid)
+                except ValueError as exc:
+                    error(exc)
                 component_filenames += os.path.join(tmpdir, pageid),
             parallel_for(o, self._bundle_simple_page, o.input, o.masks, component_filenames)
             logger.info('bundling')
