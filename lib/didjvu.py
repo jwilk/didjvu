@@ -440,7 +440,7 @@ class main():
                 try:
                     check_pageid_sanity(page.pageid)
                 except ValueError as exc:
-                    error(str(exc))
+                    error(exc)
             del page  # quieten pyflakes
             parallel_for(o, self._bundle_complex_page,
                 page_info,
