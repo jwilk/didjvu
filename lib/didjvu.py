@@ -180,21 +180,6 @@ def generate_mask(filename, image, method, params):
     else:
         return gamera.load_image(filename)
 
-_pageid_chars = re.compile('^[A-Za-z0-9_+.-]+$').match
-
-def check_pageid_sanity(pageid):
-    if not _pageid_chars(pageid):
-        raise ValueError('page identifier must consist only of lowercase ASCII letters, digits, _, +, - and dot')
-    if pageid[:1] in ('.', '+', '-'):
-        raise ValueError('page identifier cannot start with +, - or a dot')
-    if '..' in pageid:
-        raise ValueError('page identifier cannot contain two consecutive dots')
-    assert pageid == os.path.basename(pageid)
-    if pageid.endswith('.djvu'):
-        return pageid
-    else:
-        raise ValueError('page identifier must end with the .djvu extension')
-
 class namespace():
     pass
 
@@ -388,7 +373,7 @@ class main():
                 bytes_in += os.path.getsize(input)
                 pageid = templates.expand(o.pageid_template, input, page, pageid_memo)
                 try:
-                    check_pageid_sanity(pageid)
+                    djvu.validate_pageid(pageid)
                 except ValueError as exc:
                     error(exc)
                 component_filenames += os.path.join(tmpdir, pageid),
@@ -438,7 +423,7 @@ class main():
                 bytes_in += os.path.getsize(image_filename)
                 page.pageid = templates.expand(o.pageid_template, image_filename, pageno, pageid_memo)
                 try:
-                    check_pageid_sanity(page.pageid)
+                    djvu.validate_pageid(page.pageid)
                 except ValueError as exc:
                     error(exc)
             del page  # quieten pyflakes

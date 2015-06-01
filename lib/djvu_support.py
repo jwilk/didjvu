@@ -330,10 +330,26 @@ def require_cli():
         'djvmcvt',
     )
 
+_pageid_chars = re.compile('^[A-Za-z0-9_+.-]+$').match
+
+def validate_pageid(pageid):
+    if not _pageid_chars(pageid):
+        raise ValueError('page identifier must consist only of lowercase ASCII letters, digits, _, +, - and dot')
+    if pageid[:1] in ('.', '+', '-'):
+        raise ValueError('page identifier cannot start with +, - or a dot')
+    if '..' in pageid:
+        raise ValueError('page identifier cannot contain two consecutive dots')
+    assert pageid == os.path.basename(pageid)
+    if pageid.endswith('.djvu'):
+        return pageid
+    else:
+        raise ValueError('page identifier must end with the .djvu extension')
+
 __all__ = [
     'bitonal_to_djvu', 'photo_to_djvu', 'djvu_to_iw44',
     'bundle_djvu',
     'require_cli',
+    'validate_pageid',
     'Multichunk',
     'DPI_MIN', 'DPI_DEFAULT', 'DPI_MAX',
     'LOSS_LEVEL_MIN', 'LOSS_LEVEL_CLEAN', 'LOSS_LEVEL_LOSSY', 'LOSS_LEVEL_MAX',
