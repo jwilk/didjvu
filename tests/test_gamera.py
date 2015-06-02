@@ -28,7 +28,7 @@ datadir = os.path.join(os.path.dirname(__file__), 'data')
 
 def test_load_image():
     paths = []
-    for ext in ['tiff', 'bmp']:
+    for ext in ['tiff', 'png', 'bmp']:
         paths += map(os.path.basename,
             glob.glob(os.path.join(datadir, '*.' + ext))
         )
