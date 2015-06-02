@@ -16,6 +16,7 @@ import time
 
 from . common import (
     assert_equal,
+    assert_is_none,
     assert_rfc3339_timestamp,
     fork_isolation,
     interim_environ,
@@ -28,6 +29,7 @@ def test_now():
     assert_rfc3339_timestamp(str(result))
     dt = result.as_datetime()
     assert_equal(dt.dst(), datetime.timedelta(0))
+    assert_is_none(dt.tzname())
 
 def test_timezones():
     uts = 1261171514
@@ -41,6 +43,7 @@ def test_timezones():
             assert_equal(str(result), expected)
             dt = result.as_datetime()
             assert_equal(dt.dst(), datetime.timedelta(0))
+            assert_is_none(dt.tzname())
             assert_equal(str(dt), dt_expected)
     t('UTC', '2009-12-18T21:25:14Z')
     t('Europe/Warsaw', '2009-12-18T22:25:14+01:00')

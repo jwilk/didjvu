@@ -43,6 +43,8 @@ class Timestamp(object):
                 return datetime.timedelta(seconds=-offset)
             def dst(self, dt):
                 return datetime.timedelta(0)
+            def tzname(self, dt):
+                return
         return cls(*self._localtime[:6], tzinfo=tz())
 
 def now():
