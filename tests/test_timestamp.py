@@ -32,9 +32,8 @@ def test_now():
     assert_is_none(dt.tzname())
 
 def test_timezones():
-    uts = 1261171514
     @fork_isolation
-    def t(tz, expected):
+    def t(uts, tz, expected):
         dt_expected = expected.replace('T', ' ').replace('Z', '+00:00')
         with interim_environ(TZ=tz):
             time.tzset()
@@ -45,10 +44,13 @@ def test_timezones():
             assert_equal(dt.dst(), datetime.timedelta(0))
             assert_is_none(dt.tzname())
             assert_equal(str(dt), dt_expected)
-    t('UTC', '2009-12-18T21:25:14Z')
-    t('Europe/Warsaw', '2009-12-18T22:25:14+01:00')
-    t('America/New_York', '2009-12-18T16:25:14-05:00')
-    t('Asia/Kathmandu', '2009-12-19T03:10:14+05:45')
-    t('HAM+4:37', '2009-12-18T16:48:14-04:37')
+    # non-DST:
+    t(1261171514, 'UTC', '2009-12-18T21:25:14Z')
+    t(1261171514, 'Europe/Warsaw', '2009-12-18T22:25:14+01:00')
+    t(1261171514, 'America/New_York', '2009-12-18T16:25:14-05:00')
+    t(1261171514, 'Asia/Kathmandu', '2009-12-19T03:10:14+05:45')
+    t(1261171514, 'HAM+4:37', '2009-12-18T16:48:14-04:37')
+    # DST:
+    t(1337075844, 'Europe/Warsaw', '2012-05-15T11:57:24+02:00')
 
 # vim:ts=4 sts=4 sw=4 et
