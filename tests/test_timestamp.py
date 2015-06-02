@@ -52,5 +52,7 @@ def test_timezones():
     t(1261171514, 'HAM+4:37', '2009-12-18T16:48:14-04:37')
     # DST:
     t(1337075844, 'Europe/Warsaw', '2012-05-15T11:57:24+02:00')
+    # Offset changes:
+    t(1394737792, 'Europe/Moscow', '2014-03-13T23:09:52+04:00')  # used to be +04:00, but it's +03:00 now
 
 # vim:ts=4 sts=4 sw=4 et

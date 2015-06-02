@@ -2,10 +2,11 @@ didjvu (0.6.1) UNRELEASED; urgency=low
 
   * Fix loading 16-bit greyscale PNG files.
     https://groups.yahoo.com/neo/groups/gamera-devel/conversations/messages/2425
+  * Fix timezone offset calculations.
   * Improve error handling.
   * Improve the test suite.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Tue, 02 Jun 2015 12:47:20 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Tue, 02 Jun 2015 18:46:00 +0200
 
 didjvu (0.6) unstable; urgency=low
 
