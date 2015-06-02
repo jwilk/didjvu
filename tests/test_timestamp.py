@@ -11,6 +11,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 # General Public License for more details.
 
+import datetime
 import time
 
 from . common import (
@@ -25,17 +26,22 @@ from lib import timestamp
 def test_now():
     result = timestamp.now()
     assert_rfc3339_timestamp(str(result))
-
+    dt = result.as_datetime()
+    assert_equal(dt.dst(), datetime.timedelta(0))
 
 def test_timezones():
     uts = 1261171514
     @fork_isolation
     def t(tz, expected):
+        dt_expected = expected.replace('T', ' ').replace('Z', '+00:00')
         with interim_environ(TZ=tz):
             time.tzset()
             result = timestamp.Timestamp(uts)
             assert_rfc3339_timestamp(str(result))
             assert_equal(str(result), expected)
+            dt = result.as_datetime()
+            assert_equal(dt.dst(), datetime.timedelta(0))
+            assert_equal(str(dt), dt_expected)
     t('UTC', '2009-12-18T21:25:14Z')
     t('Europe/Warsaw', '2009-12-18T22:25:14+01:00')
     t('America/New_York', '2009-12-18T16:25:14-05:00')
