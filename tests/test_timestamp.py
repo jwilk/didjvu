@@ -44,13 +44,13 @@ def test_timezones():
             assert_equal(dt.dst(), datetime.timedelta(0))
             assert_is_none(dt.tzname())
             assert_equal(str(dt), dt_expected)
-    # non-DST:
+    # winter:
     t(1261171514, 'UTC', '2009-12-18T21:25:14Z')
     t(1261171514, 'Europe/Warsaw', '2009-12-18T22:25:14+01:00')
     t(1261171514, 'America/New_York', '2009-12-18T16:25:14-05:00')
     t(1261171514, 'Asia/Kathmandu', '2009-12-19T03:10:14+05:45')
     t(1261171514, 'HAM+4:37', '2009-12-18T16:48:14-04:37')
-    # DST:
+    # summer:
     t(1337075844, 'Europe/Warsaw', '2012-05-15T11:57:24+02:00')
     # Offset changes:
     t(1394737792, 'Europe/Moscow', '2014-03-13T23:09:52+04:00')  # used to be +04:00, but it's +03:00 now
