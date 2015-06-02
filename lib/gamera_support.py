@@ -110,7 +110,7 @@ class Argument(object):
                 break
         else:
             raise NotImplementedError(
-                'argument {0}: unsupported type {1!r}' + repr(self.name, arg)
+                'argument {0}: unsupported type {1!r}'.format(self.name, arg)
             )  # <no-coverage>
         if self.type in (int, float):
             [self.min, self.max] = arg.rng
