@@ -48,12 +48,12 @@ def test_load_image():
     for path in paths:
         yield t, path
 
-def test_methods():
+class test_methods():
 
     @fork_isolation
-    def t(method, args={}):
+    def _test_one_method(self, path, method, args):
         method = gamera.methods[method]
-        path = os.path.join(datadir, 'ycbcr-jpeg.tiff')
+        path = os.path.join(datadir, path)
         gamera.init()
         in_image = gamera.load_image(path)
         bin_image = method(in_image, **args)
@@ -61,10 +61,21 @@ def test_methods():
         assert_equal(bin_image.data.pixel_type, gamera.ONEBIT)
         assert_equal(in_image.dim, bin_image.dim)
 
-    for method in gamera.methods:
-        if method == 'global':
-            yield t, method, dict(threshold=42)
-        else:
-            yield t, method
+    def _test_methods(self, path):
+        def t(method, args={}):
+            return self._test_one_method(path, method, args)
+        for method in gamera.methods:
+            if method == 'global':
+                yield t, method, dict(threshold=42)
+            else:
+                yield t, method
+
+    def test_color(self):
+        for x in self._test_methods('ycbcr-jpeg.tiff'):
+            yield x
+
+    def test_grey(self):
+        for x in self._test_methods('greyscale-packbits.tiff'):
+            yield x
 
 # vim:ts=4 sts=4 sw=4 et
