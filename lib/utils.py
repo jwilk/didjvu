@@ -26,4 +26,7 @@ def enhance_import_error(exception, package, debian_package, homepage):
         message += ' <{url}>'.format(url=homepage)
     exception.args = [message]
 
+class namespace():
+    pass
+
 # vim:ts=4 sts=4 sw=4 et

@@ -27,6 +27,7 @@ from . import gamera_support as gamera
 from . import ipc
 from . import templates
 from . import temporary
+from . import utils
 
 try:
     from . import xmp
@@ -179,9 +180,6 @@ def generate_mask(filename, image, method, params):
         return method(image, **params)
     else:
         return gamera.load_image(filename)
-
-class namespace():
-    pass
 
 class main():
 
@@ -418,7 +416,7 @@ class main():
             page_info = []
             pageid_memo = {}
             for pageno, (image_filename, mask_filename) in enumerate(zip(o.input, o.masks)):
-                page = namespace()
+                page = utils.namespace()
                 page_info += page,
                 bytes_in += os.path.getsize(image_filename)
                 page.pageid = templates.expand(o.pageid_template, image_filename, pageno, pageid_memo)
