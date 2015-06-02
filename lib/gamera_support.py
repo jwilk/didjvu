@@ -68,9 +68,17 @@ def load_image(filename):
             math.hypot(1, 1)
         ))
     try:
-        # Gamera handles only a few TIFF color modes correctly.
-        # https://bugs.debian.org/784374
-        if pil_image.mode not in ['1', 'I;16', 'L', 'RGB']:
+        if pil_image.format == 'TIFF':
+            # Gamera handles only a few TIFF color modes correctly.
+            # https://bugs.debian.org/784374
+            gamera_modes = ['1', 'I;16', 'L', 'RGB']
+        elif pil_image.format == 'PNG':
+            # Gamera doesn't handle 16-bit grayscale PNG images correctly.
+            # https://groups.yahoo.com/neo/groups/gamera-devel/conversations/messages/2425
+            gamera_modes = ['1', 'L', 'RGB']
+        else:
+            gamera_modes = []
+        if pil_image.mode not in gamera_modes:
             raise IOError
         # Gamera supports more TIFF compression formats that PIL.
         # https://mail.python.org/pipermail/image-sig/2003-July/002354.html

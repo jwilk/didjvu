@@ -1,9 +1,11 @@
 didjvu (0.6.1) UNRELEASED; urgency=low
 
+  * Fix loading 16-bit greyscale PNG files.
+    https://groups.yahoo.com/neo/groups/gamera-devel/conversations/messages/2425
   * Improve error handling.
   * Improve the test suite.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Mon, 01 Jun 2015 17:59:22 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Tue, 02 Jun 2015 12:47:20 +0200
 
 didjvu (0.6) unstable; urgency=low
 
