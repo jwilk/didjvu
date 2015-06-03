@@ -95,7 +95,7 @@ class MetadataBase(object):
         for description in xmp_find('.//' + nstag(ns.rdf, 'Description')):
             pass
         if description is None:
-            raise XmpError('Cannot add xmpMM:History')
+            raise XmpError('Cannot add xmpMM:History')  # <no-coverage>
         e_description = etree.SubElement(description, nstag(ns.xmpmm, 'History'))
         etree.SubElement(e_description, nstag(ns.rdf, 'Seq'))
         fp.seek(0)
@@ -106,7 +106,7 @@ class MetadataBase(object):
         self._reload()
         try:
             self['xmpMM.History']
-        except LookupError:
+        except LookupError:  # <no-coverage>
             raise XmpError('Cannot add xmpMM:History')
 
     def __init__(self):

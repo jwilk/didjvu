@@ -16,6 +16,6 @@ lib.version                   8      0      0      0   100%
 lib.xmp                      48      0      8      1    98%
 lib.xmp.libxmp_backend       66      4     20      2    93%   51-54
 lib.xmp.namespaces            6      0      0      0   100%
-lib.xmp.pyexiv2_backend     123      5     22      2    95%   98, 109-110, 125-126
+lib.xmp.pyexiv2_backend     120      2     20      1    98%   125-126
 ---------------------------------------------------------------------
-TOTAL                      1084    196    337    112    78%
+TOTAL                      1081    193    335    111    79%
