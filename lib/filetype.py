@@ -18,7 +18,7 @@ filetype detection
 class generic(object):
 
     def __new__(self, *args, **kwargs):
-        raise NotImplementedError
+        raise NotImplementedError  # <no-coverage>
 
     @classmethod
     def like(cls, other):
