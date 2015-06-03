@@ -21,6 +21,7 @@ from . common import (
     assert_regexp_matches,
     assert_rfc3339_timestamp,
     assert_true,
+    exception,
 )
 
 xmp_backends = []
@@ -408,5 +409,22 @@ class test_metadata():
             assert_equal(get(ns.didjvu, 'test_str'), 'eggs')
             assert_equal(get(ns.didjvu, 'test_bool'), 'True')
         return test
+
+    def test_io_error(self):
+        def t(*dummy):
+            image_path = os.path.join(os.path.dirname(__file__), 'data', 'nonexistent.png')
+            meta = xmp.metadata(backend=backend)
+            meta.import_(image_path)
+            with temporary.directory() as tmpdir:
+                os.chmod(tmpdir, 0o000)
+                try:
+                    image_path = os.path.join(tmpdir, 'example.png')
+                    meta = xmp.metadata(backend=backend)
+                    with exception(IOError, callback=repr):
+                        meta.import_(image_path)
+                finally:
+                    os.chmod(tmpdir, 0o700)
+        for backend in xmp_backends:
+            yield t, tag_backend(backend)
 
 # vim:ts=4 sts=4 sw=4 et
