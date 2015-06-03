@@ -47,31 +47,6 @@ etree.register_namespace('x', 'adobe:ns:meta/')
 class XmpError(RuntimeError):
     pass
 
-class Event(object):
-
-    def __init__(self,
-        action=None,
-        software_agent=None,
-        parameters=None,
-        instance_id=None,
-        changed=None,
-        when=None,
-    ):
-        if software_agent is None:
-            software_agent = version.get_software_agent()
-        self._items = [
-            ('action', action),
-            ('softwareAgent', software_agent),
-            ('parameters', parameters),
-            ('instanceID', instance_id),
-            ('changed', changed),
-            ('when', str(when)),
-        ]
-
-    @property
-    def items(self):
-        return iter(self._items)
-
 class datetime_for_pyexiv2(datetime.datetime):
 
     __almost_zero = 1.0
