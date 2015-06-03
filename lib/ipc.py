@@ -123,30 +123,6 @@ class Subprocess(subprocess.Popen):
 
 PIPE = subprocess.PIPE
 
-# Proxy
-# =====
-
-class Proxy(object):
-
-    def __init__(self, obj, wait_fn, temporaries):
-        self._object = obj
-        self._wait_fn = wait_fn
-        self._temporaries = temporaries
-
-    def __getattribute__(self, name):
-        if name.startswith('_'):
-            return object.__getattribute__(self, name)
-        self._wait_fn()
-        self._wait_fn = int
-        return getattr(self._object, name)
-
-    def __setattr__(self, name, value):
-        if name.startswith('_'):
-            return object.__setattr__(self, name, value)
-        self._wait_fn()
-        self._wait_fn = int
-        setattr(self._object, name, value)
-
 # require()
 # =========
 
@@ -173,7 +149,6 @@ logger = logging.getLogger('didjvu.ipc')
 __all__ = [
     'CalledProcessError', 'CalledProcessInterrupted',
     'Subprocess', 'PIPE',
-    'Proxy',
 ]
 
 # vim:ts=4 sts=4 sw=4 et

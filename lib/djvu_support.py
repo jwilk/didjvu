@@ -19,6 +19,7 @@ import struct
 
 from . import ipc
 from . import temporary
+from . import utils
 
 DPI_MIN = 72
 DPI_DEFAULT = 300
@@ -75,7 +76,7 @@ def bitonal_to_djvu(image, dpi=300, loss_level=0):
         pbm_file.name,
         djvu_file.name
     ]
-    return ipc.Proxy(djvu_file, ipc.Subprocess(args).wait, [pbm_file])
+    return utils.Proxy(djvu_file, ipc.Subprocess(args).wait, [pbm_file])
 
 def photo_to_djvu(image, dpi=100, slices=IW44_SLICES_DEFAULT, gamma=2.2, mask_image=None, crcb=CRCB.normal):
     ppm_file = temporary.file(suffix='.ppm')
@@ -104,7 +105,7 @@ def djvu_to_iw44(djvu_file):
     iw44_file = temporary.file(suffix='.iw44')
     args = ['djvuextract', djvu_file.name, 'BG44=' + iw44_file.name]
     with open(os.devnull, 'wb') as dev_null:
-        return ipc.Proxy(iw44_file, ipc.Subprocess(args, stderr=dev_null).wait, [djvu_file])
+        return utils.Proxy(iw44_file, ipc.Subprocess(args, stderr=dev_null).wait, [djvu_file])
 
 def _int_or_none(x):
     if x is None:
@@ -212,7 +213,7 @@ class Multichunk(object):
         with open(os.devnull, 'wb') as dev_null:
             djvuextract = ipc.Subprocess(args, stderr=dev_null)
         for key in self._chunks:
-            self._chunks[key] = ipc.Proxy(chunk_files[key], djvuextract.wait, [self._file])
+            self._chunks[key] = utils.Proxy(chunk_files[key], djvuextract.wait, [self._file])
             self._dirty.discard(key)
         assert not self._dirty
         # The file reference is not needed anymore.
@@ -317,7 +318,7 @@ def bundle_djvu(*component_filenames):
         djvu_file = temporary.file(suffix='.djvu')
         args = ['djvm', '-c', djvu_file.name]
         args += component_filenames
-        return ipc.Proxy(djvu_file, ipc.Subprocess(args).wait, None)
+        return utils.Proxy(djvu_file, ipc.Subprocess(args).wait, None)
 
 def require_cli():
     ipc.require(
