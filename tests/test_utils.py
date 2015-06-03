@@ -14,6 +14,9 @@
 import sys
 
 from . common import (
+    assert_equal,
+    assert_false,
+    assert_true,
     exception,
     interim,
 )
@@ -61,5 +64,27 @@ class test_enhance_import():
                     )
                     raise
                 nonexistent.f()  # quieten pyflakes
+
+def test_proxy():
+    class obj:
+        x = 42
+    def wait():
+        assert_true(wait.ok)
+        wait.ok = False
+    wait.ok = False
+    class Del(object):
+        ok = False
+        def __del__(self):
+            type(self).ok = False
+    proxy = utils.Proxy(obj, wait, [Del()])
+    wait.ok = True
+    assert_equal(proxy.x, 42)
+    assert_false(wait.ok)
+    proxy.x = 37
+    assert_equal(proxy.x, 37)
+    assert_equal(obj.x, 37)
+    Del.ok = True
+    del proxy
+    assert_false(Del.ok)
 
 # vim:ts=4 sts=4 sw=4 et

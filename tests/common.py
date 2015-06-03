@@ -21,6 +21,7 @@ import traceback
 from nose import SkipTest
 from nose.tools import (
     assert_equal,
+    assert_false,
     assert_not_equal,
     assert_true,
 )
@@ -197,6 +198,7 @@ if 'coverage' in sys.modules:
 __all__ = [
     'SkipTest',
     'assert_equal',
+    'assert_false',
     'assert_greater',
     'assert_is',
     'assert_is_instance',

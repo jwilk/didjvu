@@ -11,11 +11,11 @@ lib.ipc                      79      1     32      6    94%   106
 lib.templates                40      0     14      0   100%
 lib.temporary                20      0      0      0   100%
 lib.timestamp                29      0      2      0   100%
-lib.utils                    30      3      8      1    89%   49-51
+lib.utils                    30      0      8      0   100%
 lib.version                   8      0      0      0   100%
 lib.xmp                      48      4      8      3    88%   94-97
 lib.xmp.libxmp_backend       66      4     20      2    93%   51-54
 lib.xmp.namespaces            6      0      0      0   100%
 lib.xmp.pyexiv2_backend     130      9     24      4    92%   60-62, 73, 123, 134-135, 150-151
 ---------------------------------------------------------------------
-TOTAL                      1091    207    339    117    77%
+TOTAL                      1091    204    339    116    78%
