@@ -21,7 +21,6 @@ import pyexiv2.xmp
 
 from .. import temporary
 from .. import timestamp
-from .. import version
 
 from . import namespaces as ns
 
