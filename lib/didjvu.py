@@ -373,7 +373,7 @@ class main():
                     djvu.validate_pageid(pageid)
                 except ValueError as exc:
                     error(exc)
-                component_filenames += os.path.join(tmpdir, pageid),
+                component_filenames += [os.path.join(tmpdir, pageid)]
             parallel_for(o, self._bundle_simple_page, o.input, o.masks, component_filenames)
             logger.info('bundling')
             djvu_file = djvu.bundle_djvu(*component_filenames)
@@ -416,7 +416,7 @@ class main():
             pageid_memo = {}
             for pageno, (image_filename, mask_filename) in enumerate(zip(o.input, o.masks)):
                 page = utils.namespace()
-                page_info += page,
+                page_info += [page]
                 bytes_in += os.path.getsize(image_filename)
                 page.pageid = templates.expand(o.pageid_template, image_filename, pageno, pageid_memo)
                 try:
