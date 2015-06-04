@@ -112,7 +112,7 @@ def _int_or_none(x):
         return
     if isinstance(x, int):
         return x
-    raise ValueError
+    raise TypeError
 
 def _chunk_order(key):
     # INCL must go before Sjbz.
