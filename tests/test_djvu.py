@@ -28,9 +28,10 @@ from lib import djvu_support as djvu
 from lib import ipc
 from lib import temporary
 
-djvu.require_cli()
-
 datadir = os.path.join(os.path.dirname(__file__), 'data')
+
+def setup_module():
+    djvu.require_cli()
 
 def assert_image_sizes_equal(i1, i2):
     assert_equal(i1.size, i2.size)
