@@ -138,7 +138,7 @@ didjvu (0.2.2) unstable; urgency=low
 
   * Make ‘didjvu --help’ print also Gamera version number.
   * Try loading images with Gamera, and only fall back to Python Imaging
-    Library. This should be both faster and allow to load wider variety of
+    Library. This should be both faster and allow loading wider variety of
     TIFF images.
   * Check Python version in setup.py.
   * Let the setup.py script build the manual page.
