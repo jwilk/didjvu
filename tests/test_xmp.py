@@ -12,8 +12,8 @@
 # General Public License for more details.
 
 import io
-import os
 import logging
+import os
 import xml.etree.cElementTree as etree
 
 from . common import (
