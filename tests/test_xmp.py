@@ -11,8 +11,10 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 # General Public License for more details.
 
+import io
 import os
 import logging
+import xml.etree.cElementTree as etree
 
 from . common import (
     SkipTest,
@@ -156,8 +158,6 @@ class test_metadata():
                 raise exception
             if libxmp is None:
                 raise SkipTest(libxmp_import_error)
-            import xml.etree.cElementTree as etree
-            import io
             meta = libxmp.XMPMeta()
             meta.parse_from_str(xmp_file.read())
             xml_meta = meta.serialize_to_str(omit_all_formatting=True, omit_packet_wrapper=True)
