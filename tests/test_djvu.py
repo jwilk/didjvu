@@ -11,7 +11,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 # General Public License for more details.
 
-import cStringIO as io
+import io
 import os
 import shutil
 
@@ -61,7 +61,7 @@ def ddjvu(djvu_file, fmt='ppm'):
         raise RuntimeError('ddjvu failed')
     if stderr != '':
         raise RuntimeError('ddjvu stderr: ' + stderr)
-    out_file = io.StringIO(stdout)
+    out_file = io.BytesIO(stdout)
     return pil.open(out_file)
 
 def test_bitonal_to_djvu():

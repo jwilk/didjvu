@@ -11,7 +11,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 # General Public License for more details.
 
-import cStringIO as io
+import io
 
 from . common import (
     assert_equal,
@@ -22,8 +22,8 @@ from lib import fs
 
 def test_copy_file():
     def t(s):
-        input_file = io.StringIO(s)
-        output_file = io.StringIO()
+        input_file = io.BytesIO(s)
+        output_file = io.BytesIO()
         length = fs.copy_file(input_file, output_file)
         assert_equal(output_file.tell(), length)
         output_file.seek(0)

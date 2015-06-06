@@ -11,8 +11,8 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 # General Public License for more details.
 
-import cStringIO as io
 import collections
+import io
 import sys
 
 from . common import (
@@ -185,7 +185,7 @@ class test_argument_parser():
         cli.ArgumentParser(self.methods, 'djvu')
 
     def test_no_args(self):
-        stderr = io.StringIO()
+        stderr = io.BytesIO()
         with interim(sys, argv=['didjvu'], stderr=stderr):
             ap = cli.ArgumentParser(self.methods, 'djvu')
             with exception(SystemExit, '2'):
@@ -197,7 +197,7 @@ class test_argument_parser():
         )
 
     def _test_action_no_args(self, action):
-        stderr = io.StringIO()
+        stderr = io.BytesIO()
         with interim(sys, argv=['didjvu', action], stderr=stderr):
             ap = cli.ArgumentParser(self.methods, 'djvu')
             with exception(SystemExit, '2'):
@@ -217,7 +217,7 @@ class test_argument_parser():
         yield t, 'encode'
 
     def test_bad_action(self, action='eggs'):
-        stderr = io.StringIO()
+        stderr = io.BytesIO()
         with interim(sys, argv=['didjvu', action], stderr=stderr):
             ap = cli.ArgumentParser(self.methods, 'djvu')
             with exception(SystemExit, '2'):
@@ -229,7 +229,7 @@ class test_argument_parser():
         )
 
     def _test_action(self, action, *args):
-        stderr = io.StringIO()
+        stderr = io.BytesIO()
         argv = ['didjvu', action]
         argv += args
         with interim(sys, argv=argv, stderr=stderr):
@@ -267,7 +267,7 @@ class test_argument_parser():
     def _test_help(self, action=None):
         argv = ['didjvu', action, '--help']
         argv = filter(None, argv)
-        stdout = io.StringIO()
+        stdout = io.BytesIO()
         with interim(sys, argv=argv, stdout=stdout):
             ap = cli.ArgumentParser(self.methods, 'djvu')
             with exception(SystemExit, '0'):
