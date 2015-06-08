@@ -207,7 +207,9 @@ def to_pil_rgb(image):
     return PIL.frombuffer('RGB', (image.ncols, image.nrows), buffer, 'raw', 'RGB', 0, 1)
 
 def to_pil_1bpp(image):
-    return image.to_greyscale().to_pil()
+    if image.data.pixel_type != GREYSCALE:
+        image = image.to_greyscale()
+    return image.to_pil()
 
 def _decref(o):  # <no-coverage>
     '''
