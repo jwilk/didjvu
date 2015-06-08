@@ -162,6 +162,11 @@ class Plugin(object):
                 image = image.to_rgb()
             elif GREYSCALE in pixel_types:
                 image = image.to_greyscale()
+            else:
+                raise NotImplementedError(
+                    'method {method} does not support pixel type {pt}'.format(method=self.name, pt=image.pixel_type_name)
+                )  # <no-coverage>
+        assert image.data.pixel_type in pixel_types
         if self._method is None:
             self._method = self._plugin()
         return self._method(image, **kwargs)
