@@ -76,6 +76,7 @@ def assert_image_sizes_equal(i1, i2):
 
 def assert_images_equal(i1, i2):
     assert_equal(i1.size, i2.size)
+    assert_equal(i1.mode, i2.mode)
     assert_true(
         list(i1.getdata()) ==
         list(i2.getdata()),

@@ -93,7 +93,6 @@ class test_to_pil_rgb():
         gamera.init()
         gamera_image = gamera.load_image(path)
         out_image = gamera.to_pil_rgb(gamera_image)
-        assert_equal(out_image.mode, 'RGB')
         assert_images_equal(in_image, out_image)
 
     def test_color(self):
