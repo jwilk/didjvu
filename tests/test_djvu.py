@@ -18,6 +18,8 @@ import shutil
 from . common import (
     assert_equal,
     assert_greater,
+    assert_image_sizes_equal,
+    assert_images_equal,
     assert_true,
     exception,
 )
@@ -32,17 +34,6 @@ datadir = os.path.join(os.path.dirname(__file__), 'data')
 
 def setup_module():
     djvu.require_cli()
-
-def assert_image_sizes_equal(i1, i2):
-    assert_equal(i1.size, i2.size)
-
-def assert_images_equal(i1, i2):
-    assert_equal(i1.size, i2.size)
-    assert_true(
-        list(i1.getdata()) ==
-        list(i2.getdata()),
-        msg='images are not equal'
-    )
 
 def ddjvu(djvu_file, fmt='ppm'):
     cmdline = ['ddjvu', '-1', '-format=' + fmt]

@@ -71,6 +71,17 @@ def assert_regexp_matches(regexp, text):
         message = "Regexp didn't match: {0!r} not found in {1!r}".format(regexp.pattern, text)
         raise AssertionError(message)
 
+def assert_image_sizes_equal(i1, i2):
+    assert_equal(i1.size, i2.size)
+
+def assert_images_equal(i1, i2):
+    assert_equal(i1.size, i2.size)
+    assert_true(
+        list(i1.getdata()) ==
+        list(i2.getdata()),
+        msg='images are not equal'
+    )
+
 def assert_rfc3339_timestamp(timestamp):
     return assert_regexp_matches(
         '^[0-9]{4}(-[0-9]{2}){2}T[0-9]{2}(:[0-9]{2}){2}([+-][0-9]{2}:[0-9]{2}|Z)$',
@@ -200,6 +211,8 @@ __all__ = [
     'assert_equal',
     'assert_false',
     'assert_greater',
+    'assert_image_sizes_equal',
+    'assert_images_equal',
     'assert_is',
     'assert_is_instance',
     'assert_is_none',
