@@ -121,7 +121,7 @@ class MetadataBase(object):
     def __del__(self):
         try:
             fp = self._fp
-        except AttributeError:
+        except AttributeError:  # <no-coverage>
             pass
         else:
             fp.close()
