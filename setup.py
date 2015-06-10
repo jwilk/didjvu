@@ -41,12 +41,28 @@ import glob
 import os
 import re
 
+import distutils.command
 import distutils.core
 from distutils.command.build import build as distutils_build
 from distutils.command.clean import clean as distutils_clean
 from distutils.command.sdist import sdist as distutils_sdist
 
 from lib.version import __version__
+
+class test(distutils.core.Command):
+
+    description = 'run tests'
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        import nose
+        nose.main(argv=['nosetests', '--verbose', 'tests'])
 
 class build_doc(distutils_build):
 
@@ -146,6 +162,7 @@ distutils.core.setup(
         build_doc=build_doc,
         clean=clean,
         sdist=sdist,
+        test=test,
     ),
 )
 
