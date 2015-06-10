@@ -13,6 +13,8 @@
 
 '''command line interface for *didjvu*'''
 
+import functools
+
 from . import utils
 
 try:
@@ -80,7 +82,7 @@ def slice_type(max_slices=djvu.IW44_N_SLICES_MAX):
 def get_slice_repr(lst):
     def fold(lst, obj):
         return lst + [obj - sum(lst)]
-    plus_lst = reduce(fold, lst[1:], lst[:1])
+    plus_lst = functools.reduce(fold, lst[1:], lst[:1])
     return '+'.join(map(str, plus_lst))
 
 class intact(object):
