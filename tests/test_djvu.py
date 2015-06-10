@@ -20,7 +20,6 @@ from . common import (
     assert_greater,
     assert_image_sizes_equal,
     assert_images_equal,
-    assert_true,
     exception,
 )
 
