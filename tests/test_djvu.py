@@ -45,9 +45,9 @@ def ddjvu(djvu_file, fmt='ppm'):
         cmdline += [djvu_path]
     else:
         stdio.update(stdin=djvu_file)
-    ddjvu = ipc.Subprocess(cmdline, **stdio)
-    stdout, stderr = ddjvu.communicate()
-    if ddjvu.returncode != 0:
+    child = ipc.Subprocess(cmdline, **stdio)
+    stdout, stderr = child.communicate()
+    if child.returncode != 0:
         raise RuntimeError('ddjvu failed')
     if stderr != '':
         raise RuntimeError('ddjvu stderr: ' + stderr)
