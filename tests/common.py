@@ -217,6 +217,8 @@ __all__ = [
     'assert_is',
     'assert_is_instance',
     'assert_is_none',
+    'assert_is_not_none',
+    'assert_multi_line_equal',
     'assert_not_equal',
     'assert_regexp_matches',
     'assert_rfc3339_timestamp',
