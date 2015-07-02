@@ -37,8 +37,8 @@ try:
 except AttributeError:  # <no-coverage>
     # Python 2.6
     def et_register_namespace(prefix, uri):
-        import xml.etree.ElementTree as etree
-        etree._namespace_map[uri] = prefix
+        import xml.etree.ElementTree as pyetree
+        pyetree._namespace_map[uri] = prefix
     etree.register_namespace = et_register_namespace
     del et_register_namespace
 etree.register_namespace('x', 'adobe:ns:meta/')
