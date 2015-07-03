@@ -13,7 +13,7 @@
 
 from . common import (
     assert_equal,
-    exception,
+    assert_raises,
 )
 
 from lib import templates
@@ -46,25 +46,30 @@ def test_page():
 
 def test_bad_offset():
     path = '/path/to/eggs.png'
-    with exception(KeyError, string=repr('page+ham')):
+    with assert_raises(KeyError) as ecm:
         templates.expand('{page+ham}', path, 42, {})
+    assert_equal(ecm.exception.args, ('page+ham',))
 
 def test_bad_type_offset():
     path = '/path/to/eggs.png'
-    with exception(KeyError, string=repr('base-37')):
+    with assert_raises(KeyError) as ecm:
         templates.expand('{base-37}', path, 42, {})
+    assert_equal(ecm.exception.args, ('base-37',))
 
 def test_bad_var_offset():
     path = '/path/to/eggs.png'
-    with exception(KeyError, string=repr('eggs-37')):
+    with assert_raises(KeyError) as ecm:
         templates.expand('{eggs-37}', path, 42, {})
+    assert_equal(ecm.exception.args, ('eggs-37',))
 
 def test_multi_offset():
     path = '/path/to/eggs.png'
-    with exception(KeyError, string=repr('eggs+bacon+ham')):
+    with assert_raises(KeyError) as ecm:
         templates.expand('{eggs+bacon+ham}', path, 42, {})
-    with exception(KeyError, string=repr('eggs-bacon-ham')):
+    assert_equal(ecm.exception.args, ('eggs+bacon+ham',))
+    with assert_raises(KeyError) as ecm:
         templates.expand('{eggs-bacon-ham}', path, 42, {})
+    assert_equal(ecm.exception.args, ('eggs-bacon-ham',))
 
 def test_duplicates():
     path = '/path/to/eggs.png'

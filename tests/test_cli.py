@@ -21,9 +21,9 @@ from . common import (
     assert_is,
     assert_is_none,
     assert_multi_line_equal,
+    assert_raises,
     assert_regexp_matches,
     assert_true,
-    exception,
     interim,
 )
 
@@ -33,7 +33,7 @@ class test_range_int():
 
     def test_lt_min(self):
         t = cli.range_int(37, 42, 'eggs')
-        with exception(ValueError, ''):
+        with assert_raises(ValueError):
             t('36')
 
     def test_min(self):
@@ -48,28 +48,28 @@ class test_range_int():
 
     def test_gt_max(self):
         t = cli.range_int(37, 42, 'eggs')
-        with exception(ValueError, ''):
+        with assert_raises(ValueError):
             t('43')
 
     def test_non_int(self):
         t = cli.range_int(37, 42, 'eggs')
-        with exception(ValueError, "invalid literal for int() with base 10: ''"):
+        with assert_raises(ValueError):
             t('')
-        with exception(ValueError, "invalid literal for int() with base 10: 'ham'"):
+        with assert_raises(ValueError):
             t('ham')
 
 class test_slice_type():
 
     def test_non_int(self):
         t = cli.slice_type()
-        with exception(ValueError, "invalid literal for int() with base 10: ''"):
+        with assert_raises(ValueError):
             t('')
-        with exception(ValueError, "invalid literal for int() with base 10: 'ham'"):
+        with assert_raises(ValueError):
             t('ham')
 
     def test_negative(self):
         t = cli.slice_type()
-        with exception(ValueError, 'invalid slice value'):
+        with assert_raises(ValueError):
             t('-42')
 
     def test_zero(self):
@@ -99,17 +99,17 @@ class test_slice_type():
 
     def test_comma_1(self):
         t = cli.slice_type(1)
-        with exception(ValueError, string='too many slices'):
+        with assert_raises(ValueError):
             t('37,42')
 
     def test_comma_eq(self):
         t = cli.slice_type()
-        with exception(ValueError, string='non-increasing slice value'):
+        with assert_raises(ValueError):
             t('37,37')
 
     def test_comma_lt(self):
         t = cli.slice_type()
-        with exception(ValueError, string='non-increasing slice value'):
+        with assert_raises(ValueError):
             t('42,37')
 
     def test_plus(self):
@@ -119,17 +119,17 @@ class test_slice_type():
 
     def test_plus_1(self):
         t = cli.slice_type(1)
-        with exception(ValueError, string='too many slices'):
+        with assert_raises(ValueError):
             t('37+5')
 
     def test_plus_eq(self):
         t = cli.slice_type()
-        with exception(ValueError, string='non-increasing slice value'):
+        with assert_raises(ValueError):
             t('37+0')
 
     def test_plus_lt(self):
         t = cli.slice_type()
-        with exception(ValueError, string='non-increasing slice value'):
+        with assert_raises(ValueError):
             t('42+-5')
 
 def test_slice_repr():
@@ -188,8 +188,9 @@ class test_argument_parser():
         stderr = io.BytesIO()
         with interim(sys, argv=['didjvu'], stderr=stderr):
             ap = cli.ArgumentParser(self.methods, 'djvu')
-            with exception(SystemExit, '2'):
+            with assert_raises(SystemExit) as ecm:
                 ap.parse_args({})
+            assert_equal(ecm.exception.args, (2,))
         assert_multi_line_equal(
             stderr.getvalue(),
             'usage: didjvu [-h] [--version] {{{actions}}} ...\n'
@@ -200,8 +201,9 @@ class test_argument_parser():
         stderr = io.BytesIO()
         with interim(sys, argv=['didjvu', action], stderr=stderr):
             ap = cli.ArgumentParser(self.methods, 'djvu')
-            with exception(SystemExit, '2'):
+            with assert_raises(SystemExit) as ecm:
                 ap.parse_args({})
+            assert_equal(ecm.exception.args, (2,))
         assert_regexp_matches(
             stderr.getvalue(),
             (r'(?s)\A'
@@ -220,8 +222,9 @@ class test_argument_parser():
         stderr = io.BytesIO()
         with interim(sys, argv=['didjvu', action], stderr=stderr):
             ap = cli.ArgumentParser(self.methods, 'djvu')
-            with exception(SystemExit, '2'):
+            with assert_raises(SystemExit) as ecm:
                 ap.parse_args({})
+            assert_equal(ecm.exception.args, (2,))
         assert_multi_line_equal(
             stderr.getvalue(),
             'usage: didjvu [-h] [--version] {{{actions}}} ...\n'.format(actions=','.join(self.anames)) +
@@ -270,8 +273,9 @@ class test_argument_parser():
         stdout = io.BytesIO()
         with interim(sys, argv=argv, stdout=stdout):
             ap = cli.ArgumentParser(self.methods, 'djvu')
-            with exception(SystemExit, '0'):
+            with assert_raises(SystemExit) as ecm:
                 ap.parse_args({})
+            assert_equal(ecm.exception.args, (0,))
         assert_greater(len(stdout.getvalue()), 0)
 
     def test_help(self):

@@ -20,7 +20,7 @@ from . common import (
     assert_greater,
     assert_image_sizes_equal,
     assert_images_equal,
-    exception,
+    assert_raises,
 )
 
 from PIL import Image as pil
@@ -114,24 +114,29 @@ class test_multichunk():
 class test_validate_pageid():
 
     def test_empty(self):
-        with exception(ValueError, string='page identifier must end with the .djvu extension'):
+        with assert_raises(ValueError) as ecm:
             djvu.validate_pageid('')
+        assert_equal(str(ecm.exception), 'page identifier must end with the .djvu extension')
 
     def test_bad_char(self):
-        with exception(ValueError, string='page identifier must consist only of lowercase ASCII letters, digits, _, +, - and dot'):
+        with assert_raises(ValueError) as ecm:
             djvu.validate_pageid('eggs/ham.djvu')
+        assert_equal(str(ecm.exception), 'page identifier must consist only of lowercase ASCII letters, digits, _, +, - and dot')
 
     def test_leading_bad_char(self):
-        with exception(ValueError, string='page identifier cannot start with +, - or a dot'):
+        with assert_raises(ValueError) as ecm:
             djvu.validate_pageid('.eggs.djvu')
+        assert_equal(str(ecm.exception), 'page identifier cannot start with +, - or a dot')
 
     def test_dot_dot(self):
-        with exception(ValueError, string='page identifier cannot contain two consecutive dots'):
+        with assert_raises(ValueError) as ecm:
             djvu.validate_pageid('eggs..djvu')
+        assert_equal(str(ecm.exception), 'page identifier cannot contain two consecutive dots')
 
     def test_bad_extension(self):
-        with exception(ValueError, string='page identifier must end with the .djvu extension'):
+        with assert_raises(ValueError) as ecm:
             djvu.validate_pageid('eggs.png')
+        assert_equal(str(ecm.exception), 'page identifier must end with the .djvu extension')
 
     def test_ok(self):
         n = 'eggs.djvu'

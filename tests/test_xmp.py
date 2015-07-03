@@ -20,10 +20,10 @@ from . common import (
     SkipTest,
     assert_equal,
     assert_not_equal,
+    assert_raises,
     assert_regexp_matches,
     assert_rfc3339_timestamp,
     assert_true,
-    exception,
 )
 
 xmp_backends = []
@@ -428,7 +428,7 @@ class test_metadata():
                 try:
                     image_path = os.path.join(tmpdir, 'example.png')
                     meta = xmp.metadata(backend=backend)
-                    with exception(IOError, callback=repr):
+                    with assert_raises(IOError):
                         meta.import_(image_path)
                 finally:
                     os.chmod(tmpdir, 0o700)
