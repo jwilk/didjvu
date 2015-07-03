@@ -34,6 +34,7 @@ if sys.version_info >= (2, 7):
         assert_is_none,
         assert_is_not_none,
         assert_multi_line_equal,
+        assert_regexp_matches,
     )
 else:
     # Python 2.6:
@@ -63,13 +64,12 @@ else:
             msg='{0!r} is None'.format(obj)
         )
     assert_multi_line_equal = assert_equal
-
-def assert_regexp_matches(regexp, text):
-    if isinstance(regexp, basestring):
-        regexp = re.compile(regexp)
-    if not regexp.search(text):
-        message = "Regexp didn't match: {0!r} not found in {1!r}".format(regexp.pattern, text)
-        raise AssertionError(message)
+    def assert_regexp_matches(text, regexp):
+        if isinstance(regexp, basestring):
+            regexp = re.compile(regexp)
+        if not regexp.search(text):
+            message = "Regexp didn't match: {0!r} not found in {1!r}".format(regexp.pattern, text)
+            assert_true(False, msg=message)
 
 def assert_image_sizes_equal(i1, i2):
     assert_equal(i1.size, i2.size)
@@ -85,8 +85,8 @@ def assert_images_equal(i1, i2):
 
 def assert_rfc3339_timestamp(timestamp):
     return assert_regexp_matches(
+        timestamp,
         '^[0-9]{4}(-[0-9]{2}){2}T[0-9]{2}(:[0-9]{2}){2}([+-][0-9]{2}:[0-9]{2}|Z)$',
-        timestamp
     )
 
 @contextlib.contextmanager
@@ -98,7 +98,7 @@ def exception(exc_type, string=None, regex=None, callback=None):
             assert_equal(str(exc), string)
     elif regex is not None:
         def callback(exc):
-            assert_regexp_matches(regex, str(exc))
+            assert_regexp_matches(str(exc), regex)
     try:
         yield None
     except exc_type:

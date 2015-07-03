@@ -203,11 +203,11 @@ class test_argument_parser():
             with exception(SystemExit, '2'):
                 ap.parse_args({})
         assert_regexp_matches(
+            stderr.getvalue(),
             (r'(?s)\A'
             'usage: didjvu {action} .*\n'
             'didjvu {action}: error: too few arguments\n'
-            r'\Z').format(action=action),
-            stderr.getvalue()
+            r'\Z').format(action=action)
         )
 
     def test_action_no_args(self):

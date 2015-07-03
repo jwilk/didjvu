@@ -109,14 +109,14 @@ def run_exiv2(filename, fail_ok=False):
 
 def assert_correct_uuid(uuid):
     return assert_regexp_matches(
+        uuid,
         '^uuid:[0-9a-f]{32}$',
-        uuid
     )
 
 def assert_correct_software_agent(software_agent):
     return assert_regexp_matches(
+        software_agent,
         '^didjvu [0-9.]+( [(]Gamera [0-9.]+[)])?',
-        software_agent
     )
 
 def test_namespaces():
