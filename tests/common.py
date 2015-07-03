@@ -60,7 +60,7 @@ else:
     def assert_is_not_none(obj):
         assert_true(
             obj is not None,
-            msg='{0!r} is not None'.format(obj)
+            msg='{0!r} is None'.format(obj)
         )
     assert_multi_line_equal = assert_equal
 
