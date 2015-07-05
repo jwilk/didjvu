@@ -19,6 +19,7 @@ import xml.etree.cElementTree as etree
 from . common import (
     SkipTest,
     assert_equal,
+    assert_is_none,
     assert_not_equal,
     assert_raises,
     assert_regexp_matches,
@@ -255,7 +256,7 @@ class test_metadata():
                 line = pop()
             except StopIteration:
                 line = None
-            assert_true(line is None)
+            assert_is_none(line)
         return test
 
     def _test_new_libxmp(self, xmp_file, exception=None):
@@ -372,7 +373,7 @@ class test_metadata():
                 line = pop()
             except StopIteration:
                 line = None
-            assert_true(line is None)
+            assert_is_none(line)
         return test
 
     def _test_updated_libxmp(self, xmp_file, exception=None):
