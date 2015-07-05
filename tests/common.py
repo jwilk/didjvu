@@ -44,10 +44,10 @@ else:
             x > y,
             msg='{0!r} not greater than {1!r}'.format(x, y)
         )
-    def assert_is(obj, cls):
+    def assert_is(x, y):
         assert_true(
-            obj is cls,
-            msg='{0!r} is not {1!r}'.format(obj, cls)
+            x is y,
+            msg='{0!r} is not {1!r}'.format(x, y)
         )
     def assert_is_instance(obj, cls):
         assert_true(
