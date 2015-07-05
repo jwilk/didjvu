@@ -187,7 +187,7 @@ class test_metadata():
                 event, element = pop()
             except StopIteration:
                 event, element = None, None
-            assert_true(event is None)
+            assert_is_none(event)
         return test
 
     def test_new(self):
