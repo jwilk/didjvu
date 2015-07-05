@@ -55,10 +55,7 @@ else:
             msg='{0!r} is not an instance of {1!r}'.format(obj, cls)
         )
     def assert_is_none(obj):
-        assert_true(
-            obj is None,
-            msg='{0!r} is not None'.format(obj)
-        )
+        assert_is(obj, None)
     def assert_is_not_none(obj):
         assert_true(
             obj is not None,
