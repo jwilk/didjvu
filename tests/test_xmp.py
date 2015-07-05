@@ -19,12 +19,12 @@ import xml.etree.cElementTree as etree
 from . common import (
     SkipTest,
     assert_equal,
+    assert_greater,
     assert_is_none,
     assert_not_equal,
     assert_raises,
     assert_regexp_matches,
     assert_rfc3339_timestamp,
-    assert_true,
 )
 
 xmp_backends = []
@@ -393,7 +393,7 @@ class test_metadata():
             create_date = get(ns.xmp, 'CreateDate')
             assert_equal(create_date, self._original_create_date)
             mod_date = get(ns.xmp, 'ModifyDate')
-            assert_true(mod_date > create_date)
+            assert_greater(mod_date, create_date)
             metadata_date = get(ns.xmp, 'MetadataDate')
             assert_equal(mod_date, metadata_date)
             uuid = get(ns.xmpmm, 'InstanceID')
