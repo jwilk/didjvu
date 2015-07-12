@@ -30,4 +30,4 @@ option:
 .. _pyexiv2:
    http://tilloy.net/dev/pyexiv2/
 
-.. vim:ft=rst ts=3 sw=3 et tw=72
+.. vim:ft=rst ts=3 sts=3 sw=3 et tw=72
