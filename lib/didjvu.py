@@ -253,8 +253,8 @@ class main():
             check_tty()
         else:
             filename = o.output
-            o.output = [file(filename, 'wb')]
-            o.xmp_output = [file(filename + '.xmp', 'wb')] if o.xmp else [None]
+            o.output = [open(filename, 'wb')]
+            o.xmp_output = [open(filename + '.xmp', 'wb')] if o.xmp else [None]
         assert len(o.output) == len(o.xmp_output) == 1
 
     def encode(self, o):
