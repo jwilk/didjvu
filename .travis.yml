@@ -30,7 +30,7 @@ install:
 - pip install --verbose pillow
 - if [ "$TRAVIS_PYTHON_VERSION" = '2.6' ]; then pip install argparse; fi
 - pip install python-xmp-toolkit
-- pip install git+https://github.com/escaped/pyexiv2
+- pip install --verbose git+https://github.com/escaped/pyexiv2
 script:
 - nosetests -v
 - grep -r -l ft=rst doc/ | xargs -t -n1 -I{} rst2xml.py --strict {} /dev/null
