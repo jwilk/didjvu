@@ -16,14 +16,14 @@ addons:
     - minidjvu
 cache:
   directories:
-  - $HOME/.cache/pip
+  - $HOME/.cache
   - $HOME/.ccache
 install:
 - export PATH="/usr/lib/ccache:$PATH"
 - pip install docutils
 - pip install pygments
-- wget http://sourceforge.net/projects/gamera/files/gamera/gamera-3.4.2/gamera-3.4.2.tar.gz -O /tmp/gamera.tar.gz
-- tar -xvzf /tmp/gamera.tar.gz -C /tmp
+- wget -c http://sourceforge.net/projects/gamera/files/gamera/gamera-3.4.2/gamera-3.4.2.tar.gz -O ~/.cache/gamera-3.4.2.tar.gz
+- tar -xvzf ~/.cache/gamera-3.4.2.tar.gz -C /tmp
 - sed -i -e 's/no_wx = False/no_wx = True/' /tmp/gamera-3.4.2/setup.py
 - pip install --upgrade pip
 - pip install -vvv /tmp/gamera-3.4.2/
