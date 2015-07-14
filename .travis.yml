@@ -25,8 +25,7 @@ install:
 - wget -c http://sourceforge.net/projects/gamera/files/gamera/gamera-3.4.2/gamera-3.4.2.tar.gz -O ~/.cache/gamera-3.4.2.tar.gz
 - tar -xvzf ~/.cache/gamera-3.4.2.tar.gz
 - sed -i -e 's/no_wx = False/no_wx = True/' gamera-3.4.2/setup.py
-- pip install --upgrade pip
-- pip install -vvv gamera-3.4.2/
+- ( cd gamera-3.4.2/ && python setup.py install )
 - pip install -vvv pillow
 - if [ "$TRAVIS_PYTHON_VERSION" = '2.6' ]; then pip install argparse; fi
 - pip install python-xmp-toolkit
