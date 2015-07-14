@@ -19,6 +19,7 @@ cache:
   - $HOME/.cache/pip
   - $HOME/.ccache
 install:
+- export PATH="/usr/lib/ccache:$PATH"
 - pip install docutils
 - pip install pygments
 - wget http://sourceforge.net/projects/gamera/files/gamera/gamera-3.4.2/gamera-3.4.2.tar.gz -O /tmp/gamera.tar.gz
