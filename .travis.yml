@@ -27,10 +27,10 @@ install:
 - tar -xvzf ~/.cache/gamera-3.4.2.tar.gz
 - sed -i -e 's/no_wx = False/no_wx = True/' gamera-3.4.2/setup.py
 - ( cd gamera-3.4.2/ && python setup.py install )
-- pip install -vvv pillow
+- pip install --verbose pillow
 - if [ "$TRAVIS_PYTHON_VERSION" = '2.6' ]; then pip install argparse; fi
 - pip install python-xmp-toolkit
-- pip install -vvv https://github.com/escaped/pyexiv2/archive/master.zip
+- pip install --verbose https://github.com/escaped/pyexiv2/archive/master.zip
 script:
 - nosetests -v
 - grep -r -l ft=rst doc/ | xargs -t -n1 -I{} rst2xml.py --strict {} /dev/null
