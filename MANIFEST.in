@@ -8,5 +8,6 @@ include doc/COPYING
 include doc/changelog
 recursive-include lib *.py
 recursive-include tests *.py
-recursive-include tests/data *.xmp *.tiff *.bmp
+recursive-include tests/data *.bmp *.pgm *.png *.tiff
 recursive-include tests/data *.djvu *.iff
+recursive-include tests/data *.xmp
