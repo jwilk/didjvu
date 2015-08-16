@@ -22,7 +22,7 @@ from . common import (
     assert_is_none,
     assert_multi_line_equal,
     assert_raises,
-    assert_regexp_matches,
+    assert_regex,
     assert_true,
     interim,
 )
@@ -204,7 +204,7 @@ class test_argument_parser():
             with assert_raises(SystemExit) as ecm:
                 ap.parse_args({})
             assert_equal(ecm.exception.args, (2,))
-        assert_regexp_matches(
+        assert_regex(
             stderr.getvalue(),
             (r'(?s)\A'
             'usage: didjvu {action} .*\n'

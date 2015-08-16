@@ -23,7 +23,7 @@ from . common import (
     assert_is_none,
     assert_not_equal,
     assert_raises,
-    assert_regexp_matches,
+    assert_regex,
     assert_rfc3339_timestamp,
 )
 
@@ -109,13 +109,13 @@ def run_exiv2(filename, fail_ok=False):
             raise
 
 def assert_correct_uuid(uuid):
-    return assert_regexp_matches(
+    return assert_regex(
         uuid,
         '^uuid:[0-9a-f]{32}$',
     )
 
 def assert_correct_software_agent(software_agent):
-    return assert_regexp_matches(
+    return assert_regex(
         software_agent,
         '^didjvu [0-9.]+( [(]Gamera [0-9.]+[)])?',
     )
