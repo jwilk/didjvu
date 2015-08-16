@@ -593,25 +593,25 @@
             <varlistentry>
                 <term><varname>name</varname></term>
                 <listitem>
-                    <para>Input file path.</para>
+                    <para>input file path</para>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term><varname>name-ext</varname></term>
                 <listitem>
-                    <para>Input file path without file extension.</para>
+                    <para>input file path without file extension</para>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term><varname>base</varname></term>
                 <listitem>
-                    <para>Input file name without directory components.</para>
+                    <para>input file name without directory components</para>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term><varname>base-ext</varname></term>
                 <listitem>
-                    <para>Input file name without directory components and without file extension.</para>
+                    <para>input file name without directory components and without file extension</para>
                 </listitem>
             </varlistentry>
             <varlistentry>
@@ -619,7 +619,7 @@
                 <term><varname>page+<replaceable>N</replaceable></varname></term>
                 <term><varname>page-<replaceable>N</replaceable></varname></term>
                 <listitem>
-                    <para>Page number, optionally shifted by a number <replaceable>N</replaceable>.</para>
+                    <para>page number, optionally shifted by a number <replaceable>N</replaceable></para>
                 </listitem>
             </varlistentry>
         </variablelist>
