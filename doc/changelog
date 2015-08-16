@@ -1,3 +1,9 @@
+didjvu (0.6.2) UNRELEASED; urgency=low
+
+  * 
+
+ -- Jakub Wilk <jwilk@jwilk.net>  Sun, 16 Aug 2015 12:52:00 +0200
+
 didjvu (0.6.1) unstable; urgency=low
 
   * Fix loading 16-bit greyscale PNG files.
