@@ -13,7 +13,7 @@
 
 import sys
 
-from . common import (
+from .tools import (
     assert_equal,
     assert_false,
     assert_raises,

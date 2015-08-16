@@ -13,7 +13,7 @@
 
 import os
 
-from . common import (
+from .tools import (
     assert_true,
     assert_false,
 )

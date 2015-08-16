@@ -15,7 +15,7 @@ import io
 import os
 import shutil
 
-from . common import (
+from .tools import (
     assert_equal,
     assert_greater,
     assert_image_sizes_equal,

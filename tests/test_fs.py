@@ -13,7 +13,7 @@
 
 import io
 
-from . common import (
+from .tools import (
     assert_equal,
     interim,
 )

@@ -19,7 +19,7 @@ import os
 import signal
 import stat
 
-from tests.common import (
+from .tools import (
     SkipTest,
     assert_equal,
     assert_raises,

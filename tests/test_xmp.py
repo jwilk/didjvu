@@ -16,7 +16,7 @@ import logging
 import os
 import xml.etree.cElementTree as etree
 
-from . common import (
+from .tools import (
     SkipTest,
     assert_equal,
     assert_greater,

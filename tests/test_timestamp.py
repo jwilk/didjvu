@@ -14,7 +14,7 @@
 import datetime
 import time
 
-from . common import (
+from .tools import (
     assert_equal,
     assert_is_none,
     assert_rfc3339_timestamp,
