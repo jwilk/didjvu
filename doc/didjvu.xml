@@ -1,15 +1,14 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE refentry PUBLIC '-//OASIS//DTD DocBook XML V4.5//EN' 'http://www.docbook.org/xml/4.5/docbookx.dtd'
 [
-    <!ENTITY p 'didjvu'>
     <!ENTITY version '0.6.1'>
 ]>
 
 <refentry>
 
 <refentryinfo>
-    <title>&p; manual</title>
-    <productname>&p;</productname>
+    <title>didjvu manual</title>
+    <productname>didjvu</productname>
     <author>
         <firstname>Jakub</firstname> <surname>Wilk</surname>
         <email>jwilk@jwilk.net</email>
@@ -17,19 +16,19 @@
 </refentryinfo>
 
 <refmeta>
-    <refentrytitle>&p;</refentrytitle>
+    <refentrytitle>didjvu</refentrytitle>
     <manvolnum>1</manvolnum>
     <refmiscinfo class='version'>&version;</refmiscinfo>
 </refmeta>
 
 <refnamediv>
-    <refname>&p;</refname>
+    <refname>didjvu</refname>
     <refpurpose>DjVu encoder with foreground/background separation</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
     <cmdsynopsis>
-        <command>&p; separate</command>
+        <command>didjvu separate</command>
         <arg choice='opt'>
             <group choice='req'>
                 <arg choice='plain'><option>-o</option></arg>
@@ -41,7 +40,7 @@
         <arg choice='plain'><replaceable>input-image</replaceable></arg>
     </cmdsynopsis>
     <cmdsynopsis>
-        <command>&p; separate</command>
+        <command>didjvu separate</command>
         <arg choice='plain'>
             <arg choice='plain'><option>--output-template</option></arg>
             <arg choice='plain'><replaceable>name-template</replaceable></arg>
@@ -50,7 +49,7 @@
         <arg choice='plain' rep='repeat'><replaceable>input-image</replaceable></arg>
     </cmdsynopsis>
     <cmdsynopsis>
-        <command>&p; encode</command>
+        <command>didjvu encode</command>
         <arg choice='opt'>
             <group choice='req'>
                 <arg choice='plain'><option>-o</option></arg>
@@ -62,7 +61,7 @@
         <arg choice='plain'><replaceable>input-image</replaceable></arg>
     </cmdsynopsis>
     <cmdsynopsis>
-        <command>&p; encode</command>
+        <command>didjvu encode</command>
         <arg choice='plain'>
             <arg choice='plain'><option>--output-template</option></arg>
             <arg choice='plain'><replaceable>name-template</replaceable></arg>
@@ -71,7 +70,7 @@
         <arg choice='plain' rep='repeat'><replaceable>input-image</replaceable></arg>
     </cmdsynopsis>
     <cmdsynopsis>
-        <command>&p; bundle</command>
+        <command>didjvu bundle</command>
         <arg choice='opt'>
             <group choice='req'>
                 <arg choice='plain'><option>-o</option></arg>
@@ -83,7 +82,7 @@
         <arg choice='plain' rep='repeat'><replaceable>input-image</replaceable></arg>
     </cmdsynopsis>
     <cmdsynopsis>
-        <command>&p;</command>
+        <command>didjvu</command>
         <group choice='req'>
             <arg choice='plain'><option>--version</option></arg>
             <arg choice='plain'><option>--help</option></arg>
@@ -95,25 +94,25 @@
 <refsection>
     <title>Description</title>
     <para>
-        <command>&p;</command> uses the <ulink url='http://gamera.informatik.hsnr.de/'>Gamera</ulink> framework to
+        <command>didjvu</command> uses the <ulink url='http://gamera.informatik.hsnr.de/'>Gamera</ulink> framework to
         separate foreground/background layers, which can be then encoded into a DjVu file.
     </para>
     <para>
-        <command>&p; separate</command> generates images mask(s) for the supplied input image(s).
+        <command>didjvu separate</command> generates images mask(s) for the supplied input image(s).
         Masks are saved in the PNG format.
     </para>
     <para>
-        <command>&p; encode</command> converts the supplied input image(s) to single-page DjVu documents(s).
+        <command>didjvu encode</command> converts the supplied input image(s) to single-page DjVu documents(s).
     </para>
     <para>
-        <command>&p; bundle</command> converts the supplied input image(s) to a bundled multi-page DjVu document.
+        <command>didjvu bundle</command> converts the supplied input image(s) to a bundled multi-page DjVu document.
     </para>
 </refsection>
 
 <refsection>
     <title>Options</title>
     <para>
-        <command>&p;</command> accepts the following options:
+        <command>didjvu</command> accepts the following options:
     </para>
     <refsection>
         <title>Input, output</title>
@@ -535,7 +534,7 @@
 <refsection>
     <title>Environment</title>
     <para>
-        The following environment variables affects <command>&p;</command>:
+        The following environment variables affects <command>didjvu</command>:
         <variablelist>
         <varlistentry>
             <term><varname>TMPDIR</varname></term>
@@ -544,7 +543,7 @@
             -->
             <listitem>
                 <para>
-                    <command>&p;</command> makes havy use of temporary files. It will store them in a directory
+                    <command>didjvu</command> makes havy use of temporary files. It will store them in a directory
                     specified by this variable. The default is <filename>/tmp</filename>.
                 </para>
             </listitem>
