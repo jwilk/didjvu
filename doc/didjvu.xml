@@ -329,7 +329,7 @@
                 <para>
                     For <command>bundle</command> command:
                     if <replaceable>n</replaceable> > 1,
-                    compress mask using <command>minidjvu</command>
+                    compress masks with <command>minidjvu</command>
                     using <replaceable>n</replaceable> pages in one pass.
                     The default is 1.
                 </para>
