@@ -34,7 +34,7 @@ except ImportError as import_error:  # <no-coverage>
         'https://github.com/python-xmp-toolkit/python-xmp-toolkit'
     )
 
-if backend is None:
+if backend is None:  # <no-coverage>
     try:
         from . import pyexiv2_backend as backend
     except ImportError:
