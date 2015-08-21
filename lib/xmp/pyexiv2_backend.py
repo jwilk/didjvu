@@ -118,7 +118,6 @@ class MetadataBase(object):
             '</x:xmpmeta>'.format(ns=ns)
         )
         self._reload()
-        self._original_meta = self._meta
 
     def __del__(self):
         try:
