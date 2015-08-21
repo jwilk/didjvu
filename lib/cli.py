@@ -31,10 +31,7 @@ except ImportError as ex:  # <no-coverage>
 
 from . import djvu_support as djvu
 from . import version as version_module
-try:
-    from . import xmp
-except ImportError as xmp_import_error:  # <no-coverage>
-    xmp = None
+from . import xmp
 
 def range_int(x, y, typename):
     class rint(int):
@@ -318,8 +315,8 @@ class ArgumentParser(argparse.ArgumentParser):
         o.method = self.__methods[o.method]
         o.params = self._parse_params(o)
         try:
-            if not xmp and o.xmp:
-                raise xmp_import_error
+            if o.xmp and not xmp.backend:
+                raise xmp.import_error
         except AttributeError:
             pass
         return action(o)

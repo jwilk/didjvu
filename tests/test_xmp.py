@@ -33,17 +33,8 @@ xmp_backends = []
 
 from lib import ipc
 from lib import temporary
-try:
-    from lib import xmp
-    from lib.xmp import namespaces as ns
-except ImportError as xmp_import_error:
-    pass
-else:
-    xmp_import_error = None
-
-def setup_module():
-    if xmp_import_error is not None:
-        raise SkipTest(xmp_import_error)
+from lib import xmp
+from lib.xmp import namespaces as ns
 
 try:
     from lib.xmp import libxmp_backend

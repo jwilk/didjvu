@@ -22,18 +22,19 @@ from .. import timestamp
 from .. import utils
 from .. import version
 
+import_error = None
+backend = None
+
 try:
-    from . import libxmp_backend as default_backend
-except ImportError as exc:  # <no-coverage>
+    from . import libxmp_backend as backend
+except ImportError as import_error:  # <no-coverage>
+    pass
+
+if backend is None:
     try:
-        from . import pyexiv2_backend as default_backend
+        from . import pyexiv2_backend as backend
     except ImportError:
-        utils.enhance_import_error(exc,
-            'python-xmp-toolkit',
-            'python-libxmp',
-            'https://github.com/python-xmp-toolkit/python-xmp-toolkit'
-        )
-        raise exc
+        pass
 
 def gen_uuid():
     return 'uuid:' + str(uuid.uuid4()).replace('-', '')
@@ -63,7 +64,7 @@ class Event(object):
     def items(self):
         return iter(self._items)
 
-def metadata(backend=default_backend):
+def metadata(backend=backend):
 
     class Metadata(backend.MetadataBase):
 
@@ -107,6 +108,10 @@ def metadata(backend=default_backend):
 
     return Metadata()
 
-__all__ = ['metadata']
+__all__ = [
+    'backend',
+    'import_error',
+    'metadata',
+]
 
 # vim:ts=4 sts=4 sw=4 et

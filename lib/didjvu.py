@@ -29,11 +29,7 @@ from . import ipc
 from . import templates
 from . import temporary
 from . import utils
-
-try:
-    from . import xmp
-except ImportError:
-    xmp = None
+from . import xmp
 
 logger = None
 
