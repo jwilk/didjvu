@@ -28,7 +28,11 @@ backend = None
 try:
     from . import libxmp_backend as backend
 except ImportError as import_error:  # <no-coverage>
-    pass
+    utils.enhance_import_error(import_error,
+        'python-xmp-toolkit',
+        'python-libxmp',
+        'https://github.com/python-xmp-toolkit/python-xmp-toolkit'
+    )
 
 if backend is None:
     try:
