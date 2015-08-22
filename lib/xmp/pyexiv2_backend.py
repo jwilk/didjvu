@@ -17,6 +17,7 @@
 
 import datetime
 import itertools
+import sys
 import xml.etree.cElementTree as etree
 
 import pyexiv2.xmp
@@ -31,7 +32,14 @@ def xmp_register_namespace(prefix, uri):
     class fool_pyexiv2(str):
         def endswith(self, suffix, *args, **kwargs):
             return True
-    pyexiv2.xmp.register_namespace(fool_pyexiv2(uri), prefix)
+    try:
+        pyexiv2.xmp.register_namespace(fool_pyexiv2(uri), prefix)
+    except KeyError:
+        if 'gi.repository.GExiv2' in sys.modules:
+            # most likely the namespace was registered by the GExiv2 backend
+            pass
+        else:  # <no-coverage>
+            raise
 xmp_register_namespace('didjvu', ns.didjvu)
 
 try:

@@ -19,20 +19,21 @@ import errno
 import uuid
 
 from .. import timestamp
-from .. import utils
 from .. import version
 
 import_error = None
 backend = None
 
 try:
-    from . import libxmp_backend as backend
+    from . import gexiv2_backend as backend
 except ImportError as import_error:  # <no-coverage>
-    utils.enhance_import_error(import_error,
-        'python-xmp-toolkit',
-        'python-libxmp',
-        'https://github.com/python-xmp-toolkit/python-xmp-toolkit'
-    )
+    pass
+
+if backend is None:  # <no-coverage>
+    try:
+        from . import libxmp_backend as backend
+    except ImportError:
+        pass
 
 if backend is None:  # <no-coverage>
     try:

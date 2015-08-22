@@ -10,7 +10,8 @@
 Additionally, one of the following libraries is needed for the ``--xmp``
 option:
 
-* python-xmp-toolkit_ or
+* GExiv2_ + PyGI_; or
+* python-xmp-toolkit_; or
 * pyexiv2_ (≥ 0.3).
 
 .. _Python:
@@ -25,6 +26,10 @@ option:
    http://minidjvu.sourceforge.net/
 .. _argparse:
    https://pypi.python.org/pypi/argparse
+.. _GExiv2:
+   https://wiki.gnome.org/Projects/gexiv2
+.. _PyGI:
+   https://wiki.gnome.org/Projects/PyGObject
 .. _python-xmp-toolkit:
    https://github.com/python-xmp-toolkit/python-xmp-toolkit
 .. _pyexiv2:

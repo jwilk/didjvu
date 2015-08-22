@@ -37,6 +37,15 @@ from lib import xmp
 from lib.xmp import namespaces as ns
 
 try:
+    from lib.xmp import gexiv2_backend
+except ImportError as gexiv2_backend_import_error:
+    class gexiv2_backend:
+        # dummy replacement
+        class MetadataBase(object):
+            def __init__(self):
+                raise SkipTest(gexiv2_backend_import_error)
+
+try:
     from lib.xmp import libxmp_backend
 except ImportError as libxmp_backend_import_error:
     class libxmp_backend:
@@ -54,7 +63,7 @@ except ImportError as pyexiv2_backend_import_error:
             def __init__(self):
                 raise SkipTest(pyexiv2_backend_import_error)
 
-xmp_backends = [libxmp_backend, pyexiv2_backend]
+xmp_backends = [gexiv2_backend, libxmp_backend, pyexiv2_backend]
 
 try:
     import libxmp
