@@ -27,6 +27,7 @@ from .tools import (
     assert_raises,
     assert_regex,
     assert_rfc3339_timestamp,
+    import_module,
 )
 
 xmp_backends = []
@@ -36,34 +37,28 @@ from lib import temporary
 from lib import xmp
 from lib.xmp import namespaces as ns
 
-try:
-    from lib.xmp import gexiv2_backend
-except ImportError as gexiv2_backend_import_error:
-    class gexiv2_backend:
-        # dummy replacement
-        class MetadataBase(object):
-            def __init__(self):
-                raise SkipTest(gexiv2_backend_import_error)
+def import_backend(name):
+    mod_name = 'lib.xmp.{0}_backend'.format(name)
+    try:
+        backend = import_module(mod_name)
+    except ImportError as import_error:
+        class backend:
+            # dummy replacement
+            class MetadataBase(object):
+                def __init__(self):
+                    raise SkipTest(import_error)
+        backend.__name__ = mod_name
+    return backend
 
-try:
-    from lib.xmp import libxmp_backend
-except ImportError as libxmp_backend_import_error:
-    class libxmp_backend:
-        # dummy replacement
-        class MetadataBase(object):
-            def __init__(self):
-                raise SkipTest(libxmp_backend_import_error)
-
-try:
-    from lib.xmp import pyexiv2_backend
-except ImportError as pyexiv2_backend_import_error:
-    class pyexiv2_backend:
-        # dummy replacement
-        class MetadataBase(object):
-            def __init__(self):
-                raise SkipTest(pyexiv2_backend_import_error)
-
-xmp_backends = [gexiv2_backend, libxmp_backend, pyexiv2_backend]
+xmp_backends = [
+    import_backend(name)
+    for name in [
+        'gexiv2',
+        'libxmp',
+        'pyexiv2',
+    ]
+]
+del name
 
 try:
     import libxmp

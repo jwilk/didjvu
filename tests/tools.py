@@ -39,6 +39,7 @@ if sys.version_info >= (2, 7):
         assert_raises,
         assert_regexp_matches as assert_regex,
     )
+    from importlib import import_module
 else:
     # Python 2.6:
     def assert_greater(x, y):
@@ -91,6 +92,8 @@ else:
         if not regex.search(text):
             message = "Regex didn't match: {0!r} not found in {1!r}".format(regex.pattern, text)
             assert_true(False, msg=message)
+    def import_module(mod):
+        return __import__(mod, fromlist=[''], level=0)
 
 def assert_image_sizes_equal(i1, i2):
     assert_equal(i1.size, i2.size)
