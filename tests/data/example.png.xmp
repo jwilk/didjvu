@@ -15,13 +15,13 @@
         <dc:format>image/png</dc:format>
         <tiff:ImageWidth>69</tiff:ImageWidth>
         <tiff:ImageHeight>42</tiff:ImageHeight>
-        <xmpMM:InstanceID>uuid:a2686c01b50e4b6aab2cccdef40f6286</xmpMM:InstanceID>
+        <xmpMM:InstanceID>urn:uuid:c3745412-65c0-4db4-880f-34fb57beddc0</xmpMM:InstanceID>
         <xmpMM:History>
             <rdf:Seq>
                 <rdf:li rdf:parseType="Resource">
                     <stEvt:action>created</stEvt:action>
                     <stEvt:softwareAgent>scanhelper 0.2.4</stEvt:softwareAgent>
-                    <stEvt:instanceID>uuid:a2686c01b50e4b6aab2cccdef40f6286</stEvt:instanceID>
+                    <stEvt:instanceID>urn:uuid:c3745412-65c0-4db4-880f-34fb57beddc0</stEvt:instanceID>
                     <stEvt:when>2012-02-01T16:28:00+01:00</stEvt:when>
                 </rdf:li>
             </rdf:Seq>

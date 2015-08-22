@@ -42,7 +42,11 @@ if backend is None:  # <no-coverage>
         pass
 
 def gen_uuid():
-    return 'uuid:' + str(uuid.uuid4()).replace('-', '')
+    '''
+    generate an UUID URN, in accordance with RFC 4122
+    '''
+    # https://tools.ietf.org/html/rfc4122#section-3
+    return 'urn:uuid:{uuid}'.format(uuid=uuid.uuid4())
 
 class Event(object):
 

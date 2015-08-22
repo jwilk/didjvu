@@ -110,10 +110,15 @@ def run_exiv2(filename, fail_ok=False):
         if not fail_ok:
             raise
 
+_uuid_regex = (
+    r'\Aurn:uuid:XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX\Z'
+    .replace('X', '[0-9a-f]')
+)
+
 def assert_correct_uuid(uuid):
     return assert_regex(
         uuid,
-        '^uuid:[0-9a-f]{32}$',
+        _uuid_regex,
     )
 
 def assert_correct_software_agent(software_agent):
@@ -314,7 +319,7 @@ class test_metadata():
 
     _original_software_agent = 'scanhelper 0.2.4'
     _original_create_date = '2012-02-01T16:28:00+01:00'
-    _original_uuid = 'uuid:a2686c01b50e4b6aab2cccdef40f6286'
+    _original_uuid = 'urn:uuid:c3745412-65c0-4db4-880f-34fb57beddc0'
 
     def _test_updated_exiv2(self, xmp_file, exception=None):
         def test(*dummy):

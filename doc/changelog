@@ -1,6 +1,9 @@
 didjvu (0.6.2) UNRELEASED; urgency=low
 
-  * Add GExiv2 XMP backend.
+  * Improve XMP support:
+    + Add GExiv2 XMP backend.
+    + Generate globally unique identifies in the urn:uuid namespace.
+      https://tools.ietf.org/html/rfc4122#section-3
 
  -- Jakub Wilk <jwilk@jwilk.net>  Sat, 22 Aug 2015 11:07:34 +0200
 
