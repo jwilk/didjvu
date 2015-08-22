@@ -73,9 +73,9 @@ except ImportError as libxmp_import_error:
 
 def test_uuid():
     uuid1 = xmp.gen_uuid()
-    assert_correct_uuid(uuid1)
+    assert_uuid_urn(uuid1)
     uuid2 = xmp.gen_uuid()
-    assert_correct_uuid(uuid2)
+    assert_uuid_urn(uuid2)
     assert_not_equal(uuid1, uuid2)
 
 def tag_backend(backend):
@@ -115,7 +115,7 @@ _uuid_regex = (
     .replace('X', '[0-9a-f]')
 )
 
-def assert_correct_uuid(uuid):
+def assert_uuid_urn(uuid):
     return assert_regex(
         uuid,
         _uuid_regex,
@@ -246,7 +246,7 @@ class test_metadata():
             assert_equal(pop(), ('Xmp.xmpMM.History[1]', 'type="Struct"'))
             assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:action', 'converted'))
             key, evt_uuid = pop()
-            assert_correct_uuid(evt_uuid)
+            assert_uuid_urn(evt_uuid)
             assert_equal(key, 'Xmp.xmpMM.History[1]/stEvt:instanceID')
             assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:parameters', 'to image/x-test'))
             key, software_agent = pop()
@@ -257,7 +257,7 @@ class test_metadata():
             # - InstanceID:
             key, uuid = pop()
             assert_equal(key, 'Xmp.xmpMM.InstanceID')
-            assert_correct_uuid(uuid)
+            assert_uuid_urn(uuid)
             assert_equal(uuid, evt_uuid)
             try:
                 line = pop()
@@ -281,7 +281,7 @@ class test_metadata():
             metadata_date = get(ns.xmp, 'MetadataDate')
             assert_equal(mod_date, metadata_date)
             uuid = get(ns.xmpmm, 'InstanceID')
-            assert_correct_uuid(uuid)
+            assert_uuid_urn(uuid)
             assert_equal(get(ns.xmpmm, 'History[1]/stEvt:action'), 'converted')
             software_agent = get(ns.xmpmm, 'History[1]/stEvt:softwareAgent')
             assert_correct_software_agent(software_agent)
@@ -355,7 +355,7 @@ class test_metadata():
             assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:action', 'created'))
             key, original_uuid = pop()
             assert_equal(key, 'Xmp.xmpMM.History[1]/stEvt:instanceID')
-            assert_correct_uuid(original_uuid)
+            assert_uuid_urn(original_uuid)
             assert_equal(original_uuid, self._original_uuid)
             assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:softwareAgent', self._original_software_agent))
             assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:when', create_date))
@@ -364,7 +364,7 @@ class test_metadata():
             assert_equal(pop(), ('Xmp.xmpMM.History[2]/stEvt:action', 'converted'))
             key, evt_uuid = pop()
             assert_equal(key, 'Xmp.xmpMM.History[2]/stEvt:instanceID')
-            assert_correct_uuid(evt_uuid)
+            assert_uuid_urn(evt_uuid)
             assert_equal(pop(), ('Xmp.xmpMM.History[2]/stEvt:parameters', 'from image/png to image/x-test'))
             key, software_agent = pop()
             assert_equal(key, 'Xmp.xmpMM.History[2]/stEvt:softwareAgent')
@@ -373,7 +373,7 @@ class test_metadata():
             # - InstanceID:
             key, uuid = pop()
             assert_equal(key, 'Xmp.xmpMM.InstanceID')
-            assert_correct_uuid(evt_uuid)
+            assert_uuid_urn(evt_uuid)
             assert_equal(uuid, evt_uuid)
             assert_not_equal(uuid, original_uuid)
             try:
@@ -404,12 +404,12 @@ class test_metadata():
             metadata_date = get(ns.xmp, 'MetadataDate')
             assert_equal(mod_date, metadata_date)
             uuid = get(ns.xmpmm, 'InstanceID')
-            assert_correct_uuid(uuid)
+            assert_uuid_urn(uuid)
             # History[1]
             assert_equal(get(ns.xmpmm, 'History[1]/stEvt:action'), 'created')
             assert_equal(get(ns.xmpmm, 'History[1]/stEvt:softwareAgent'), self._original_software_agent)
             original_uuid = get(ns.xmpmm, 'History[1]/stEvt:instanceID')
-            assert_correct_uuid(original_uuid)
+            assert_uuid_urn(original_uuid)
             assert_equal(original_uuid, self._original_uuid)
             assert_not_equal(uuid, original_uuid)
             assert_equal(get(ns.xmpmm, 'History[1]/stEvt:when'), create_date)
