@@ -98,12 +98,16 @@ def run_exiv2(filename, fail_ok=False):
     try:
         child = ipc.Subprocess(
             ['exiv2', 'print', '-P', 'Xkt', filename],
-            stdout=ipc.PIPE
+            stdout=ipc.PIPE,
+            stderr=ipc.PIPE,
         )
     except OSError as ex:
         raise SkipTest(ex)
     for line in sorted(child.stdout):
         yield line
+    stderr = child.stderr.read()
+    if not fail_ok:
+        assert_equal(stderr, '')
     try:
         child.wait()
     except ipc.CalledProcessError:
