@@ -158,7 +158,7 @@ class MetadataBase(object):
             value = tuple(value.split('/', 1))
         self._meta['Xmp.' + key] = value
 
-    def add_to_history(self, event, index):
+    def _add_to_history(self, event, index):
         for key, value in event.items:
             if value is None:
                 continue
@@ -171,7 +171,7 @@ class MetadataBase(object):
             key = 'Xmp.xmpMM.History[{i}]'.format(i=i)
             if key not in keys:
                 break
-        return self.add_to_history(event, i)
+        return self._add_to_history(event, i)
 
     def serialize(self):
         self._meta.write()

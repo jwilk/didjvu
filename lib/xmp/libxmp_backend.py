@@ -74,7 +74,7 @@ class MetadataBase(object):
         if rc is False:
             raise XmpError('Cannot set property')  # <no-coverage>
 
-    def add_to_history(self, event, index):
+    def _add_to_history(self, event, index):
         for key, value in event.items:
             if value is None:
                 continue
@@ -88,7 +88,7 @@ class MetadataBase(object):
         if count == 0:
             self['xmpMM.History'] = []
             assert count_history() == 0
-        result = self.add_to_history(event, count + 1)
+        result = self._add_to_history(event, count + 1)
         assert count_history() == count + 1
         return result
 

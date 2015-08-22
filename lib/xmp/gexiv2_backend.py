@@ -65,7 +65,7 @@ class MetadataBase(object):
             value = str(value)
         self._meta['Xmp.' + key] = value
 
-    def add_to_history(self, event, index):
+    def _add_to_history(self, event, index):
         for key, value in event.items:
             if value is None:
                 continue
@@ -82,7 +82,7 @@ class MetadataBase(object):
             n = max(i, n)
         if n == 0:
             self._meta.set_xmp_tag_struct('Xmp.xmpMM.History', GExiv2.StructureType.SEQ)
-        return self.add_to_history(event, n + 1)
+        return self._add_to_history(event, n + 1)
 
     def serialize(self):
         return '<?xml version="1.0"?>\n' + (
