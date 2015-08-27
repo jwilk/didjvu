@@ -10,7 +10,7 @@
 Additionally, one of the following libraries is needed for the ``--xmp``
 option:
 
-* GExiv2_ + PyGI_; or
+* GExiv2_ (≥ 0.10.3) + PyGI_; or
 * python-xmp-toolkit_; or
 * pyexiv2_ (≥ 0.3).
 
