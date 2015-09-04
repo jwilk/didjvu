@@ -224,12 +224,6 @@ if 'coverage' in sys.modules:
         # Oh well. FIXME.
         return f
 
-if sys.version_info >= (2, 7):
-    from importlib import import_module
-else:
-    def import_module(mod):
-        return __import__(mod, fromlist=[''], level=0)
-
 __all__ = [
     'SkipTest',
     'assert_equal',

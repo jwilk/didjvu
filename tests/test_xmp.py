@@ -16,6 +16,7 @@
 import io
 import logging
 import os
+import sys
 import xml.etree.cElementTree as etree
 
 from .tools import (
@@ -27,7 +28,6 @@ from .tools import (
     assert_raises,
     assert_regex,
     assert_rfc3339_timestamp,
-    import_module,
 )
 
 xmp_backends = []
@@ -36,6 +36,12 @@ from lib import ipc
 from lib import temporary
 from lib import xmp
 from lib.xmp import namespaces as ns
+
+if sys.version_info >= (2, 7):
+    from importlib import import_module
+else:
+    def import_module(mod):
+        return __import__(mod, fromlist=[''], level=0)
 
 def import_backend(name):
     mod_name = 'lib.xmp.{0}_backend'.format(name)
