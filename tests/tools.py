@@ -131,20 +131,14 @@ def interim_environ(**override):
     copy = dict((key, value) for key, value in os.environ.iteritems() if key in copy_keys)
     for key, value in override.iteritems():
         if value is None:
-            try:
-                del os.environ[key]
-            except KeyError:
-                pass
+            os.environ.pop(key, None)
         else:
             os.environ[key] = value
     try:
         yield
     finally:
         for key in keys:
-            try:
-                del os.environ[key]
-            except KeyError:
-                pass
+            os.environ.pop(key, None)
         os.environ.update(copy)
 
 class IsolatedError(Exception):
