@@ -28,72 +28,81 @@ from nose.tools import (
     assert_true,
 )
 
-if sys.version_info >= (2, 7):
-    from nose.tools import (
-        assert_greater,
-        assert_is,
-        assert_is_instance,
-        assert_is_none,
-        assert_is_not_none,
-        assert_multi_line_equal,
-        assert_raises,
-        assert_regexp_matches as assert_regex,
+import nose.tools
+
+def noseimport(vmaj, vmin, name=None):
+    def wrapper(f):
+        if sys.version_info >= (vmaj, vmin):
+            return getattr(nose.tools, name or f.__name__)
+        return f
+    return wrapper
+
+@noseimport(2, 7)
+def assert_greater(x, y):
+    assert_true(
+        x > y,
+        msg='{0!r} not greater than {1!r}'.format(x, y)
     )
-    from importlib import import_module
-else:
-    # Python 2.6:
-    def assert_greater(x, y):
-        assert_true(
-            x > y,
-            msg='{0!r} not greater than {1!r}'.format(x, y)
-        )
-    def assert_is(x, y):
-        assert_true(
-            x is y,
-            msg='{0!r} is not {1!r}'.format(x, y)
-        )
-    def assert_is_instance(obj, cls):
-        assert_true(
-            isinstance(obj, cls),
-            msg='{0!r} is not an instance of {1!r}'.format(obj, cls)
-        )
-    def assert_is_none(obj):
-        assert_is(obj, None)
-    def assert_is_not_none(obj):
-        assert_true(
-            obj is not None,
-            msg='{0!r} is None'.format(obj)
-        )
-    assert_multi_line_equal = assert_equal
-    class assert_raises(object):
-        def __init__(self, exc_type):
-            self._exc_type = exc_type
-            self.exception = None
-        def __enter__(self):
-            return self
-        def __exit__(self, exc_type, exc_value, tb):
-            if exc_type is None:
-                assert_true(False, '{0} not raised'.format(self._exc_type.__name__))
-            if not issubclass(exc_type, self._exc_type):
-                return False
-            if isinstance(exc_value, exc_type):
-                pass
-                # This branch is not always taken in Python 2.6:
-                # https://bugs.python.org/issue7853
-            elif isinstance(exc_value, tuple):
-                exc_value = exc_type(*exc_value)
-            else:
-                exc_value = exc_type(exc_value)
-            self.exception = exc_value
-            return True
-    def assert_regex(text, regex):
-        if isinstance(regex, basestring):
-            regex = re.compile(regex)
-        if not regex.search(text):
-            message = "Regex didn't match: {0!r} not found in {1!r}".format(regex.pattern, text)
-            assert_true(False, msg=message)
-    def import_module(mod):
-        return __import__(mod, fromlist=[''], level=0)
+
+@noseimport(2, 7)
+def assert_is(x, y):
+    assert_true(
+        x is y,
+        msg='{0!r} is not {1!r}'.format(x, y)
+    )
+
+@noseimport(2, 7)
+def assert_is_instance(obj, cls):
+    assert_true(
+        isinstance(obj, cls),
+        msg='{0!r} is not an instance of {1!r}'.format(obj, cls)
+    )
+
+@noseimport(2, 7)
+def assert_is_none(obj):
+    assert_is(obj, None)
+
+@noseimport(2, 7)
+def assert_is_not_none(obj):
+    assert_true(
+        obj is not None,
+        msg='{0!r} is None'.format(obj)
+    )
+
+@noseimport(2, 7)
+def assert_multi_line_equal(x, y):
+    assert_equal(x, y)
+
+@noseimport(2, 7)
+class assert_raises(object):
+    def __init__(self, exc_type):
+        self._exc_type = exc_type
+        self.exception = None
+    def __enter__(self):
+        return self
+    def __exit__(self, exc_type, exc_value, tb):
+        if exc_type is None:
+            assert_true(False, '{0} not raised'.format(self._exc_type.__name__))
+        if not issubclass(exc_type, self._exc_type):
+            return False
+        if isinstance(exc_value, exc_type):
+            pass
+            # This branch is not always taken in Python 2.6:
+            # https://bugs.python.org/issue7853
+        elif isinstance(exc_value, tuple):
+            exc_value = exc_type(*exc_value)
+        else:
+            exc_value = exc_type(exc_value)
+        self.exception = exc_value
+        return True
+
+@noseimport(2, 7, 'assert_regexp_matches')
+def assert_regex(text, regex):
+    if isinstance(regex, basestring):
+        regex = re.compile(regex)
+    if not regex.search(text):
+        message = "Regex didn't match: {0!r} not found in {1!r}".format(regex.pattern, text)
+        assert_true(False, msg=message)
 
 def assert_image_sizes_equal(i1, i2):
     assert_equal(i1.size, i2.size)
@@ -214,6 +223,12 @@ if 'coverage' in sys.modules:
         # Fork isolation would break coverage measurements.
         # Oh well. FIXME.
         return f
+
+if sys.version_info >= (2, 7):
+    from importlib import import_module
+else:
+    def import_module(mod):
+        return __import__(mod, fromlist=[''], level=0)
 
 __all__ = [
     'SkipTest',
