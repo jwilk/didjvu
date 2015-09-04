@@ -72,6 +72,8 @@ def assert_is_not_none(obj):
 @noseimport(2, 7)
 def assert_multi_line_equal(x, y):
     assert_equal(x, y)
+if sys.version_info >= (2, 7):
+    type(assert_multi_line_equal.__self__).maxDiff = None
 
 @noseimport(2, 7)
 class assert_raises(object):
