@@ -79,6 +79,7 @@ def metadata(backend=backend):
 
         def update(self, media_type, internal_properties=()):
             instance_id = gen_uuid()
+            document_id = gen_uuid()
             now = timestamp.now()
             original_media_type = self.get('dc.format')
             # TODO: try to guess original media type
@@ -90,6 +91,16 @@ def metadata(backend=backend):
             self['xmp.ModifyDate'] = now
             self['xmp.MetadataDate'] = now
             self['xmpMM.InstanceID'] = instance_id
+            try:
+                self['xmpMM.OriginalDocumentID']
+            except KeyError:
+                try:
+                    original_document_id = self['xmpMM.DocumentID']
+                except KeyError:
+                    pass
+                else:
+                    self['xmpMM.OriginalDocumentID'] = original_document_id
+            self['xmpMM.DocumentID'] = document_id
             event = Event(
                 action='converted',
                 parameters=event_params,

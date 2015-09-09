@@ -4,9 +4,10 @@ didjvu (0.6.2) UNRELEASED; urgency=low
     + Add GExiv2 XMP backend.
     + Generate globally unique identifiers in the urn:uuid namespace.
       https://tools.ietf.org/html/rfc4122#section-3
+    + Update the xmpMM:DocumentID property.
   * Improve the test suite.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Sat, 22 Aug 2015 12:05:09 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Wed, 09 Sep 2015 17:08:45 +0200
 
 didjvu (0.6.1) unstable; urgency=low
 

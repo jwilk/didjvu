@@ -246,12 +246,17 @@ class test_metadata():
             assert_rfc3339_timestamp(modify_date)
             assert_equal(metadata_date, modify_date)
             # XMP Media Management:
+            # - DocumentID:
+            key, document_id = pop()
+            assert_equal(key, 'Xmp.xmpMM.DocumentID')
+            assert_uuid_urn(document_id)
+            # - History:
             assert_equal(pop(), ('Xmp.xmpMM.History', 'type="Seq"'))
             # - History[1]:
             assert_equal(pop(), ('Xmp.xmpMM.History[1]', 'type="Struct"'))
             assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:action', 'converted'))
-            key, evt_uuid = pop()
-            assert_uuid_urn(evt_uuid)
+            key, evt_instance_id = pop()
+            assert_uuid_urn(evt_instance_id)
             assert_equal(key, 'Xmp.xmpMM.History[1]/stEvt:instanceID')
             assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:parameters', 'to image/x-test'))
             key, software_agent = pop()
@@ -260,10 +265,10 @@ class test_metadata():
             key, evt_date = pop()
             assert_equal((key, evt_date), ('Xmp.xmpMM.History[1]/stEvt:when', modify_date))
             # - InstanceID:
-            key, uuid = pop()
+            key, instance_id = pop()
             assert_equal(key, 'Xmp.xmpMM.InstanceID')
-            assert_uuid_urn(uuid)
-            assert_equal(uuid, evt_uuid)
+            assert_uuid_urn(instance_id)
+            assert_equal(instance_id, evt_instance_id)
             try:
                 line = pop()
             except StopIteration:
@@ -285,13 +290,15 @@ class test_metadata():
             mod_date = get(ns.xmp, 'ModifyDate')
             metadata_date = get(ns.xmp, 'MetadataDate')
             assert_equal(mod_date, metadata_date)
-            uuid = get(ns.xmpmm, 'InstanceID')
-            assert_uuid_urn(uuid)
+            document_id = get(ns.xmpmm, 'DocumentID')
+            assert_uuid_urn(document_id)
+            instance_id = get(ns.xmpmm, 'InstanceID')
+            assert_uuid_urn(instance_id)
             assert_equal(get(ns.xmpmm, 'History[1]/stEvt:action'), 'converted')
             software_agent = get(ns.xmpmm, 'History[1]/stEvt:softwareAgent')
             assert_correct_software_agent(software_agent)
             assert_equal(get(ns.xmpmm, 'History[1]/stEvt:parameters'), 'to image/x-test')
-            assert_equal(get(ns.xmpmm, 'History[1]/stEvt:instanceID'), uuid)
+            assert_equal(get(ns.xmpmm, 'History[1]/stEvt:instanceID'), instance_id)
             assert_equal(get(ns.xmpmm, 'History[1]/stEvt:when'), str(mod_date))
             assert_equal(get(ns.didjvu, 'test_int'), '42')
             assert_equal(get(ns.didjvu, 'test_str'), 'eggs')
@@ -324,7 +331,8 @@ class test_metadata():
 
     _original_software_agent = 'scanhelper 0.2.4'
     _original_create_date = '2012-02-01T16:28:00+01:00'
-    _original_uuid = 'urn:uuid:c3745412-65c0-4db4-880f-34fb57beddc0'
+    _original_document_id = 'urn:uuid:04fa0637-2b6e-417c-9fff-d6f0f02c08a6'
+    _original_instance_id = 'urn:uuid:c3745412-65c0-4db4-880f-34fb57beddc0'
 
     def _test_updated_exiv2(self, xmp_file, exception=None):
         def test(*dummy):
@@ -354,33 +362,42 @@ class test_metadata():
             assert_rfc3339_timestamp(modify_date)
             assert_equal(metadata_date, modify_date)
             # XMP Media Management:
+            # - DocumentID:
+            key, document_id = pop()
+            assert_equal(key, 'Xmp.xmpMM.DocumentID')
+            assert_uuid_urn(document_id)
+            assert_not_equal(document_id, self._original_document_id)
+            # - History:
             assert_equal(pop(), ('Xmp.xmpMM.History', 'type="Seq"'))
             # - History[1]:
             assert_equal(pop(), ('Xmp.xmpMM.History[1]', 'type="Struct"'))
             assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:action', 'created'))
-            key, original_uuid = pop()
+            key, original_instance_id = pop()
             assert_equal(key, 'Xmp.xmpMM.History[1]/stEvt:instanceID')
-            assert_uuid_urn(original_uuid)
-            assert_equal(original_uuid, self._original_uuid)
+            assert_equal(original_instance_id, self._original_instance_id)
             assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:softwareAgent', self._original_software_agent))
             assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:when', create_date))
             # - History[2]
             assert_equal(pop(), ('Xmp.xmpMM.History[2]', 'type="Struct"'))
             assert_equal(pop(), ('Xmp.xmpMM.History[2]/stEvt:action', 'converted'))
-            key, evt_uuid = pop()
+            key, evt_instance_id = pop()
             assert_equal(key, 'Xmp.xmpMM.History[2]/stEvt:instanceID')
-            assert_uuid_urn(evt_uuid)
+            assert_uuid_urn(evt_instance_id)
             assert_equal(pop(), ('Xmp.xmpMM.History[2]/stEvt:parameters', 'from image/png to image/x-test'))
             key, software_agent = pop()
             assert_equal(key, 'Xmp.xmpMM.History[2]/stEvt:softwareAgent')
             assert_correct_software_agent(software_agent)
             assert_equal(pop(), ('Xmp.xmpMM.History[2]/stEvt:when', metadata_date))
             # - InstanceID:
-            key, uuid = pop()
+            key, instance_id = pop()
             assert_equal(key, 'Xmp.xmpMM.InstanceID')
-            assert_uuid_urn(evt_uuid)
-            assert_equal(uuid, evt_uuid)
-            assert_not_equal(uuid, original_uuid)
+            assert_uuid_urn(instance_id)
+            assert_equal(instance_id, evt_instance_id)
+            assert_not_equal(instance_id, original_instance_id)
+            # - OriginalDocumentID:
+            key, original_document_id = pop()
+            assert_equal(key, 'Xmp.xmpMM.OriginalDocumentID')
+            assert_equal(original_document_id, self._original_document_id)
             try:
                 line = pop()
             except StopIteration:
@@ -408,22 +425,29 @@ class test_metadata():
             assert_greater(mod_date, create_date)
             metadata_date = get(ns.xmp, 'MetadataDate')
             assert_equal(mod_date, metadata_date)
-            uuid = get(ns.xmpmm, 'InstanceID')
-            assert_uuid_urn(uuid)
+            # (Original)DocumentID:
+            original_document_id = get(ns.xmpmm, 'OriginalDocumentID')
+            assert_equal(original_document_id, self._original_document_id)
+            document_id = get(ns.xmpmm, 'DocumentID')
+            assert_uuid_urn(document_id)
+            assert_not_equal(document_id, original_document_id)
+            assert_uuid_urn(document_id)
+            # InstanceID:
+            instance_id = get(ns.xmpmm, 'InstanceID')
+            assert_uuid_urn(instance_id)
             # History[1]
             assert_equal(get(ns.xmpmm, 'History[1]/stEvt:action'), 'created')
             assert_equal(get(ns.xmpmm, 'History[1]/stEvt:softwareAgent'), self._original_software_agent)
-            original_uuid = get(ns.xmpmm, 'History[1]/stEvt:instanceID')
-            assert_uuid_urn(original_uuid)
-            assert_equal(original_uuid, self._original_uuid)
-            assert_not_equal(uuid, original_uuid)
+            original_instance_id = get(ns.xmpmm, 'History[1]/stEvt:instanceID')
+            assert_equal(original_instance_id, self._original_instance_id)
+            assert_not_equal(instance_id, original_instance_id)
             assert_equal(get(ns.xmpmm, 'History[1]/stEvt:when'), create_date)
             # History[2]
             assert_equal(get(ns.xmpmm, 'History[2]/stEvt:action'), 'converted')
             software_agent = get(ns.xmpmm, 'History[2]/stEvt:softwareAgent')
             assert_correct_software_agent(software_agent)
             assert_equal(get(ns.xmpmm, 'History[2]/stEvt:parameters'), 'from image/png to image/x-test')
-            assert_equal(get(ns.xmpmm, 'History[2]/stEvt:instanceID'), uuid)
+            assert_equal(get(ns.xmpmm, 'History[2]/stEvt:instanceID'), instance_id)
             assert_equal(get(ns.xmpmm, 'History[2]/stEvt:when'), mod_date)
             # internal properties
             assert_equal(get(ns.didjvu, 'test_int'), '42')
