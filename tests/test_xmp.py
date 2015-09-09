@@ -377,7 +377,7 @@ class test_metadata():
             assert_equal(original_instance_id, self._original_instance_id)
             assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:softwareAgent', self._original_software_agent))
             assert_equal(pop(), ('Xmp.xmpMM.History[1]/stEvt:when', create_date))
-            # - History[2]
+            # - History[2]:
             assert_equal(pop(), ('Xmp.xmpMM.History[2]', 'type="Struct"'))
             assert_equal(pop(), ('Xmp.xmpMM.History[2]/stEvt:action', 'converted'))
             key, evt_instance_id = pop()
@@ -435,21 +435,21 @@ class test_metadata():
             # InstanceID:
             instance_id = get(ns.xmpmm, 'InstanceID')
             assert_uuid_urn(instance_id)
-            # History[1]
+            # History[1]:
             assert_equal(get(ns.xmpmm, 'History[1]/stEvt:action'), 'created')
             assert_equal(get(ns.xmpmm, 'History[1]/stEvt:softwareAgent'), self._original_software_agent)
             original_instance_id = get(ns.xmpmm, 'History[1]/stEvt:instanceID')
             assert_equal(original_instance_id, self._original_instance_id)
             assert_not_equal(instance_id, original_instance_id)
             assert_equal(get(ns.xmpmm, 'History[1]/stEvt:when'), create_date)
-            # History[2]
+            # History[2]:
             assert_equal(get(ns.xmpmm, 'History[2]/stEvt:action'), 'converted')
             software_agent = get(ns.xmpmm, 'History[2]/stEvt:softwareAgent')
             assert_correct_software_agent(software_agent)
             assert_equal(get(ns.xmpmm, 'History[2]/stEvt:parameters'), 'from image/png to image/x-test')
             assert_equal(get(ns.xmpmm, 'History[2]/stEvt:instanceID'), instance_id)
             assert_equal(get(ns.xmpmm, 'History[2]/stEvt:when'), mod_date)
-            # internal properties
+            # internal properties:
             assert_equal(get(ns.didjvu, 'test_int'), '42')
             assert_equal(get(ns.didjvu, 'test_str'), 'eggs')
             assert_equal(get(ns.didjvu, 'test_bool'), 'True')
