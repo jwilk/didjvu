@@ -1,4 +1,4 @@
-didjvu (0.7) UNRELEASED; urgency=low
+didjvu (0.7) unstable; urgency=low
 
   * Improve XMP support:
     + Add GExiv2 XMP backend.
@@ -7,7 +7,7 @@ didjvu (0.7) UNRELEASED; urgency=low
     + Update the xmpMM:DocumentID property.
   * Improve the test suite.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Wed, 09 Sep 2015 17:09:56 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Thu, 10 Sep 2015 19:16:22 +0200
 
 didjvu (0.6.1) unstable; urgency=low
 
