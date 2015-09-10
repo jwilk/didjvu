@@ -329,7 +329,7 @@ class test_metadata():
                 yield self._test_updated_exiv2(xmp_file, exception=exc), tag_backend(backend), tag_exiv2
                 yield self._test_updated_libxmp(xmp_file, exception=exc), tag_backend(backend), tag_libxmp
 
-    _original_software_agent = 'scanhelper 0.2.4'
+    _original_software_agent = 'scanhelper 0.6'
     _original_create_date = '2012-02-01T16:28:00+01:00'
     _original_document_id = 'urn:uuid:04fa0637-2b6e-417c-9fff-d6f0f02c08a6'
     _original_instance_id = 'urn:uuid:c3745412-65c0-4db4-880f-34fb57beddc0'

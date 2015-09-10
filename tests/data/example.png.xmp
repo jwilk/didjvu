@@ -9,7 +9,7 @@
 >
 <rdf:RDF>
     <rdf:Description rdf:about="">
-        <xmp:CreatorTool>scanhelper 0.2.4</xmp:CreatorTool>
+        <xmp:CreatorTool>scanhelper 0.6</xmp:CreatorTool>
         <xmp:CreateDate>2012-02-01T16:28:00+01:00</xmp:CreateDate>
         <xmp:MetadataDate>2012-02-29T20:30:21+01:00</xmp:MetadataDate>
         <dc:format>image/png</dc:format>
@@ -21,7 +21,7 @@
             <rdf:Seq>
                 <rdf:li rdf:parseType="Resource">
                     <stEvt:action>created</stEvt:action>
-                    <stEvt:softwareAgent>scanhelper 0.2.4</stEvt:softwareAgent>
+                    <stEvt:softwareAgent>scanhelper 0.6</stEvt:softwareAgent>
                     <stEvt:instanceID>urn:uuid:c3745412-65c0-4db4-880f-34fb57beddc0</stEvt:instanceID>
                     <stEvt:when>2012-02-01T16:28:00+01:00</stEvt:when>
                 </rdf:li>
