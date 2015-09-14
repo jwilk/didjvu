@@ -270,12 +270,12 @@ _djvu_header = 'AT&TFORM\0\0\0\0DJVMDIRM\0\0\0\0\1'
 
 def bundle_djvu_via_indirect(*component_filenames):
     with temporary.directory() as tmpdir:
-        pageids = []
+        page_ids = []
         page_sizes = []
         for filename in component_filenames:
-            pageid = os.path.basename(filename)
-            os.symlink(filename, os.path.join(tmpdir, pageid))
-            pageids += [pageid]
+            page_id = os.path.basename(filename)
+            os.symlink(filename, os.path.join(tmpdir, page_id))
+            page_ids += [page_id]
             page_size = os.path.getsize(filename)
             if page_size >= 1 << 24:
                 # Would overflow; but 0 is fine, too.
@@ -283,16 +283,16 @@ def bundle_djvu_via_indirect(*component_filenames):
             page_sizes += [page_size]
         with temporary.file(dir=tmpdir, suffix='djvu') as index_file:
             index_file.write(_djvu_header)
-            index_file.write(struct.pack('>H', len(pageids)))
+            index_file.write(struct.pack('>H', len(page_ids)))
             index_file.flush()
             bzz = ipc.Subprocess(['bzz', '-e', '-', '-'], stdin=ipc.PIPE, stdout=index_file)
             try:
                 for page_size in page_sizes:
                     bzz.stdin.write(struct.pack('>I', page_size)[1:])
-                for pageid in pageids:
-                    bzz.stdin.write(struct.pack('B', not pageid.endswith('.iff')))
-                for pageid in pageids:
-                    bzz.stdin.write(pageid)
+                for page_id in page_ids:
+                    bzz.stdin.write(struct.pack('B', not page_id.endswith('.iff')))
+                for page_id in page_ids:
+                    bzz.stdin.write(page_id)
                     bzz.stdin.write('\0')
             finally:
                 bzz.stdin.close()
@@ -333,18 +333,18 @@ def require_cli():
         'djvmcvt',
     )
 
-_pageid_chars = re.compile('^[A-Za-z0-9_+.-]*$').match
+_page_id_chars = re.compile('^[A-Za-z0-9_+.-]*$').match
 
-def validate_pageid(pageid):
-    if not _pageid_chars(pageid):
+def validate_page_id(page_id):
+    if not _page_id_chars(page_id):
         raise ValueError('page identifier must consist only of lowercase ASCII letters, digits, _, +, - and dot')
-    if pageid[:1] in ('.', '+', '-'):
+    if page_id[:1] in ('.', '+', '-'):
         raise ValueError('page identifier cannot start with +, - or a dot')
-    if '..' in pageid:
+    if '..' in page_id:
         raise ValueError('page identifier cannot contain two consecutive dots')
-    assert pageid == os.path.basename(pageid)
-    if pageid.endswith('.djvu'):
-        return pageid
+    assert page_id == os.path.basename(page_id)
+    if page_id.endswith('.djvu'):
+        return page_id
     else:
         raise ValueError('page identifier must end with the .djvu extension')
 
@@ -352,7 +352,7 @@ __all__ = [
     'bitonal_to_djvu', 'photo_to_djvu', 'djvu_to_iw44',
     'bundle_djvu',
     'require_cli',
-    'validate_pageid',
+    'validate_page_id',
     'Multichunk',
     'DPI_MIN', 'DPI_DEFAULT', 'DPI_MAX',
     'LOSS_LEVEL_MIN', 'LOSS_LEVEL_CLEAN', 'LOSS_LEVEL_LOSSY', 'LOSS_LEVEL_MAX',

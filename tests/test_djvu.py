@@ -113,35 +113,35 @@ class test_multichunk():
             out_image = ddjvu(tmp_djvu_path, fmt='pbm')
             assert_images_equal(in_image, out_image)
 
-class test_validate_pageid():
+class test_validate_page_id():
 
     def test_empty(self):
         with assert_raises(ValueError) as ecm:
-            djvu.validate_pageid('')
+            djvu.validate_page_id('')
         assert_equal(str(ecm.exception), 'page identifier must end with the .djvu extension')
 
     def test_bad_char(self):
         with assert_raises(ValueError) as ecm:
-            djvu.validate_pageid('eggs/ham.djvu')
+            djvu.validate_page_id('eggs/ham.djvu')
         assert_equal(str(ecm.exception), 'page identifier must consist only of lowercase ASCII letters, digits, _, +, - and dot')
 
     def test_leading_bad_char(self):
         with assert_raises(ValueError) as ecm:
-            djvu.validate_pageid('.eggs.djvu')
+            djvu.validate_page_id('.eggs.djvu')
         assert_equal(str(ecm.exception), 'page identifier cannot start with +, - or a dot')
 
     def test_dot_dot(self):
         with assert_raises(ValueError) as ecm:
-            djvu.validate_pageid('eggs..djvu')
+            djvu.validate_page_id('eggs..djvu')
         assert_equal(str(ecm.exception), 'page identifier cannot contain two consecutive dots')
 
     def test_bad_extension(self):
         with assert_raises(ValueError) as ecm:
-            djvu.validate_pageid('eggs.png')
+            djvu.validate_page_id('eggs.png')
         assert_equal(str(ecm.exception), 'page identifier must end with the .djvu extension')
 
     def test_ok(self):
         n = 'eggs.djvu'
-        assert_equal(djvu.validate_pageid(n), n)
+        assert_equal(djvu.validate_page_id(n), n)
 
 # vim:ts=4 sts=4 sw=4 et

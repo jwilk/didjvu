@@ -251,7 +251,7 @@ class test_argument_parser():
         assert_equal(options.masks, [])
         assert_is_none(options.output)
         if action == 'bundle':
-            assert_equal(options.pageid_template, '{base-ext}.djvu')
+            assert_equal(options.page_id_template, '{base-ext}.djvu')
         else:
             assert_is_none(options.output_template)
         assert_is_none(options.dpi)

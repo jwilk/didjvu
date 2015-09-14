@@ -123,7 +123,7 @@ def _get_method_params_help(methods):
 class ArgumentParser(argparse.ArgumentParser):
 
     class defaults:
-        pageid_template = '{base-ext}.djvu'
+        page_id_template = '{base-ext}.djvu'
         pages_per_dict = 1
         dpi = None
         fg_slices = [100]
@@ -147,13 +147,17 @@ class ArgumentParser(argparse.ArgumentParser):
             p.add_argument('-o', '--output', metavar='FILE', help='output filename')
             if p is p_bundle:
                 p.add_argument(
-                    '--pageid-template', metavar='TEMPLATE', default=default.pageid_template,
-                    help='naming scheme for page identifiers (default: "{template}")'.format(template=default.pageid_template)
+                    '--page-id-template', metavar='TEMPLATE', default=default.page_id_template,
+                    help='naming scheme for page identifiers (default: "{template}")'.format(template=default.page_id_template)
                 )
+                p.add_argument(
+                    '--pageid-template', dest='page_id_template', metavar='TEMPLATE',
+                    help=argparse.SUPPRESS
+                )  # obsolete alias
             else:
                 p.add_argument(
                     '--output-template', metavar='TEMPLATE',
-                    help='naming scheme for output file (e.g. "{template}")'.format(template=default.pageid_template)
+                    help='naming scheme for output file (e.g. "{template}")'.format(template=default.page_id_template)
                 )
             p.add_argument('--losslevel', dest='loss_level', type=losslevel_type, help=argparse.SUPPRESS)
             p.add_argument(

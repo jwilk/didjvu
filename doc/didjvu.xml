@@ -164,7 +164,7 @@ more details.
             </listitem>
         </varlistentry>
         <varlistentry>
-            <term><option>--pageid-template=<replaceable>template</replaceable></option></term>
+            <term><option>--page-id-template=<replaceable>template</replaceable></option></term>
             <listitem>
                 <para>
                     Specifies the naming scheme for page identifiers for the <command>bundle</command> command.
