@@ -116,7 +116,7 @@ def run_exiv2(filename, fail_ok=False):
             raise
 
 _uuid_regex = (
-    r'\Aurn:uuid:XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX\Z'
+    r'\Aurn:uuid:XXXXXXXX-XXXX-4XXX-[89ab]XXX-XXXXXXXXXXXX\Z'
     .replace('X', '[0-9a-f]')
 )
 
