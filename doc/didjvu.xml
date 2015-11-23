@@ -583,7 +583,7 @@ more details.
             -->
             <listitem>
                 <para>
-                    <command>didjvu</command> makes havy use of temporary files.
+                    <command>didjvu</command> makes heavy use of temporary files.
                     It will store them in a directory specified by this variable.
                     The default is <filename>/tmp</filename>.
                 </para>

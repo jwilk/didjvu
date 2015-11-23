@@ -2,8 +2,9 @@ didjvu (0.8) UNRELEASED; urgency=low
 
   * Rename “--pageid-template” as “--page-id-template”.
   * Fix compatibility with Pillow ≥ 3.0.
+  * Fix typo in the documentation.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Sat, 21 Nov 2015 00:24:11 +0100
+ -- Jakub Wilk <jwilk@jwilk.net>  Mon, 23 Nov 2015 16:37:37 +0100
 
 didjvu (0.7) unstable; urgency=low
 
