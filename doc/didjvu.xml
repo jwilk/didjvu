@@ -526,7 +526,7 @@ more details.
             <term><option>--xmp</option></term>
             <listitem>
                 <para>
-                    Create sidecar <ulink url='http://www.adobe.com/devnet/xmp.html'>XMP</ulink> metadata.
+                    Create sidecar <ulink url='https://www.adobe.com/devnet/xmp.html'>XMP</ulink> metadata.
                 </para>
                 <note><para>This option is experimental!</para></note>
             </listitem>
