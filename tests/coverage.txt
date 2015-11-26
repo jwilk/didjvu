@@ -15,9 +15,9 @@ lib/timestamp.py                29      0      2      0   100%
 lib/utils.py                    30      0      8      0   100%
 lib/version.py                   8      0      0      0   100%
 lib/xmp.py                      59      0      8      1    99%   61->63
-lib/xmp/gexiv2_backend.py       63      3     16      1    95%   23-24, 27, 26->27
+lib/xmp/gexiv2_backend.py       60      0     14      0   100%
 lib/xmp/libxmp_backend.py       66      0     20      0   100%
 lib/xmp/namespaces.py            6      0      0      0   100%
 lib/xmp/pyexiv2_backend.py     121      0     20      1    99%   170->174
 ------------------------------------------------------------------------
-TOTAL                         1186    190    357     36    81%
+TOTAL                         1183    187    355     35    81%
