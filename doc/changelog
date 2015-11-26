@@ -1,4 +1,4 @@
-didjvu (0.8) UNRELEASED; urgency=low
+didjvu (0.8) unstable; urgency=low
 
   * Explicitly require GExiv2 version 0.10 to avoid warnings from PyGI.
   * Rename “--pageid-template” as “--page-id-template”.
@@ -7,7 +7,7 @@ didjvu (0.8) UNRELEASED; urgency=low
   * Use HTTPS for more URLs in the documentation.
   * Improve the test suite.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Thu, 26 Nov 2015 17:24:09 +0100
+ -- Jakub Wilk <jwilk@jwilk.net>  Thu, 26 Nov 2015 18:42:38 +0100
 
 didjvu (0.7) unstable; urgency=low
 
