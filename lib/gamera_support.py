@@ -96,7 +96,7 @@ def load_image(filename):
             # Gamera still uses tostring(), which was deprecated,
             # and finally removed in Pillow 3.0.0.
             pil_image.tostring = pil_image.tobytes
-        except AttributeError:
+        except AttributeError:  # <no-coverage>
             pass
         image = _from_pil(pil_image)
     image.dpi = dpi
