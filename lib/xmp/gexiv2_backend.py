@@ -17,6 +17,11 @@
 
 import re
 
+import gi
+try:
+    gi.require_version('GExiv2', '0.10')
+except ValueError as exc:
+    raise ImportError(exc)
 from gi.repository import GExiv2
 if GExiv2.get_version() < 1003:
     raise ImportError('GExiv2 >= 0.10.3 is required')
