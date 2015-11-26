@@ -1,3 +1,9 @@
+didjvu (0.8.1) UNRELEASED; urgency=low
+
+  * 
+
+ -- Jakub Wilk <jwilk@jwilk.net>  Thu, 26 Nov 2015 18:57:18 +0100
+
 didjvu (0.8) unstable; urgency=low
 
   * Explicitly require GExiv2 version 0.10 to avoid warnings from PyGI.
