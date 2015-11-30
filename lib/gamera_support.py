@@ -95,6 +95,7 @@ def load_image(filename):
         try:
             # Gamera still uses tostring(), which was deprecated,
             # and finally removed in Pillow 3.0.0.
+            # https://pillow.readthedocs.org/en/3.0.x/releasenotes/3.0.0.html#deprecated-methods
             pil_image.tostring = pil_image.tobytes
         except AttributeError:  # <no-coverage>
             pass
@@ -264,6 +265,7 @@ def init():
         PIL.fromstring = PIL.frombytes
         # Gamera still uses fromstring(), which was deprecated,
         # and finally removed in Pillow 3.0.0.
+        # https://pillow.readthedocs.org/en/3.0.x/releasenotes/3.0.0.html#deprecated-methods
     except AttributeError:
         pass
     return result
