@@ -23,7 +23,7 @@ install:
 - pip install --upgrade pip
 - pip install docutils
 - pip install pygments
-- wget -c http://sourceforge.net/projects/gamera/files/gamera/gamera-3.4.2/gamera-3.4.2.tar.gz -O ~/.cache/gamera-3.4.2.tar.gz
+- wget -c https://github.com/hsnr-gamera/gamera/releases/download/3.4.2/gamera-3.4.2.tar.gz -O ~/.cache/gamera-3.4.2.tar.gz
 - tar -xvzf ~/.cache/gamera-3.4.2.tar.gz
 - sed -i -e 's/no_wx = False/no_wx = True/' gamera-3.4.2/setup.py
 - ( cd gamera-3.4.2/ && python setup.py install )
