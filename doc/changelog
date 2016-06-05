@@ -116,7 +116,7 @@ didjvu (0.2.8) unstable; urgency=low
 didjvu (0.2.7) unstable; urgency=low
 
   * Improve the manual page, as per man-pages(7) recommendations:
-    - Remove the “AUTHOR” section.
+    + Remove the “AUTHOR” section.
   * Make “setup.py clean -a” remove compiled manual page (unless it was built
     by “setup.py sdist”).
   * Check Python version at runtime, not only in setup.py.
