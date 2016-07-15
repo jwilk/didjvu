@@ -1,8 +1,9 @@
 didjvu (0.8.1) UNRELEASED; urgency=low
 
-  * 
+  * Don't hardcode the Python interpreter path in script shebangs; use
+    “#!/usr/bin/env python” instead.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Thu, 26 Nov 2015 18:57:18 +0100
+ -- Jakub Wilk <jwilk@jwilk.net>  Fri, 15 Jul 2016 11:05:09 +0200
 
 didjvu (0.8) unstable; urgency=low
 
