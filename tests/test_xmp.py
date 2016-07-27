@@ -178,7 +178,8 @@ class test_metadata():
             xml_meta = io.StringIO(xml_meta)
             iterator = etree.iterparse(xml_meta, events=('start', 'end'))
             iterator = iter(iterator)  # odd, but needed for Python 2.6
-            pop = lambda: next(iterator)
+            def pop():
+                return next(iterator)
             event, element = pop()
             assert_equal(event, 'start')
             assert_equal(element.tag, '{adobe:ns:meta/}xmpmeta')
