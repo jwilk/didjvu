@@ -40,7 +40,7 @@ def expand(template, name, page, memo):
             base_var, offset = var.split('-', 1)
         else:
             continue  # <no-coverage>
-            # https://bitbucket.org/ned/coveragepy/issue/198
+            # https://bitbucket.org/ned/coveragepy/issues/198
         try:
             offset = sign * int(offset, 10)
         except ValueError:
