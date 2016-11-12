@@ -3,8 +3,10 @@ didjvu (0.8.1) UNRELEASED; urgency=low
   * Don't hardcode the Python interpreter path in script shebangs; use
     “#!/usr/bin/env python” instead.
   * Update Gamera documentation URL.
+  * Update bug tracker URLs.
+    The project repo has moved to GitHub.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Sun, 21 Aug 2016 18:19:21 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Sat, 12 Nov 2016 21:03:17 +0100
 
 didjvu (0.8) unstable; urgency=low
 
