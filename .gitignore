@@ -2,4 +2,3 @@
 .coverage
 MANIFEST
 doc/*.1
-secret/
