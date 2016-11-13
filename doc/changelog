@@ -1,4 +1,4 @@
-didjvu (0.8.1) UNRELEASED; urgency=low
+didjvu (0.8.1) unstable; urgency=low
 
   * Don't hardcode the Python interpreter path in script shebangs; use
     “#!/usr/bin/env python” instead.
@@ -6,7 +6,7 @@ didjvu (0.8.1) UNRELEASED; urgency=low
   * Update bug tracker URLs.
     The project repo has moved to GitHub.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Sat, 12 Nov 2016 21:03:17 +0100
+ -- Jakub Wilk <jwilk@jwilk.net>  Sun, 13 Nov 2016 17:51:00 +0100
 
 didjvu (0.8) unstable; urgency=low
 
