@@ -8,7 +8,7 @@ lib/djvu_support.py            257    120     91     15    50%   50-52, 87, 114,
 lib/filetype.py                 18      0      4      1    95%   41->43
 lib/fs.py                       14      0      4      0   100%
 lib/gamera_support.py          142      2     46      2    98%   269-270, 196->198, 198->exit
-lib/ipc.py                      79      1     32      6    94%   108, 31->34, 42->46, 47->51, 93->95, 101->103, 107->108
+lib/ipc.py                      76      1     30      6    93%   104, 32->35, 43->47, 48->52, 89->91, 97->99, 103->104
 lib/templates.py                40      0     12      0   100%
 lib/temporary.py                20      0      0      0   100%
 lib/timestamp.py                29      0      2      0   100%
@@ -20,4 +20,4 @@ lib/xmp/libxmp_backend.py       66      0     20      0   100%
 lib/xmp/namespaces.py            6      0      0      0   100%
 lib/xmp/pyexiv2_backend.py     121      0     20      1    99%   170->174
 ------------------------------------------------------------------------
-TOTAL                         1181    185    355     35    81%
+TOTAL                         1178    185    353     35    81%
