@@ -16,8 +16,8 @@
 import sys
 
 if sys.version_info < (2, 6):
-    raise RuntimeError('Python >= 2.6 is required')  # <no-coverage>
+    raise RuntimeError('Python >= 2.6 is required')  # no coverage
 if sys.version_info >= (3, 0):
-    raise RuntimeError('Python 2.X is required')  # <no-coverage>
+    raise RuntimeError('Python 2.X is required')  # no coverage
 
 # vim:ts=4 sts=4 sw=4 et

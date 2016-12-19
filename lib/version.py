@@ -21,12 +21,12 @@ __version__ = '0.8.2'
 def get_software_agent():
     try:
         import gamera
-    except ImportError:  # <no-coverage>
+    except ImportError:  # no coverage
         gamera = None
     result = 'didjvu ' + __version__
     try:
         result += ' (Gamera {0})'.format(gamera.__version__)
-    except (AttributeError, TypeError, ValueError):  # <no-coverage>
+    except (AttributeError, TypeError, ValueError):  # no coverage
         pass
     return result
 
@@ -48,7 +48,7 @@ class VersionAction(argparse.Action):
         print('+ Python {0}.{1}.{2}'.format(*sys.version_info))
         try:
             import gamera
-        except ImportError:  # <no-coverage>
+        except ImportError:  # no coverage
             pass
         else:
             print('+ Gamera {0}'.format(gamera.__version__))

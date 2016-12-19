@@ -21,7 +21,7 @@ from . import utils
 
 try:
     import argparse
-except ImportError as ex:  # <no-coverage>
+except ImportError as ex:  # no coverage
     utils.enhance_import_error(ex,
         'argparse',
         'python-argparse',

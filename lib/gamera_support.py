@@ -26,7 +26,7 @@ from . import utils
 
 try:
     from PIL import Image as PIL
-except ImportError as ex:  # <no-coverage>
+except ImportError as ex:  # no coverage
     utils.enhance_import_error(ex,
         'Python Imaging Library',
         'python-imaging',
@@ -39,7 +39,7 @@ else:
 
 try:
     import gamera
-except ImportError as ex:  # <no-coverage>
+except ImportError as ex:  # no coverage
     utils.enhance_import_error(ex,
         'Gamera',
         'python-gamera',
@@ -97,7 +97,7 @@ def load_image(filename):
             # and finally removed in Pillow 3.0.0.
             # https://pillow.readthedocs.io/en/3.0.x/releasenotes/3.0.0.html#deprecated-methods
             pil_image.tostring = pil_image.tobytes
-        except AttributeError:  # <no-coverage>
+        except AttributeError:  # no coverage
             pass
         image = _from_pil(pil_image)
     image.dpi = dpi
@@ -120,7 +120,7 @@ class Argument(object):
         else:
             raise NotImplementedError(
                 'argument {0}: unsupported type {1!r}'.format(self.name, arg)
-            )  # <no-coverage>
+            )  # no coverage
         if self.type in (int, float):
             [self.min, self.max] = arg.rng
             if self.min == -gamera.args.DEFAULT_MAX_ARG_NUMBER:
@@ -137,7 +137,7 @@ class Argument(object):
             if not isinstance(self.default, self.type):
                 raise TypeError(
                     'argument {0}: type({1!r}) should be {2}'.format(self.name, self.default, self.type.__name__)
-                )  # <no-coverage>
+                )  # no coverage
         else:
             self.default = None
 
@@ -150,7 +150,7 @@ class Plugin(object):
         self.name = name
         if sys.version_info >= (2, 7):
             self.args = collections.OrderedDict()
-        else:  # <no-coverage>
+        else:  # no coverage
             # Oh well.
             self.args = {}
         for arg in plugin.args:
@@ -174,7 +174,7 @@ class Plugin(object):
             else:
                 raise NotImplementedError(
                     'method {method} does not support pixel type {pt}'.format(method=self.name, pt=image.pixel_type_name)
-                )  # <no-coverage>
+                )  # no coverage
         assert image.data.pixel_type in pixel_types
         if self._method is None:
             self._method = self._plugin()
@@ -220,7 +220,7 @@ def to_pil_1bpp(image):
         image = image.to_greyscale()
     return image.to_pil()
 
-def _decref(o):  # <no-coverage>
+def _decref(o):  # no coverage
     '''
     Forcibly decrease refcount of the object by 1.
     '''
@@ -230,7 +230,7 @@ def _decref(o):  # <no-coverage>
     memmove.restype = ctypes.py_object
     return memmove(o, None, 0)
 
-def _monkeypatch_to_raw_string():  # <no-coverage>
+def _monkeypatch_to_raw_string():  # no coverage
     '''
     Monkey-patch to _to_raw_string plugin function to return objects with
     correct refcounts.
@@ -252,7 +252,7 @@ def init():
     test_image = Image((0, 0), (5, 5), RGB)
     test_string = test_image._to_raw_string()
     refcount = sys.getrefcount(test_string)
-    if refcount == 3:  # <no-coverage>
+    if refcount == 3:  # no coverage
         # See: https://tech.groups.yahoo.com/group/gamera-devel/message/2068
         warnings.warn(RuntimeWarning('Working around memory leak in the Gamera library'), stacklevel=2)
         _monkeypatch_to_raw_string()

@@ -42,12 +42,12 @@ def get_signal_names():
     try:
         if data['SIGABRT'] == data['SIGIOT']:
             del data['SIGIOT']
-    except KeyError:  # <no-coverage>
+    except KeyError:  # no coverage
         pass
     try:
         if data['SIGCHLD'] == data['SIGCLD']:
             del data['SIGCLD']
-    except KeyError:  # <no-coverage>
+    except KeyError:  # no coverage
         pass
     return dict((no, name) for name, no in data.iteritems())
 

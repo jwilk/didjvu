@@ -38,13 +38,13 @@ def xmp_register_namespace(prefix, uri):
         if 'gi.repository.GExiv2' in sys.modules:
             # most likely the namespace was registered by the GExiv2 backend
             pass
-        else:  # <no-coverage>
+        else:  # no coverage
             raise
 xmp_register_namespace('didjvu', ns.didjvu)
 
 try:
     etree.register_namespace
-except AttributeError:  # <no-coverage>
+except AttributeError:  # no coverage
     # Python 2.6
     def et_register_namespace(prefix, uri):
         import xml.etree.ElementTree as pyetree
@@ -98,13 +98,13 @@ class MetadataBase(object):
         description = None
         try:
             xmp_find = xmp.iterfind
-        except AttributeError:  # <no-coverage>
+        except AttributeError:  # no coverage
             # Python 2.6
             xmp_find = xmp.findall
         for description in xmp_find('.//' + nstag(ns.rdf, 'Description')):
             pass
         if description is None:
-            raise XmpError('Cannot add xmpMM:History')  # <no-coverage>
+            raise XmpError('Cannot add xmpMM:History')  # no coverage
         e_description = etree.SubElement(description, nstag(ns.xmpmm, 'History'))
         etree.SubElement(e_description, nstag(ns.rdf, 'Seq'))
         fp.seek(0)
@@ -115,7 +115,7 @@ class MetadataBase(object):
         self._reload()
         try:
             self['xmpMM.History']
-        except LookupError:  # <no-coverage>
+        except LookupError:  # no coverage
             raise XmpError('Cannot add xmpMM:History')
 
     def __init__(self):
@@ -130,7 +130,7 @@ class MetadataBase(object):
     def __del__(self):
         try:
             fp = self._fp
-        except AttributeError:  # <no-coverage>
+        except AttributeError:  # no coverage
             pass
         else:
             fp.close()

@@ -26,16 +26,16 @@ backend = None
 
 try:
     from . import gexiv2_backend as backend
-except ImportError as import_error:  # <no-coverage>
+except ImportError as import_error:  # no coverage
     pass
 
-if backend is None:  # <no-coverage>
+if backend is None:  # no coverage
     try:
         from . import libxmp_backend as backend
     except ImportError:
         pass
 
-if backend is None:  # <no-coverage>
+if backend is None:  # no coverage
     try:
         from . import pyexiv2_backend as backend
     except ImportError:
