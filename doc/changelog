@@ -1,8 +1,9 @@
 didjvu (0.8.2) UNRELEASED; urgency=low
 
-  * 
+  * Make --version print also versions of Python and the libraries.
+  * Make --version print to stdout, not stderr.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Sun, 18 Dec 2016 19:03:34 +0100
+ -- Jakub Wilk <jwilk@jwilk.net>  Mon, 19 Dec 2016 12:33:54 +0100
 
 didjvu (0.8.1) unstable; urgency=low
 
