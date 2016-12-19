@@ -21,8 +21,6 @@ cache:
 install:
 - export PATH="/usr/lib/ccache:$PATH"
 - pip install --upgrade pip
-- pip install docutils
-- pip install pygments
 - wget -c https://github.com/hsnr-gamera/gamera/releases/download/3.4.2/gamera-3.4.2.tar.gz -O ~/.cache/gamera-3.4.2.tar.gz
 - tar -xvzf ~/.cache/gamera-3.4.2.tar.gz
 - sed -i -e 's/no_wx = False/no_wx = True/' gamera-3.4.2/setup.py
@@ -31,6 +29,8 @@ install:
 - if [ "$TRAVIS_PYTHON_VERSION" = '2.6' ]; then pip install argparse; fi
 - pip install python-xmp-toolkit
 - pip install --verbose git+https://github.com/escaped/pyexiv2
+- pip install docutils
+- pip install pygments
 script:
 - nosetests -v
 - grep -r -l ft=rst doc/ | xargs -t -n1 -I{} rst2xml.py --strict {} /dev/null
