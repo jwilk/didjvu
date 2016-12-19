@@ -220,7 +220,7 @@ def fork_isolation(f):
     return wrapper
 
 if 'coverage' in sys.modules:
-    del fork_isolation  # quieten pyflakes
+    fork_isolation  # quieten pyflakes
     def fork_isolation(f):
         # Fork isolation would break coverage measurements.
         # Oh well. FIXME.
