@@ -211,8 +211,8 @@ class test_shell_escape():
         assert_equal(r, """'s'"'"'pam'""")
 
     def test_list(self):
-        l = ['$pam', 'eggs', "s'pam"]
-        r = ipc.shell_escape(l)
+        lst = ['$pam', 'eggs', "s'pam"]
+        r = ipc.shell_escape(lst)
         assert_equal(r, """'$pam' eggs 's'"'"'pam'""")
 
 class test_require():
