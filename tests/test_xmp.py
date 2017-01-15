@@ -30,8 +30,6 @@ from .tools import (
     assert_rfc3339_timestamp,
 )
 
-xmp_backends = []
-
 from lib import ipc
 from lib import temporary
 from lib import xmp
