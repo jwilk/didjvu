@@ -18,14 +18,16 @@ cache:
   directories:
   - $HOME/.cache
   - $HOME/.ccache
+env:
+- GAMERA_VERSION=3.4.2
 install:
 - export PATH="/usr/lib/ccache:$PATH"
 - pip install --upgrade pip
-- wget -c https://github.com/hsnr-gamera/gamera/releases/download/3.4.2/gamera-3.4.2.tar.gz -O ~/.cache/gamera-3.4.2.tar.gz
-- tar -xvzf ~/.cache/gamera-3.4.2.tar.gz
-- sed -i -e 's/no_wx = False/no_wx = True/' gamera-3.4.2/setup.py
-- ( cd gamera-3.4.2/ && python setup.py install )
-- rm -r gamera-3.4.2/
+- wget -c https://github.com/hsnr-gamera/gamera/releases/download/$GAMERA_VERSION/gamera-${GAMERA_VERSION}.tar.gz -O ~/.cache/gamera-${GAMERA_VERSION}.tar.gz
+- tar -xvzf ~/.cache/gamera-${GAMERA_VERSION}.tar.gz
+- sed -i -e 's/no_wx = False/no_wx = True/' gamera-${GAMERA_VERSION}/setup.py
+- ( cd gamera-${GAMERA_VERSION}/ && python setup.py install )
+- rm -r gamera-${GAMERA_VERSION}/
 - if [ "$TRAVIS_PYTHON_VERSION" = '2.6' ]; then PILLOW_VERSION=3.4.2; fi
 - pip install --verbose pillow${PILLOW_VERSION:+==$PILLOW_VERSION}
 - if [ "$TRAVIS_PYTHON_VERSION" = '2.6' ]; then pip install argparse; fi
