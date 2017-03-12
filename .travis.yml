@@ -33,11 +33,13 @@ install:
 - if [ "$TRAVIS_PYTHON_VERSION" = '2.6' ]; then pip install argparse; fi
 - pip install python-xmp-toolkit
 - pip install --verbose git+https://github.com/escaped/pyexiv2
+- pip install pydiatra
 - pip install pyflakes
 - pip install docutils
 - pip install pygments
 script:
 - nosetests -v
+- private/run-pydiatra
 - private/run-pyflakes
 - private/check-rst
 - xmllint --noout --valid doc/*.xml
