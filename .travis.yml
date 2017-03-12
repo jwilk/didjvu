@@ -19,7 +19,7 @@ cache:
   - $HOME/.cache
   - $HOME/.ccache
 env:
-- GAMERA_VERSION=3.4.2
+- GAMERA_VERSION=3.4.3
 install:
 - export PATH="/usr/lib/ccache:$PATH"
 - pip install --upgrade pip
