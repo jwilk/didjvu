@@ -8,6 +8,7 @@ addons:
   apt:
     packages:
     - djvulibre-bin
+    - docbook-xml
     - exiv2
     - libboost-python-dev
     - libexempi3
@@ -44,6 +45,6 @@ script:
 - private/run-pydiatra
 - private/run-pyflakes
 - private/check-rst
-- xmllint --noout --valid doc/*.xml
+- xmllint --nonet --noout --valid doc/*.xml
 
 # vim:ts=2 sts=2 sw=2 et
