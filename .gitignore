@@ -1,5 +1,5 @@
 *.py[co]
-.coverage
-MANIFEST
-dist
-doc/*.1
+/.coverage
+/MANIFEST
+/dist
+/doc/*.1
