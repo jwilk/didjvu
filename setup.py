@@ -172,7 +172,7 @@ distutils.core.setup(
     packages=['didjvu', 'didjvu.xmp'],
     package_dir=dict(didjvu='lib'),
     scripts=['didjvu'],
-    data_files=[('share/man/man1', glob.glob('doc/*.1'))],
+    data_files=[('share/man/man1', ['doc/didjvu.1'])],
     cmdclass=dict(
         build_doc=build_doc,
         clean=clean,
