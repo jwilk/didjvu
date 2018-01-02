@@ -169,7 +169,7 @@ distutils.core.setup(
     url='http://jwilk.net/software/didjvu',
     author='Jakub Wilk',
     author_email='jwilk@jwilk.net',
-    packages=['didjvu'],
+    packages=['didjvu', 'didjvu.xmp'],
     package_dir=dict(didjvu='lib'),
     scripts=['didjvu'],
     data_files=[('share/man/man1', glob.glob('doc/*.1'))],
