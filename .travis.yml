@@ -25,7 +25,6 @@ env:
 - GAMERA_VERSION=3.4.3
 install:
 - export PATH="/usr/lib/ccache:$PATH"
-- pip install --upgrade pip
 - wget -c https://github.com/hsnr-gamera/gamera/releases/download/$GAMERA_VERSION/gamera-${GAMERA_VERSION}.tar.gz -O ~/.cache/gamera-${GAMERA_VERSION}.tar.gz
 - tar -xvzf ~/.cache/gamera-${GAMERA_VERSION}.tar.gz
 - sed -i -e 's/no_wx = False/no_wx = True/' gamera-${GAMERA_VERSION}/setup.py
