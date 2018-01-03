@@ -32,6 +32,7 @@ install:
 - sed -i -e 's/no_wx = False/no_wx = True/' gamera-${GAMERA_VERSION}/setup.py
 - ( cd gamera-${GAMERA_VERSION}/ && python setup.py install )
 - rm -r gamera-${GAMERA_VERSION}/
+- PILLOW_VERSION=4.3.0
 - if [ "$TRAVIS_PYTHON_VERSION" = '2.6' ]; then PILLOW_VERSION=3.4.2; fi
 - pip install --verbose pillow${PILLOW_VERSION:+==$PILLOW_VERSION}
 - if [ "$TRAVIS_PYTHON_VERSION" = '2.6' ]; then pip install argparse; fi
