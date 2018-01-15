@@ -16,4 +16,11 @@ Make ``didjvu bundle`` display correct “bits-per-pixel” information.
 
 Add support for multi-page TIFF files.
 
+Migrate from DocBook XML to reStructuredText.
+
+In the manual page, apostrophes should be written as ``'``,
+not ``\(aq``.
+
+Automatically check Python code with pylint.
+
 .. vim:ft=rst ts=3 sts=4 sw=3 et tw=72
