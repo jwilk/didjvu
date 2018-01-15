@@ -472,4 +472,6 @@ class main():
         compression_info = self.compression_info_template.format(**locals())
         logger.nosy(compression_info)
 
+__all__ = ['main']
+
 # vim:ts=4 sts=4 sw=4 et
