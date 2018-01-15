@@ -1,8 +1,8 @@
 didjvu (0.8.3) UNRELEASED; urgency=low
 
-  * 
+  * Reorganize documentation.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Mon, 15 Jan 2018 21:48:12 +0100
+ -- Jakub Wilk <jwilk@jwilk.net>  Mon, 15 Jan 2018 22:12:00 +0100
 
 didjvu (0.8.2) unstable; urgency=low
 
