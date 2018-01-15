@@ -1,3 +1,6 @@
+Overview
+========
+
 **didjvu** uses the Gamera_ framework to separate foreground/background layers,
 which can be then encoded into a DjVu_ file.
 
@@ -6,4 +9,42 @@ which can be then encoded into a DjVu_ file.
 .. _DjVu:
    http://djvu.org/
 
-.. vim:ft=rst ts=3 sts=3 sw=3 et
+Prerequisites
+=============
+
+*didjvu* requires the following software:
+
+* Python_ (≥ 2.6);
+* Gamera_ (≥ 3.2.3);
+* Python Imaging Library (PIL_);
+* DjVuLibre_ (≥ 3.5.22);
+* minidjvu_ (≥ 0.8), for the ``--pages-per-dict``/``-p`` option;
+* argparse_.
+
+Additionally, one of the following libraries is needed for the ``--xmp``
+option:
+
+* GExiv2_ (≥ 0.10.3) + PyGI_; or
+* python-xmp-toolkit_; or
+* pyexiv2_ (≥ 0.3).
+
+.. _Python:
+   https://www.python.org/
+.. _PIL:
+   http://www.pythonware.com/products/pil/
+.. _DjVuLibre:
+   http://djvu.sourceforge.net/
+.. _minidjvu:
+   http://minidjvu.sourceforge.net/
+.. _argparse:
+   https://pypi.python.org/pypi/argparse
+.. _GExiv2:
+   https://wiki.gnome.org/Projects/gexiv2
+.. _PyGI:
+   https://wiki.gnome.org/Projects/PyGObject
+.. _python-xmp-toolkit:
+   https://github.com/python-xmp-toolkit/python-xmp-toolkit
+.. _pyexiv2:
+   https://launchpad.net/pyexiv2
+
+.. vim:ft=rst ts=3 sts=3 sw=3 et tw=72
