@@ -19,10 +19,7 @@ separate foreground/background layers, which it can then encode into a `DjVu
 <http://djvu.org/>`_ file.
 '''
 
-from __future__ import with_statement
-# Let's keep this __future__ import here, even though Python 2.5 is no longer
-# supported, so that people running setup.py against the unsupported version
-# get a nice error message instead of SyntaxError.
+b''  # Python >= 2.6 is required
 
 import glob
 import os
