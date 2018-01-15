@@ -22,7 +22,7 @@ from __future__ import print_function
 import argparse
 import sys
 
-__version__ = '0.8.2'
+__version__ = '0.8.3'
 
 def get_software_agent():
     try:
