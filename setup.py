@@ -14,9 +14,8 @@
 # for more details.
 
 '''
-*didjvu* uses the `Gamera <http://gamera.informatik.hsnr.de/>`_ framework to
-separate foreground/background layers, which it can then encode into a `DjVu
-<http://djvu.org/>`_ file.
+*didjvu* uses the Gamera framework to separate foreground/background layers,
+which it can then encode into a DjVu file.
 '''
 
 b''  # Python >= 2.6 is required
