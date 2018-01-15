@@ -1,0 +1,9 @@
+**didjvu** uses the Gamera_ framework to separate foreground/background layers,
+which can be then encoded into a DjVu_ file.
+
+.. _Gamera:
+   http://gamera.informatik.hsnr.de/
+.. _DjVu:
+   http://djvu.org/
+
+.. vim:ft=rst ts=3 sts=3 sw=3 et

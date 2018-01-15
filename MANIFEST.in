@@ -2,12 +2,14 @@ include MANIFEST.in
 
 include .coveragerc
 include COPYING
+exclude README
 include didjvu
 include didjvu.py
 include doc/*.1
 include doc/*.txt
 include doc/*.xml
 include doc/COPYING
+include doc/README
 include doc/changelog
 include private/*
 include tests/coverage.txt
