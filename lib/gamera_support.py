@@ -253,7 +253,7 @@ def init():
     test_string = test_image._to_raw_string()
     refcount = sys.getrefcount(test_string)
     if refcount == 3:  # no coverage
-        # See: https://tech.groups.yahoo.com/group/gamera-devel/message/2068
+        # See: https://groups.yahoo.com/neo/groups/gamera-devel/conversations/topics/2068
         warnings.warn(RuntimeWarning('Working around memory leak in the Gamera library'), stacklevel=2)
         _monkeypatch_to_raw_string()
         fixed_test_string = test_image._to_raw_string()
