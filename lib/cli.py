@@ -13,7 +13,9 @@
 # FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 # for more details.
 
-'''command line interface for *didjvu*'''
+'''
+didjvu's command-line interface
+'''
 
 import functools
 
