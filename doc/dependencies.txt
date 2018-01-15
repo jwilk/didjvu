@@ -33,6 +33,6 @@ option:
 .. _python-xmp-toolkit:
    https://github.com/python-xmp-toolkit/python-xmp-toolkit
 .. _pyexiv2:
-   http://tilloy.net/dev/pyexiv2/
+   https://launchpad.net/pyexiv2
 
 .. vim:ft=rst ts=3 sts=3 sw=3 et tw=72
