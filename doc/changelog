@@ -1,4 +1,4 @@
-didjvu (0.8.2) UNRELEASED; urgency=low
+didjvu (0.8.2) unstable; urgency=low
 
   * Make --version print also versions of Python and the libraries.
   * Make --version print to stdout, not stderr.
@@ -7,7 +7,7 @@ didjvu (0.8.2) UNRELEASED; urgency=low
     + Use distutils644 to sanitize tarball permissions etc.
   * Update pyexiv2 homepage URL.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Mon, 15 Jan 2018 15:30:01 +0100
+ -- Jakub Wilk <jwilk@jwilk.net>  Mon, 15 Jan 2018 19:39:50 +0100
 
 didjvu (0.8.1) unstable; urgency=low
 
