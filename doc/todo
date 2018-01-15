@@ -1,19 +1,19 @@
- * Allow running *didjvu* in parallel (``-j``/``--jobs``).
+Allow running *didjvu* in parallel (``-j``/``--jobs``).
 
- * Allow specifying page titles (``--page-title-template``).
+Allow specifying page titles (``--page-title-template``).
 
- * Allow customizing gamma value (``--gamma``).
+Allow customizing gamma value (``--gamma``).
 
- * Optimize the ``subsample_fg()`` function, which is called if
-   non-standard image quality options are used.
+Optimize the ``subsample_fg()`` function, which is called if
+non-standard image quality options are used.
 
- * Allow running ``didjvu encode`` and ``didjvu separate`` on
-   a single-page DjVu files.
+Allow running ``didjvu encode`` and ``didjvu separate`` on
+a single-page DjVu files.
 
- * Allow running ``didjvu bundle`` on DjVu files.
+Allow running ``didjvu bundle`` on DjVu files.
 
- * Make ``didjvu bundle`` display correct “bits-per-pixel” information.
+Make ``didjvu bundle`` display correct “bits-per-pixel” information.
 
- * Add support for multi-page TIFF files.
+Add support for multi-page TIFF files.
 
 .. vim:ft=rst ts=3 sts=4 sw=3 et tw=72
