@@ -13,6 +13,10 @@
 # FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 # for more details.
 
+'''
+didjvu core
+'''
+
 from __future__ import print_function
 
 import itertools

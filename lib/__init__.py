@@ -13,6 +13,10 @@
 # FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 # for more details.
 
+'''
+didjvu's private modules
+'''
+
 import sys
 
 if sys.version_info < (2, 6):

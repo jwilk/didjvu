@@ -13,6 +13,10 @@
 # FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 # for more details.
 
+'''
+constants for various XML namespaces
+'''
+
 didjvu = 'http://jwilk.net/software/didjvu#'
 
 dc = 'http://purl.org/dc/elements/1.1/'
