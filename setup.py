@@ -101,18 +101,18 @@ class build_doc(distutils_build):
             file.write(contents)
 
     def run(self):
-        for xmlname in glob.iglob(os.path.join('doc', '*.xml')):
-            manname = os.path.splitext(xmlname)[0] + '.1'
-            command = [
-                'xsltproc', '--nonet',
-                '--param', 'man.authors.section.enabled', '0',
-                '--param', 'man.charmap.use.subset', '0',
-                '--param', 'man.font.links', '"I"',
-                '--output', 'doc/',
-                'http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl',
-                xmlname,
-            ]
-            self.make_file([xmlname], manname, self.build_man, [manname, command])
+        xmlname = os.path.join('doc', 'manpage.xml')
+        manname = os.path.join('doc', 'didjvu.1')
+        command = [
+            'xsltproc', '--nonet',
+            '--param', 'man.authors.section.enabled', '0',
+            '--param', 'man.charmap.use.subset', '0',
+            '--param', 'man.font.links', '"I"',
+            '--output', 'doc/',
+            'http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl',
+            xmlname,
+        ]
+        self.make_file([xmlname], manname, self.build_man, [manname, command])
 
 distutils_build.sub_commands[:0] = [('build_doc', None)]
 
