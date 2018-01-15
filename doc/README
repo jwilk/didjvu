@@ -1,8 +1,8 @@
 Overview
 ========
 
-**didjvu** uses the Gamera_ framework to separate foreground/background layers,
-which can be then encoded into a DjVu_ file.
+**didjvu** uses the Gamera_ framework to separate foreground/background
+layers, which can be then encoded into a DjVu_ file.
 
 .. _Gamera:
    http://gamera.informatik.hsnr.de/
