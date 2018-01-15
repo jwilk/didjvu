@@ -52,4 +52,10 @@ class Proxy(object):
         self._wait_fn = int
         setattr(self._object, name, value)
 
+__all__ = [
+    'Proxy',
+    'enhance_import_error',
+    'namespace',
+]
+
 # vim:ts=4 sts=4 sw=4 et
