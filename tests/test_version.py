@@ -37,7 +37,7 @@ def test_changelog():
     assert_equal(changelog_version, version.__version__)
 
 def test_manpage():
-    path = os.path.join(docdir, 'didjvu.xml')
+    path = os.path.join(docdir, 'manpage.xml')
     for event, elem in etree.iterparse(path):
         if elem.tag == 'refmiscinfo' and elem.get('class') == 'version':
             assert_equal(elem.text, version.__version__)
