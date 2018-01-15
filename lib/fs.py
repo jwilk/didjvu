@@ -35,4 +35,9 @@ def replace_ext(filename, ext):
         ext
     )
 
+__all__ = [
+    'copy_file',
+    'replace_ext',
+]
+
 # vim:ts=4 sts=4 sw=4 et
