@@ -12,7 +12,7 @@ layers, which can be then encoded into a DjVu_ file.
 Prerequisites
 =============
 
-*didjvu* requires the following software:
+The following software is required:
 
 * Python_ (≥ 2.6);
 * Gamera_ (≥ 3.2.3);
