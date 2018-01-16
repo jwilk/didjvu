@@ -100,8 +100,8 @@ class build_doc(distutils_build):
             file.write(contents)
 
     def run(self):
-        xmlname = os.path.join('doc', 'manpage.xml')
-        manname = os.path.join('doc', 'didjvu.1')
+        xmlname = 'doc/manpage.xml'
+        manname = 'doc/didjvu.1'
         command = [
             'xsltproc', '--nonet',
             '--param', 'man.authors.section.enabled', '0',
@@ -121,7 +121,7 @@ class clean(distutils_clean):
         distutils_clean.run(self)
         if not self.all:
             return
-        for manname in glob.iglob(os.path.join('doc', '*.1')):
+        for manname in glob.iglob('doc/*.1'):
             with open(manname, 'r') as file:
                 stamp = file.readline()
             if stamp != sdist.manpage_stamp:
@@ -151,7 +151,7 @@ class sdist(distutils_sdist):
 
     def make_release_tree(self, base_dir, files):
         distutils_sdist.make_release_tree(self, base_dir, files)
-        for manname in glob.iglob(os.path.join(base_dir, 'doc', '*.1')):
+        for manname in glob.iglob(os.path.join(base_dir, 'doc/*.1')):
             self.execute(self._rewrite_manpage, [manname], 'rewriting {0}'.format(manname))
         self._maybe_move_file(base_dir, 'COPYING', 'doc/COPYING')
 
