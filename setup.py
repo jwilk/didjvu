@@ -39,6 +39,8 @@ else:
 
 from lib.version import __version__
 
+data_files = []
+
 class test(distutils.core.Command):
 
     description = 'run tests'
@@ -98,6 +100,7 @@ class build_doc(distutils_build):
             xmlname,
         ]
         self.make_file([xmlname], manname, self.build_man, [manname, command])
+        data_files.append(('share/man/man1', [manname]))
 
 distutils_build.sub_commands[:0] = [('build_doc', None)]
 
@@ -168,7 +171,7 @@ distutils.core.setup(
     packages=['didjvu', 'didjvu.xmp'],
     package_dir=dict(didjvu='lib'),
     scripts=['didjvu'],
-    data_files=[('share/man/man1', ['doc/didjvu.1'])],
+    data_files=data_files,
     cmdclass=dict(
         build_doc=build_doc,
         clean=clean,
