@@ -42,8 +42,8 @@ install:
 - pip install docutils pygments
 script:
 - nosetests -v
-- private/run-pydiatra
-- private/run-pyflakes
+- py2diatra .
+- pyflakes .
 - private/check-rst
 - xmllint --nonet --noout --valid doc/*.xml
 - python setup.py install
