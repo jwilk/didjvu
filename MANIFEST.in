@@ -2,7 +2,7 @@ include MANIFEST.in
 
 include .coveragerc
 include COPYING
-exclude README
+exclude README.rst
 include didjvu
 include didjvu.py
 include doc/*.txt
