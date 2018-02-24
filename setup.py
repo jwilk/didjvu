@@ -37,7 +37,10 @@ except ImportError:
 else:
     distutils644.install()
 
-from lib.version import __version__
+def get_version():
+    with open('doc/changelog', 'r') as file:
+        line = file.readline()
+    return line.split()[1].strip('()')
 
 data_files = []
 
@@ -160,7 +163,7 @@ Topic :: Multimedia :: Graphics
 
 distutils.core.setup(
     name='didjvu',
-    version=__version__,
+    version=get_version(),
     license='GNU GPL 2',
     description='DjVu encoder with foreground/background separation',
     long_description=__doc__.strip(),
