@@ -33,7 +33,7 @@ install:
 - ( cd gamera-${GAMERA_VERSION}/ && python setup.py install )
 - rm -r gamera-${GAMERA_VERSION}/
 - PILLOW_VERSION=4.3.0
-- if [ "$TRAVIS_PYTHON_VERSION" = '2.6' ]; then PILLOW_VERSION=3.4.2; fi
+- if [[ $TRAVIS_PYTHON_VERSION = 2.6 ]]; then PILLOW_VERSION=3.4.2; fi
 - pip install --verbose pillow${PILLOW_VERSION:+==$PILLOW_VERSION}
 - pip install python-xmp-toolkit
 - pip install --verbose git+https://github.com/escaped/pyexiv2
