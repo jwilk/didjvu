@@ -35,7 +35,6 @@ install:
 - PILLOW_VERSION=4.3.0
 - if [ "$TRAVIS_PYTHON_VERSION" = '2.6' ]; then PILLOW_VERSION=3.4.2; fi
 - pip install --verbose pillow${PILLOW_VERSION:+==$PILLOW_VERSION}
-- if [ "$TRAVIS_PYTHON_VERSION" = '2.6' ]; then pip install argparse; fi
 - pip install python-xmp-toolkit
 - pip install --verbose git+https://github.com/escaped/pyexiv2
 - pip install pydiatra pyflakes
