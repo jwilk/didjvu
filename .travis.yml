@@ -50,6 +50,6 @@ script:
 - didjvu --version
 - export MANPATH="$VIRTUAL_ENV/share/man" MANWIDTH=80
 - man 1 didjvu | grep -A 10 -w DIDJVU
-- curl -fsS https://pypi.python.org/simple/didjvu/; [ $? -eq 22 ]
+- curl -fsS https://pypi.org/simple/didjvu/; [ $? -eq 22 ]
 
 # vim:ts=2 sts=2 sw=2 et
