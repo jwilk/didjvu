@@ -30,9 +30,9 @@ before_install:
 install:
 - export PATH="/usr/lib/ccache:$PATH"
 - wget https://github.com/hsnr-gamera/gamera/releases/download/$GAMERA_VERSION/gamera-${GAMERA_VERSION}.tar.gz
-- tar -xvzf gamera-${GAMERA_VERSION}.tar.gz
-- sed -i -e 's/no_wx = False/no_wx = True/' gamera-${GAMERA_VERSION}/setup.py
-- ( cd gamera-${GAMERA_VERSION}/ && python setup.py install )
+- tar -xvzf gamera-*.tar.gz
+- sed -i -e 's/no_wx = False/no_wx = True/' gamera-*/setup.py
+- ( cd gamera-*/ && python setup.py install )
 - rm -r gamera-*
 - pip install --verbose pillow${pillow_suffix}
 - pip install python-xmp-toolkit
