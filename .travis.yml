@@ -25,6 +25,9 @@ cache:
   - $HOME/.ccache
 env:
 - GAMERA_VERSION=3.4.3
+before_install:
+- pillow_suffix===4.3.0
+- if [[ $TRAVIS_PYTHON_VERSION = 2.6 ]]; then pillow_suffix===3.4.2; fi
 install:
 - export PATH="/usr/lib/ccache:$PATH"
 - wget -c https://github.com/hsnr-gamera/gamera/releases/download/$GAMERA_VERSION/gamera-${GAMERA_VERSION}.tar.gz -O ~/.cache/gamera-${GAMERA_VERSION}.tar.gz
@@ -32,9 +35,7 @@ install:
 - sed -i -e 's/no_wx = False/no_wx = True/' gamera-${GAMERA_VERSION}/setup.py
 - ( cd gamera-${GAMERA_VERSION}/ && python setup.py install )
 - rm -r gamera-${GAMERA_VERSION}/
-- PILLOW_VERSION=4.3.0
-- if [[ $TRAVIS_PYTHON_VERSION = 2.6 ]]; then PILLOW_VERSION=3.4.2; fi
-- pip install --verbose pillow${PILLOW_VERSION:+==$PILLOW_VERSION}
+- pip install --verbose pillow${pillow_suffix}
 - pip install python-xmp-toolkit
 - pip install --verbose git+https://github.com/escaped/pyexiv2
 - pip install pydiatra pyflakes
