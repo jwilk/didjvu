@@ -21,7 +21,6 @@ addons:
     - xsltproc
 cache:
   directories:
-  - $HOME/.cache
   - $HOME/.ccache
 env:
 - GAMERA_VERSION=3.4.3
@@ -30,11 +29,11 @@ before_install:
 - if [[ $TRAVIS_PYTHON_VERSION = 2.6 ]]; then pillow_suffix===3.4.2; fi
 install:
 - export PATH="/usr/lib/ccache:$PATH"
-- wget -c https://github.com/hsnr-gamera/gamera/releases/download/$GAMERA_VERSION/gamera-${GAMERA_VERSION}.tar.gz -O ~/.cache/gamera-${GAMERA_VERSION}.tar.gz
-- tar -xvzf ~/.cache/gamera-${GAMERA_VERSION}.tar.gz
+- wget https://github.com/hsnr-gamera/gamera/releases/download/$GAMERA_VERSION/gamera-${GAMERA_VERSION}.tar.gz
+- tar -xvzf gamera-${GAMERA_VERSION}.tar.gz
 - sed -i -e 's/no_wx = False/no_wx = True/' gamera-${GAMERA_VERSION}/setup.py
 - ( cd gamera-${GAMERA_VERSION}/ && python setup.py install )
-- rm -r gamera-${GAMERA_VERSION}/
+- rm -r gamera-*
 - pip install --verbose pillow${pillow_suffix}
 - pip install python-xmp-toolkit
 - pip install --verbose git+https://github.com/escaped/pyexiv2
