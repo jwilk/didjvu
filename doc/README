@@ -37,7 +37,7 @@ option:
 .. _minidjvu:
    http://minidjvu.sourceforge.net/
 .. _argparse:
-   https://pypi.python.org/pypi/argparse
+   https://pypi.org/project/argparse/
 .. _GExiv2:
    https://wiki.gnome.org/Projects/gexiv2
 .. _PyGI:

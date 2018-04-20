@@ -27,7 +27,7 @@ except ImportError as ex:  # no coverage
     utils.enhance_import_error(ex,
         'argparse',
         'python-argparse',
-        'https://pypi.python.org/pypi/argparse'
+        'https://pypi.org/project/argparse/'
     )
     raise
 
