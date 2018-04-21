@@ -19,6 +19,7 @@ which it can then encode into a DjVu file.
 '''
 
 b''  # Python >= 2.6 is required
+exec b''  # Python 2.X is required
 
 import glob
 import os
