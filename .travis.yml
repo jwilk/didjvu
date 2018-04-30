@@ -20,6 +20,7 @@ addons:
     - minidjvu
     - xsltproc
 cache:
+  pip: true
   directories:
   - $HOME/.ccache
 env:
