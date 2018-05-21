@@ -28,6 +28,8 @@ env:
 before_install:
 - pillow_suffix===4.3.0
 - if [[ $TRAVIS_PYTHON_VERSION = 2.6 ]]; then pillow_suffix===3.4.2; fi
+- pyflakes=pyflakes
+- if [[ $TRAVIS_PYTHON_VERSION = 2.6 ]]; then pyflakes='pyflakes<2'; fi
 install:
 - export PATH="/usr/lib/ccache:$PATH"
 - wget https://github.com/hsnr-gamera/gamera/releases/download/$GAMERA_VERSION/gamera-${GAMERA_VERSION}.tar.gz
@@ -38,7 +40,8 @@ install:
 - pip install --verbose pillow${pillow_suffix}
 - pip install python-xmp-toolkit
 - pip install --verbose git+https://github.com/escaped/pyexiv2
-- pip install pydiatra pyflakes
+- pip install pydiatra
+- pip install $pyflakes
 - pip install docutils pygments
 script:
 - nosetests -v
