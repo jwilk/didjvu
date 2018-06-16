@@ -44,6 +44,7 @@ install:
 - pip install $pyflakes
 - pip install docutils pygments
 script:
+- dpkg-parsechangelog -ldoc/changelog --all 2>&1 >/dev/null | { ! grep .; }
 - nosetests -v
 - py2diatra .
 - pyflakes .
