@@ -1,9 +1,12 @@
 dist: trusty
 sudo: false
 language: python
-python:
-- "2.6"
-- "2.7"
+matrix:
+  include:
+  - python: "2.6"
+    env: GAMERA_VERSION=3.3.2
+  - python: "2.7"
+    env: GAMERA_VERSION=3.4.3
 addons:
   apt:
     packages:
@@ -11,6 +14,7 @@ addons:
     - docbook-xml
     - docbook-xsl
     - exiv2
+    - g++-4.6
     - libboost-python-dev
     - libexempi3
     - libexiv2-dev
@@ -23,16 +27,20 @@ cache:
   pip: true
   directories:
   - $HOME/.ccache
-env:
-- GAMERA_VERSION=3.4.3
 before_install:
 - pillow_suffix===4.3.0
 - if [[ $TRAVIS_PYTHON_VERSION = 2.6 ]]; then pillow_suffix===3.4.2; fi
 - pyflakes=pyflakes
 - if [[ $TRAVIS_PYTHON_VERSION = 2.6 ]]; then pyflakes='pyflakes<2'; fi
+- gamera_url="https://github.com/hsnr-gamera/gamera/releases/download/$GAMERA_VERSION/gamera-${GAMERA_VERSION}.tar.gz";
+- if [[ $GAMERA_VERSION = 3.3.2 ]]; then
+    gamera_url="https://github.com/hsnr-gamera/gamera/archive/173cbefd7046a526c9238c337c15dc75bef42924.tar.gz";
+    export CC=gcc-4.6;
+    export CXX=g++-4.6;
+  fi
 install:
 - export PATH="/usr/lib/ccache:$PATH"
-- wget https://github.com/hsnr-gamera/gamera/releases/download/$GAMERA_VERSION/gamera-${GAMERA_VERSION}.tar.gz
+- wget "$gamera_url" -O "gamera-${GAMERA_VERSION}.tar.gz"
 - tar -xvzf gamera-*.tar.gz
 - ( cd gamera-*/ && echo '__version__ = "0.0"' > wx.py)
 - ( cd gamera-*/ && python setup.py install )
