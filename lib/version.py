@@ -46,8 +46,18 @@ class VersionAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         print('{prog} {0}'.format(__version__, prog=parser.prog))
         print('+ Python {0}.{1}.{2}'.format(*sys.version_info))
-        import gamera
-        print('+ Gamera {0}'.format(gamera.__version__))
+        from . import gamera_support as gs
+        print('+ Gamera {0}'.format(gs.gamera.__version__))
+        pil_name = 'Pillow'
+        try:
+            pil_version = gs.PIL.PILLOW_VERSION
+        except AttributeError:
+            try:
+                pil_version = gs.PIL.__version__
+            except AttributeError:
+                pil_name = 'PIL'
+                pil_version = gs.PIL.VERSION
+        print('+ {PIL} {0}'.format(pil_version, PIL=pil_name))
         parser.exit()
 
 __all__ = [
