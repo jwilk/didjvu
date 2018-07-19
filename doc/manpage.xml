@@ -264,9 +264,7 @@ more details.
                     </varlistentry>
                     <varlistentry>
                         <term><literal>bernsen</literal></term>
-                        <listitem><para>Bernsen thresholding algorithm</para>
-                            <note><para>this method requires Gamera ≥ 3.3.2</para></note>
-                        </listitem>
+                        <listitem><para>Bernsen thresholding algorithm</para></listitem>
                     </varlistentry>
                     <varlistentry>
                         <term><literal>brink</literal></term>
@@ -296,9 +294,7 @@ more details.
                     </varlistentry>
                     <varlistentry>
                         <term><literal>shading-subtraction</literal></term>
-                        <listitem><para>thresholds an image after subtracting a possibly shaded background</para>
-                            <note><para>this method requires Gamera ≥ 3.3.1</para></note>
-                        </listitem>
+                        <listitem><para>thresholds an image after subtracting a possibly shaded background</para></listitem>
                     </varlistentry>
                     <varlistentry>
                         <term><literal>tsai</literal></term>

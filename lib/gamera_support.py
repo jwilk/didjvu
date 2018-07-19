@@ -20,7 +20,6 @@ import ctypes
 import math
 import re
 import sys
-import warnings
 
 from . import utils
 
@@ -184,6 +183,7 @@ def _load_methods():
     replace_suffix = re.compile('_threshold$').sub
     class _methods:
         from gamera.plugins.threshold import abutaleb_threshold
+        from gamera.plugins.threshold import bernsen_threshold
         from gamera.plugins.threshold import djvu_threshold
         from gamera.plugins.threshold import otsu_threshold
         from gamera.plugins.threshold import threshold as global_threshold
@@ -191,11 +191,8 @@ def _load_methods():
         # TODO: from gamera.plugins.binarization import gatos_threshold
         from gamera.plugins.binarization import niblack_threshold
         from gamera.plugins.binarization import sauvola_threshold
+        from gamera.plugins.binarization import shading_subtraction
         from gamera.plugins.binarization import white_rohrer_threshold
-        if has_version(3, 3, 1):
-            from gamera.plugins.binarization import shading_subtraction
-        if has_version(3, 3, 2):
-            from gamera.plugins.threshold import bernsen_threshold
         if has_version(3, 4, 0):
             from gamera.plugins.binarization import brink_threshold
     methods = {}
@@ -221,45 +218,17 @@ def to_pil_1bpp(image):
         image = image.to_greyscale()
     return image.to_pil()
 
-def _decref(o):  # no coverage
-    '''
-    Forcibly decrease refcount of the object by 1.
-    '''
-    libc = ctypes.cdll.LoadLibrary(None)
-    memmove = libc.memmove
-    memmove.argtypes = [ctypes.py_object, ctypes.py_object, ctypes.c_size_t]
-    memmove.restype = ctypes.py_object
-    return memmove(o, None, 0)
-
-def _monkeypatch_to_raw_string():  # no coverage
-    '''
-    Monkey-patch to _to_raw_string plugin function to return objects with
-    correct refcounts.
-    '''
-    from gamera.plugins import _string_io
-    old_to_raw_string = _string_io._to_raw_string
-    def fixed_to_raw_string(*args, **kwargs):
-        o = old_to_raw_string(*args, **kwargs)
-        assert sys.getrefcount(o) == 3
-        o = _decref(o)
-        assert sys.getrefcount(o) == 2
-        return o
-    _string_io._to_raw_string = fixed_to_raw_string
-    Image._to_raw_string = fixed_to_raw_string
-
 def init():
+    if not has_version(3, 3, 2):
+        raise RuntimeError('Gamera >= 3.3.2 is required')
     sys.modules['numpy'] = None
     result = _init()
     test_image = Image((0, 0), (5, 5), RGB)
     test_string = test_image._to_raw_string()
     refcount = sys.getrefcount(test_string)
-    if refcount == 3:  # no coverage
+    if refcount >= 3:  # no coverage
         # See: https://groups.yahoo.com/neo/groups/gamera-devel/conversations/topics/2068
-        warnings.warn(RuntimeWarning('Working around memory leak in the Gamera library'), stacklevel=2)
-        _monkeypatch_to_raw_string()
-        fixed_test_string = test_image._to_raw_string()
-        assert sys.getrefcount(fixed_test_string) == 2
-        assert test_string == fixed_test_string
+        raise RuntimeError('Memory leak in Gamera')
     else:
         assert refcount == 2
     try:
