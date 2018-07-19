@@ -34,7 +34,7 @@ install:
 - export PATH="/usr/lib/ccache:$PATH"
 - wget https://github.com/hsnr-gamera/gamera/releases/download/$GAMERA_VERSION/gamera-${GAMERA_VERSION}.tar.gz
 - tar -xvzf gamera-*.tar.gz
-- sed -i -e 's/no_wx = False/no_wx = True/' gamera-*/setup.py
+- ( cd gamera-*/ && echo '__version__ = "0.0"' > wx.py)
 - ( cd gamera-*/ && python setup.py install )
 - rm -r gamera-*
 - pip install --verbose pillow${pillow_suffix}
