@@ -264,7 +264,9 @@ more details.
                     </varlistentry>
                     <varlistentry>
                         <term><literal>bernsen</literal></term>
-                        <listitem><para>Bernsen thresholding algorithm</para></listitem>
+                        <listitem><para>Bernsen thresholding algorithm</para>
+                            <note><para>this method requires Gamera ≥ 3.3.2</para></note>
+                        </listitem>
                     </varlistentry>
                     <varlistentry>
                         <term><literal>brink</literal></term>

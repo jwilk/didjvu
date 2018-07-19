@@ -184,7 +184,6 @@ def _load_methods():
     replace_suffix = re.compile('_threshold$').sub
     class _methods:
         from gamera.plugins.threshold import abutaleb_threshold
-        from gamera.plugins.threshold import bernsen_threshold
         from gamera.plugins.threshold import djvu_threshold
         from gamera.plugins.threshold import otsu_threshold
         from gamera.plugins.threshold import threshold as global_threshold
@@ -195,6 +194,8 @@ def _load_methods():
         from gamera.plugins.binarization import white_rohrer_threshold
         if has_version(3, 3, 1):
             from gamera.plugins.binarization import shading_subtraction
+        if has_version(3, 3, 2):
+            from gamera.plugins.threshold import bernsen_threshold
         if has_version(3, 4, 0):
             from gamera.plugins.binarization import brink_threshold
     methods = {}
