@@ -25,15 +25,9 @@ import sys
 __version__ = '0.8.3'
 
 def get_software_agent():
-    try:
-        import gamera
-    except ImportError:  # no coverage
-        gamera = None
+    import gamera
     result = 'didjvu ' + __version__
-    try:
-        result += ' (Gamera {0})'.format(gamera.__version__)
-    except (AttributeError, TypeError, ValueError):  # no coverage
-        pass
+    result += ' (Gamera {0})'.format(gamera.__version__)
     return result
 
 class VersionAction(argparse.Action):
@@ -52,12 +46,8 @@ class VersionAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         print('{prog} {0}'.format(__version__, prog=parser.prog))
         print('+ Python {0}.{1}.{2}'.format(*sys.version_info))
-        try:
-            import gamera
-        except ImportError:  # no coverage
-            pass
-        else:
-            print('+ Gamera {0}'.format(gamera.__version__))
+        import gamera
+        print('+ Gamera {0}'.format(gamera.__version__))
         parser.exit()
 
 __all__ = [
