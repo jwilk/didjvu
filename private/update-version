@@ -5,5 +5,5 @@ PS4='$ '
 set -x
 dch -m -v "$version" -u low -c doc/changelog
 export version
-perl -pi -e 's/^__version__ = '"'"'\K[\w.]+/$ENV{version}/' lib/version.py
-perl -pi -e "s/<(!ENTITY version) '[0-9.]+'>/<\1 '\$ENV{version}'>/" doc/*.xml
+perl -pi -e 's/^__version__ = \047\K[\w.]+/$ENV{version}/' lib/version.py
+perl -pi -e 's/<!ENTITY version \047\K[\w.]+/$ENV{version}/' doc/*.xml
