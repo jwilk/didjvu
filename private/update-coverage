@@ -46,7 +46,7 @@ def main():
         '--cover-package=lib',
         '--cover-erase',
     ] + modules
-    path = os.path.join('tests', 'coverage.txt')
+    path = os.path.join('tests', 'coverage')
     plugin = Coverage()
     report_stream = plugin.stream = io.BytesIO()
     print('Generated automatically by private/update-coverage. '

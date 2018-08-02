@@ -13,7 +13,7 @@ include doc/changelog
 include doc/credits
 include doc/todo
 include private/*
-include tests/coverage.txt
+include tests/coverage
 recursive-include lib *.py
 recursive-include tests *.py
 recursive-include tests/data *.bmp *.pgm *.png *.tiff
