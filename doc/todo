@@ -23,4 +23,6 @@ not ``\(aq``.
 
 Automatically check Python code with pylint.
 
+Should ``xmp::ModifyDate`` be updated?
+
 .. vim:ft=rst ts=3 sts=4 sw=3 et tw=72
