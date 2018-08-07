@@ -55,7 +55,7 @@ script:
 - nosetests -v
 - py2diatra .
 - pyflakes .
-- make -C doc check
+- make -C doc all check
 - python setup.py install
 - cd /
 - didjvu --version
