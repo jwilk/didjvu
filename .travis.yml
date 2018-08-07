@@ -1,20 +1,13 @@
 dist: trusty
 sudo: false
 language: python
-matrix:
-  include:
-  - python: "2.6"
-    env: GAMERA_VERSION=3.3.2
-  - python: "2.7"
-    env: GAMERA_VERSION=3.4.3
 addons:
   apt:
-    packages:
+    packages: &packages
     - djvulibre-bin
     - docbook-xml
     - docbook-xsl
     - exiv2
-    - g++-4.6
     - libboost-python-dev
     - libexempi3
     - libexiv2-dev
@@ -23,6 +16,17 @@ addons:
     - libxml2-utils
     - minidjvu
     - xsltproc
+matrix:
+  include:
+  - python: "2.6"
+    env: GAMERA_VERSION=3.3.2
+    addons:
+      apt:
+        packages:
+        - *packages
+        - g++-4.6
+  - python: "2.7"
+    env: GAMERA_VERSION=3.4.3
 cache:
   pip: true
   directories:
