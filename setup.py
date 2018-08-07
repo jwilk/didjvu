@@ -22,28 +22,15 @@ b''  # Python >= 2.6 is required
 exec b''  # Python 2.X is required
 
 import glob
-import os
-import re
 
 import distutils.command
 import distutils.core
-from distutils.command.build import build as distutils_build
-from distutils.command.clean import clean as distutils_clean
 from distutils.command.sdist import sdist as distutils_sdist
-
-try:
-    import distutils644
-except ImportError:
-    pass
-else:
-    distutils644.install()
 
 def get_version():
     with open('doc/changelog', 'r') as file:
         line = file.readline()
     return line.split()[1].strip('()')
-
-data_files = []
 
 class test(distutils.core.Command):
 
@@ -60,84 +47,10 @@ class test(distutils.core.Command):
         import nose
         nose.main(argv=['nosetests', '--verbose', 'tests'])
 
-class build_doc(distutils_build):
-
-    description = 'build documentation'
-
-    _url_regex = re.compile(
-        r'^(\\%https?://.*)',
-        re.MULTILINE
-    )
-
-    def build_man(self, manname, commandline):
-        self.spawn(commandline)
-        with open(manname, 'r+') as file:
-            contents = file.read()
-            # Format URLs consistently:
-            contents = self._url_regex.sub(
-                lambda m: r'\m[blue]\fI{0}\fR\m[]'.format(*m.groups()),
-                contents,
-            )
-            file.seek(0)
-            file.truncate()
-            file.write(contents)
-
-    def run(self):
-        xmlname = 'doc/manpage.xml'
-        manname = 'doc/didjvu.1'
-        command = [
-            'xsltproc', '--nonet',
-            '--param', 'man.authors.section.enabled', '0',
-            '--param', 'man.charmap.use.subset', '0',
-            '--param', 'man.font.links', '"I"',
-            '--output', 'doc/',
-            'http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl',
-            xmlname,
-        ]
-        self.make_file([xmlname], manname, self.build_man, [manname, command])
-        data_files.append(('share/man/man1', [manname]))
-
-distutils_build.sub_commands[:0] = [('build_doc', None)]
-
-class clean(distutils_clean):
-
-    def run(self):
-        distutils_clean.run(self)
-        if not self.all:
-            return
-        for manname in glob.iglob('doc/*.1'):
-            with open(manname, 'r') as file:
-                stamp = file.readline()
-            if stamp != sdist.manpage_stamp:
-                self.execute(os.unlink, [manname], 'removing {0}'.format(manname))
-
 class sdist(distutils_sdist):
 
-    manpage_stamp = '''.\\" [created by setup.py sdist]\n'''
-
     def run(self):
-        self.run_command('build_doc')
-        return distutils_sdist.run(self)
-
-    def _rewrite_manpage(self, manname):
-        with open(manname, 'r') as file:
-            contents = file.read()
-        os.unlink(manname)
-        with open(manname, 'w') as file:
-            file.write(self.manpage_stamp)
-            file.write(contents)
-
-    def _maybe_move_file(self, base_dir, src, dst):
-        src = os.path.join(base_dir, src)
-        dst = os.path.join(base_dir, dst)
-        if os.path.exists(src):
-            self.move_file(src, dst)
-
-    def make_release_tree(self, base_dir, files):
-        distutils_sdist.make_release_tree(self, base_dir, files)
-        for manname in glob.iglob(os.path.join(base_dir, 'doc/*.1')):
-            self.execute(self._rewrite_manpage, [manname], 'rewriting {0}'.format(manname))
-        self._maybe_move_file(base_dir, 'COPYING', 'doc/COPYING')
+        raise NotImplementedError
 
 classifiers = '''
 Development Status :: 4 - Beta
@@ -166,10 +79,8 @@ distutils.core.setup(
     packages=['didjvu', 'didjvu.xmp'],
     package_dir=dict(didjvu='lib'),
     scripts=['didjvu'],
-    data_files=data_files,
+    data_files=[('share/man/man1', glob.glob('doc/*.1'))],
     cmdclass=dict(
-        build_doc=build_doc,
-        clean=clean,
         sdist=sdist,
         test=test,
     ),
