@@ -74,7 +74,7 @@ def load_image(filename):
             # https://bugs.debian.org/784374
             gamera_modes = ['1', 'I;16', 'L', 'RGB']
         elif pil_image.format == 'PNG':
-            # Gamera doesn't handle 16-bit grayscale PNG images correctly.
+            # Gamera doesn't handle 16-bit greyscale PNG images correctly.
             # https://groups.yahoo.com/neo/groups/gamera-devel/conversations/messages/2425
             gamera_modes = ['1', 'L', 'RGB']
         else:
