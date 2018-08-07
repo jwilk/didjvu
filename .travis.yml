@@ -19,7 +19,7 @@ addons:
     - libexempi3
     - libexiv2-dev
     - libpng-dev
-    - libtiff4-dev
+    - libtiff-dev
     - libxml2-utils
     - minidjvu
     - xsltproc
