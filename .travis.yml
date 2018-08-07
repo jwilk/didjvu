@@ -8,6 +8,7 @@ addons:
     - docbook-xml
     - docbook-xsl
     - exiv2
+    - gir1.2-gexiv2-0.10
     - libboost-python-dev
     - libexempi3
     - libexiv2-dev
@@ -15,6 +16,7 @@ addons:
     - libtiff-dev
     - libxml2-utils
     - minidjvu
+    - python-gi
     - xsltproc
 matrix:
   include:
@@ -27,6 +29,10 @@ matrix:
         - g++-4.6
   - python: "2.7"
     env: GAMERA_VERSION=3.4.3
+  - python: "2.7"
+    env: GAMERA_VERSION=3.4.3
+    dist: xenial
+    sudo: true
 cache:
   pip: true
   directories:
@@ -42,6 +48,8 @@ before_install:
     export CC=gcc-4.6;
     export CXX=g++-4.6;
   fi
+- gexiv2_version=$(dpkg-query -Wf '${source:Version}' gir1.2-gexiv2-0.10)
+- if [[ $gexiv2_version = 0.10.[3-9]* ]]; then if_pyexiv2=:; else if_gexiv2=:; fi
 install:
 - export PATH="/usr/lib/ccache:$PATH"
 - wget "$gamera_url" -O "gamera-${GAMERA_VERSION}.tar.gz"
@@ -51,7 +59,9 @@ install:
 - rm -r gamera-*
 - pip install --verbose pillow${pillow_suffix}
 - pip install python-xmp-toolkit
-- pip install --verbose git+https://github.com/escaped/pyexiv2
+- $if_pyexiv2 pip install --verbose git+https://github.com/escaped/pyexiv2
+- $if_gexiv2 cp -a /usr/lib/python2.7/dist-packages/gi $VIRTUAL_ENV/lib/python2.7/site-packages/
+- $if_gexiv2 mv -v $VIRTUAL_ENV/lib/python2.7/site-packages/gi/_gi{.x86_64-linux-gnu,}.so
 - pip install pydiatra
 - pip install $pyflakes
 - pip install docutils pygments
