@@ -1,0 +1,57 @@
+#!/bin/sh
+
+# Copyright © 2018 Jakub Wilk <jwilk@jwilk.net>
+#
+# This file is part of didjvu.
+#
+# didjvu is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License version 2 as
+# published by the Free Software Foundation.
+#
+# didjvu is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+# for more details.
+
+set -e -u
+cd "${0%/*}/.."
+if [ $# -ge 2 ]
+then
+    printf '%s [commit]\n' "$0" >&2
+    exit 1
+fi
+if ! [ -d .git ]
+then
+    printf '%s requires git checkout\n' "$0" >&2
+    exit 1
+fi
+pwd="$PWD"
+commit=${1:-HEAD}
+commit=$(git describe "$commit")
+name=$(git cat-file blob "$commit:doc/changelog" | head -n1 | cut -d ' ' -f 1)
+date=$(git rev-list -1 --format=%cI "$commit" | grep -o '^....-..-..' | tr -d -)
+version=$(git cat-file blob "$commit:doc/changelog" | head -n1 | cut -d ' ' -f2 | tr -d '()')
+released=$(git cat-file blob "$commit:doc/changelog" | head -n1 | grep -v -w UNRELEASED || true)
+[ -n "$released" ] || version="${version}rc${date}"
+printf 'Commit: %s\nVersion: %s\n' "$commit" "$version" >&2
+set -x
+sourceroot=$(mktemp -d -t "$name-source-XXXXXX")
+tar_opts='--owner root --group root --mode a+rX --format ustar --sort name'
+gzip='gzip -9 -n'
+git archive "$commit" --prefix="$name-$version/" | tar -C "$sourceroot" -xf -
+cd "$sourceroot"/*
+make -C doc/
+mv COPYING doc/
+rm .git*
+rm .travis.yml
+rm -f private/make-release-tarball
+rm README.rst  # shipped as doc/README
+cd ..
+mkdir -p "$pwd/dist"
+tar $tar_opts -I "$gzip" -cf "$pwd/dist/$name-$version.tar.gz" */
+rm -r "$sourceroot"
+set +x
+cd "$pwd"
+ls -d "dist/$name-$version.tar.gz"
+
+# vim:ts=4 sts=4 sw=4 et
