@@ -1,12 +1,16 @@
 didjvu (0.8.3) UNRELEASED; urgency=low
 
+  * Remake the build system:
+    + Don't use setup.py to build source tarballs.
+    + Use separate makefile to build manual pages.
   * Drop support for Gamera < 3.3.2.
+  * Require Pillow, instead of long unmaintained Python Imaging Library.
   * Improve error handling.
   * Reorganize documentation.
   * Point to Python 2 documentation in the manual page.
     This is the version didjvu uses.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Thu, 19 Jul 2018 18:41:53 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Wed, 29 Aug 2018 18:44:41 +0200
 
 didjvu (0.8.2) unstable; urgency=low
 
