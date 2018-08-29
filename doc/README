@@ -16,7 +16,7 @@ The following software is required:
 
 * Python_ (2.6 or 2.7)
 * Gamera_ (≥ 3.3.2)
-* Python Imaging Library (PIL_)
+* Pillow_
 * DjVuLibre_ (≥ 3.5.22)
 * minidjvu_ (≥ 0.8) for the ``--pages-per-dict``/``-p`` option
 * argparse_ (only for Python 2.6)
@@ -31,7 +31,7 @@ option:
 .. _Python:
    https://www.python.org/
 .. _PIL:
-   http://www.pythonware.com/products/pil/
+   https://pypi.org/project/Pillow/
 .. _DjVuLibre:
    http://djvu.sourceforge.net/
 .. _minidjvu:

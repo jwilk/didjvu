@@ -27,9 +27,9 @@ try:
     from PIL import Image as PIL
 except ImportError as ex:  # no coverage
     utils.enhance_import_error(ex,
-        'Python Imaging Library',
-        'python-imaging',
-        'http://www.pythonware.com/products/pil/'
+        'Pillow',
+        'python-pil',
+        'https://pypi.org/project/Pillow/'
     )
     raise
 else:
