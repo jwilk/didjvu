@@ -30,7 +30,7 @@ option:
 
 .. _Python:
    https://www.python.org/
-.. _PIL:
+.. _Pillow:
    https://pypi.org/project/Pillow/
 .. _DjVuLibre:
    http://djvu.sourceforge.net/
