@@ -42,4 +42,10 @@ def check(filename):
                 cls = djvu_single
     return cls
 
+__all__ = [
+    'check',
+    'djvu',
+    'djvu_single',
+]
+
 # vim:ts=4 sts=4 sw=4 et
