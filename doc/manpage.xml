@@ -111,7 +111,7 @@ more details.
 <refsection>
     <title>Description</title>
     <para>
-        <command>didjvu</command> uses the <ulink url='http://gamera.informatik.hsnr.de/'>Gamera</ulink> framework
+        <command>didjvu</command> uses the <ulink url='https://gamera.informatik.hsnr.de/'>Gamera</ulink> framework
         to separate foreground/background layers, which can be then encoded into a DjVu file.
     </para>
     <para>
@@ -315,7 +315,7 @@ more details.
                 </para>
                 <para>
                     Please consult the
-                    <ulink url='http://gamera.informatik.hsnr.de/docs/gamera-docs/binarization.html'>Gamera documentation</ulink>
+                    <ulink url='https://gamera.informatik.hsnr.de/docs/gamera-docs/binarization.html'>Gamera documentation</ulink>
                     for details.
                 </para>
             </listitem>
@@ -332,7 +332,7 @@ more details.
                 </para>
                 <para>
                     Please consult the
-                    <ulink url='http://gamera.informatik.hsnr.de/docs/gamera-docs/binarization.html'>Gamera documentation</ulink>
+                    <ulink url='https://gamera.informatik.hsnr.de/docs/gamera-docs/binarization.html'>Gamera documentation</ulink>
                     for details.
                 </para>
             </listitem>

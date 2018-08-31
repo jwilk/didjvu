@@ -42,7 +42,7 @@ except ImportError as ex:  # no coverage
     utils.enhance_import_error(ex,
         'Gamera',
         'python-gamera',
-        'http://gamera.informatik.hsnr.de/'
+        'https://gamera.informatik.hsnr.de/'
     )
     raise
 del gamera  # quieten pyflakes
