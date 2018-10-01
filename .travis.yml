@@ -38,7 +38,6 @@ cache:
   directories:
   - $HOME/.ccache
 before_install:
-- pillow_suffix===4.3.0
 - if [[ $TRAVIS_PYTHON_VERSION = 2.6 ]]; then pillow_suffix===3.4.2; fi
 - pyflakes=pyflakes
 - if [[ $TRAVIS_PYTHON_VERSION = 2.6 ]]; then pyflakes='pyflakes<2'; fi
