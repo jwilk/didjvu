@@ -282,7 +282,7 @@ class test_argument_parser():
 
     def test_help(self):
         t = self._test_help
-        yield t
+        yield t,
         yield t, 'bundle'
         yield t, 'encode'
         yield t, 'separate'
