@@ -42,8 +42,8 @@ else
 endif
 
 .PHONY: test
-test:
-	$(PYTHON) -c 'import nose; nose.main()' --verbose
+test: didjvu
+	$(PYTHON) $(<) --run-tests --verbose tests/
 
 .PHONY: test-installed
 test-installed: $(or $(shell command -v didjvu;),$(bindir)/didjvu)
