@@ -45,6 +45,10 @@ endif
 test:
 	$(PYTHON) -c 'import nose; nose.main()' --verbose
 
+.PHONY: test-installed
+test-installed: $(or $(shell command -v didjvu;),$(bindir)/didjvu)
+	$(<) --run-tests --verbose tests/
+
 .PHONY: clean
 clean:
 	find . -type f -name '*.py[co]' -delete
