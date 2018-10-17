@@ -125,6 +125,14 @@ def _get_method_params_help(methods):
             result += ['  - ' + arg_help]
     return '\n'.join(result)
 
+class TestAction(argparse.Action):
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        import nose
+        argv = ['nosetests']
+        argv += values
+        nose.main(argv=argv)
+
 class ArgumentParser(argparse.ArgumentParser):
 
     class defaults:
@@ -141,6 +149,7 @@ class ArgumentParser(argparse.ArgumentParser):
     def __init__(self, methods, default_method):
         argparse.ArgumentParser.__init__(self, formatter_class=argparse.RawDescriptionHelpFormatter)
         self.add_argument('--version', action=version.VersionAction)
+        self.add_argument('--run-tests', nargs=argparse.REMAINDER, action=TestAction, help=argparse.SUPPRESS)
         p_separate = self.add_subparser('separate', help='generate masks for images')
         p_encode = self.add_subparser('encode', help='convert images to single-page DjVu documents')
         p_bundle = self.add_subparser('bundle', help='convert images to bundled multi-page DjVu document')
