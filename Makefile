@@ -25,6 +25,7 @@ all: ;
 .PHONY: install
 install: didjvu
 	install -d -m755 $(DESTDIR)$(bindir)
+	$(PYTHON) - < lib/__init__.py  # Python version check
 	python_exe=$$($(PYTHON) -c 'import sys; print(sys.executable)') && \
 	sed \
 		-e "1 s@^#!.*@#!$$python_exe@" \
