@@ -242,7 +242,7 @@ class ArgumentParser(argparse.ArgumentParser):
                 '-q', '--quiet', dest='verbosity', action='store_const', const=[],
                 help='no informational messages'
             )
-            p.add_argument('input', metavar='<input-image>', nargs='+')
+            p.add_argument('input', metavar='IMAGE', nargs='+')
             p.set_defaults(
                 masks=[],
                 fg_bg_defaults=None,
