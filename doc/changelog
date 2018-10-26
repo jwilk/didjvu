@@ -4,12 +4,16 @@ didjvu (0.8.3) UNRELEASED; urgency=low
     The new build system if based on makefiles.
   * Drop support for Gamera < 3.3.2.
   * Require Pillow, instead of long unmaintained Python Imaging Library.
+  * Consistently use uppercase for CLI metavariables.
   * Improve error handling.
   * Reorganize documentation.
   * Point to Python 2 documentation in the manual page.
     This is the version didjvu uses.
+  * Use HTTPS for gamera.informatik.hsnr.de URLs.
+  * Update PyPI URLs.
+  * Improve the test suite.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Wed, 17 Oct 2018 17:39:32 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Fri, 26 Oct 2018 23:56:48 +0200
 
 didjvu (0.8.2) unstable; urgency=low
 
