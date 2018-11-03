@@ -47,4 +47,20 @@ option:
 .. _pyexiv2:
    https://launchpad.net/pyexiv2
 
+Installation
+============
+
+You can use didjvu without installing it,
+straight out of unpacked source tarball or a VCS checkout.
+
+It's also possible to install it system-wide with::
+
+   # make install
+
+By default, ``make install`` installs the package to ``/usr/local``.
+You can specify a different installation prefix
+by setting the ``PREFIX`` variable, e.g.::
+
+   $ make install PREFIX="$HOME/.local"
+
 .. vim:ft=rst ts=3 sts=3 sw=3 et tw=72
