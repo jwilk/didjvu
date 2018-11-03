@@ -21,7 +21,7 @@ didjvu (0.8.2) unstable; urgency=low
   * Make --version print to stdout, not stderr.
   * Improve the setup script:
     + Fix the “install” command.
-    + Use distutils644 to sanitize tarball permissions etc.
+    + Use distutils644 to normalize tarball permissions etc.
   * Update pyexiv2 homepage URL.
 
  -- Jakub Wilk <jwilk@jwilk.net>  Mon, 15 Jan 2018 19:39:50 +0100
