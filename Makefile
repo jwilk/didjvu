@@ -27,20 +27,20 @@ python_exe = $(shell $(PYTHON) -c 'import sys; print(sys.executable)')
 .PHONY: install
 install: didjvu
 	$(PYTHON) - < lib/__init__.py  # Python version check
-	install -d -m755 $(DESTDIR)$(bindir)
+	install -d $(DESTDIR)$(bindir)
 	sed \
 		-e "1 s@^#!.*@#!$(python_exe)@" \
 		-e "s#^basedir = .*#basedir = '$(basedir)/'#" \
 		$(<) > $(DESTDIR)$(bindir)/$(<)
 	chmod 0755 $(DESTDIR)$(bindir)/$(<)
-	install -d -m755 $(DESTDIR)$(basedir)/lib/xmp
-	( find lib -type f ! -name '*.py[co]' ) \
-	| xargs -t -I {} install -p -m644 {} $(DESTDIR)$(basedir)/{}
+	install -d $(DESTDIR)$(basedir)/lib/xmp
+	install -p -m644 lib/xmp/*.py $(DESTDIR)$(basedir)/lib/xmp/
+	install -p -m644 lib/*.py $(DESTDIR)$(basedir)/lib/
 ifeq "$(wildcard doc/*.1)" ""
 	# run "$(MAKE) -C doc" to build the manpage
 else
 	install -d $(DESTDIR)$(PREFIX)/share/man/man1
-	install -m644 doc/$(<).1 $(DESTDIR)$(PREFIX)/share/man/man1/$(<).1
+	install -m644 doc/$(<).1 $(DESTDIR)$(PREFIX)/share/man/man1/
 endif
 
 .PHONY: test
