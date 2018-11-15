@@ -31,8 +31,9 @@ install: didjvu
 	sed \
 		-e "1 s@^#!.*@#!$(python_exe)@" \
 		-e "s#^basedir = .*#basedir = '$(basedir)/'#" \
-		$(<) > $(DESTDIR)$(bindir)/$(<)
-	chmod 0755 $(DESTDIR)$(bindir)/$(<)
+		$(<) > $(<).tmp
+	install $(<).tmp $(DESTDIR)$(bindir)/$(<)
+	rm $(<).tmp
 	install -d $(DESTDIR)$(basedir)/lib/xmp
 	install -p -m644 lib/xmp/*.py $(DESTDIR)$(basedir)/lib/xmp/
 	install -p -m644 lib/*.py $(DESTDIR)$(basedir)/lib/
@@ -59,6 +60,7 @@ clean:
 	find . -type f -name '*.py[co]' -delete
 	find . -type d -name '__pycache__' -delete
 	rm -f .coverage
+	rm -f *.tmp
 
 .error = GNU make is required
 
