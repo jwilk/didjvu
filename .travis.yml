@@ -1,5 +1,4 @@
 dist: trusty
-sudo: false
 language: python
 addons:
   apt:
@@ -32,7 +31,6 @@ matrix:
   - python: "2.7"
     env: GAMERA_VERSION=3.4.3
     dist: xenial
-    sudo: true
 cache:
   pip: true
   directories:
