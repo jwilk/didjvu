@@ -159,7 +159,7 @@ def interim_environ(**override):
             os.environ.pop(key, None)
         os.environ.update(copy)
 
-class IsolatedError(Exception):
+class IsolatedException(Exception):
     pass
 
 def _n_relevant_tb_levels(tb):
@@ -209,7 +209,7 @@ def fork_isolation(f):
             msg = msg.rstrip('\n')
             pid, status = os.waitpid(pid, 0)
             if status == (EXIT_EXCEPTION << 8):
-                raise IsolatedError('\n\n' + msg)
+                raise IsolatedException('\n\n' + msg)
             elif status == (EXIT_SKIP_TEST << 8):
                 raise SkipTest(msg)
             elif status == 0 and msg == '':
