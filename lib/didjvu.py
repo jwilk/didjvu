@@ -193,7 +193,6 @@ class main():
     def __init__(self):
         parser = cli.ArgumentParser(gamera.methods, default_method='djvu')
         parser.parse_args(actions=self)
-        setup_logging()
 
     def check_common(self, o):
         if len(o.masks) == 0:
@@ -203,6 +202,7 @@ class main():
                 len(o.input),
                 len(o.masks)
             )
+        setup_logging()
         ipc_logger = logging.getLogger('didjvu.ipc')
         assert logger is not None
         log_level = {
