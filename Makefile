@@ -49,11 +49,11 @@ endif
 
 .PHONY: test
 test: didjvu
-	$(PYTHON) $(<) --run-tests --verbose tests/
+	$(PYTHON) $(<) --test --verbose tests/
 
 .PHONY: test-installed
 test-installed: $(or $(shell command -v didjvu;),$(bindir)/didjvu)
-	didjvu --run-tests --verbose tests/
+	didjvu --test --verbose tests/
 
 .PHONY: clean
 clean:
