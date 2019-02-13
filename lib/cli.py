@@ -150,6 +150,7 @@ class ArgumentParser(argparse.ArgumentParser):
         argparse.ArgumentParser.__init__(self, formatter_class=argparse.RawDescriptionHelpFormatter)
         self.add_argument('--version', action=version.VersionAction)
         self.add_argument('--run-tests', nargs=argparse.REMAINDER, action=TestAction, help=argparse.SUPPRESS)
+        # --run-tests is used internally to implement “make test(-installed)”; do not use directly
         p_separate = self.add_subparser('separate', help='generate masks for images')
         p_encode = self.add_subparser('encode', help='convert images to single-page DjVu documents')
         p_bundle = self.add_subparser('bundle', help='convert images to bundled multi-page DjVu document')
