@@ -6,9 +6,9 @@ didjvu (0.8.3) UNRELEASED; urgency=low
   * Require Pillow, instead of long unmaintained Python Imaging Library.
   * Consistently use uppercase for CLI metavariables.
   * Improve error handling.
-  * Reorganize documentation.
-  * Point to Python 2 documentation in the manual page.
-    This is the version didjvu uses.
+  * Reorganize and improve documentation.
+    + Point to Python 2 documentation in the manual page.
+      This is the version didjvu uses.
   * Use HTTPS for gamera.informatik.hsnr.de URLs.
   * Update PyPI URLs.
   * Improve the test suite.
