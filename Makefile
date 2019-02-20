@@ -18,6 +18,7 @@ DESTDIR =
 
 bindir = $(PREFIX)/bin
 basedir = $(PREFIX)/share/didjvu
+mandir = $(PREFIX)/share/man
 
 .PHONY: all
 all: ;
@@ -43,8 +44,8 @@ endif
 ifeq "$(wildcard doc/*.1)" ""
 	# run "$(MAKE) -C doc" to build the manpage
 else
-	install -d $(DESTDIR)$(PREFIX)/share/man/man1
-	install -m644 doc/$(<).1 $(DESTDIR)$(PREFIX)/share/man/man1/
+	install -d $(DESTDIR)$(mandir)/man1
+	install -m644 doc/$(<).1 $(DESTDIR)$(mandir)/man1/
 endif
 
 .PHONY: test
