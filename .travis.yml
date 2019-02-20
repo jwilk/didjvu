@@ -17,7 +17,7 @@ addons:
     - minidjvu
     - python-gi
     - xsltproc
-matrix:
+jobs:
   include:
   - python: "2.6"
     env: GAMERA_VERSION=3.3.2
