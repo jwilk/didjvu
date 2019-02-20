@@ -66,7 +66,8 @@ script:
 - make test
 - py2diatra .
 - pyflakes .
-- make -C doc all check
+- make -C doc check
+- make -C doc all
 - make install PREFIX=$HOME/.local
 - cd /
 - didjvu --version
