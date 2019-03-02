@@ -1,4 +1,4 @@
-didjvu (0.8.3) UNRELEASED; urgency=low
+didjvu (0.9) UNRELEASED; urgency=low
 
   * Remake the build system.
     The new build system if based on makefiles.
@@ -13,7 +13,7 @@ didjvu (0.8.3) UNRELEASED; urgency=low
   * Update PyPI URLs.
   * Improve the test suite.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Fri, 26 Oct 2018 23:56:48 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Sat, 02 Mar 2019 19:26:03 +0100
 
 didjvu (0.8.2) unstable; urgency=low
 
