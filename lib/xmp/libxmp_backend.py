@@ -64,8 +64,8 @@ class MetadataBase(object):
             rc = backend.set_property_int(namespace, key, value)
         elif isinstance(value, list) and len(value) == 0:
             rc = backend.set_property(namespace, key, '',
-                 prop_value_is_array=True,
-                 prop_array_is_ordered=True
+                prop_value_is_array=True,
+                prop_array_is_ordered=True
             )
         else:
             if isinstance(value, timestamp.Timestamp):
