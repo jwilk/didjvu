@@ -120,7 +120,7 @@ def _get_method_params_help(methods):
                     message = 'unexpected default value for {method}.{arg}: {default}'.format(method=name, arg=arg.name, default=arg.default)
                     raise NotImplementedError(message)
             else:
-                message = 'unexpected type for {method}.{arg}: {tp}'.format(method=name, arg=arg.name, default=arg.default, tp=arg.type.__name__)
+                message = 'unexpected type for {method}.{arg}: {tp}'.format(method=name, arg=arg.name, tp=arg.type.__name__)
                 raise NotImplementedError(message)
             result += ['  - ' + arg_help]
     return '\n'.join(result)
