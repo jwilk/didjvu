@@ -50,7 +50,7 @@ class Proxy(object):
             return object.__setattr__(self, name, value)
         self._wait_fn()
         self._wait_fn = int
-        setattr(self._object, name, value)
+        return setattr(self._object, name, value)
 
 __all__ = [
     'Proxy',
