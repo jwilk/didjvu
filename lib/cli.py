@@ -107,7 +107,10 @@ def _get_method_params_help(methods):
                 arg_help += '=' + 'NX'[arg.type is float]
                 arg_help_paren = []
                 if (arg.min is None) != (arg.max is None):
-                    message = 'inconsistent limits for {method}.{arg}: min={min}, max={max}'.format(method=name, arg=arg.name, min=arg.min, max=arg.max)
+                    message = 'inconsistent limits for {method}.{arg}: min={min}, max={max}'.format(
+                        method=name, arg=arg.name,
+                        min=arg.min, max=arg.max
+                    )
                     raise NotImplementedError(message)
                 if arg.min is not None:
                     arg_help_paren += ['{0} .. {1}'.format(arg.min, arg.max)]
@@ -117,7 +120,10 @@ def _get_method_params_help(methods):
                     arg_help += ' ({0})'.format(', '.join(arg_help_paren))
             elif arg.type is bool:
                 if arg.default is not False:
-                    message = 'unexpected default value for {method}.{arg}: {default}'.format(method=name, arg=arg.name, default=arg.default)
+                    message = 'unexpected default value for {method}.{arg}: {default}'.format(
+                        method=name, arg=arg.name,
+                        default=arg.default
+                    )
                     raise NotImplementedError(message)
             else:
                 message = 'unexpected type for {method}.{arg}: {tp}'.format(method=name, arg=arg.name, tp=arg.type.__name__)
