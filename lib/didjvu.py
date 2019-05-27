@@ -196,7 +196,7 @@ def format_compression_info(bytes_in, bytes_out, bits_per_pixel):
     )
     return msg
 
-class main():
+class main(object):
 
     def __init__(self):
         parser = cli.ArgumentParser(gamera.methods, default_method='djvu')

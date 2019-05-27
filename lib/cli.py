@@ -141,7 +141,7 @@ class TestAction(argparse.Action):
 
 class ArgumentParser(argparse.ArgumentParser):
 
-    class defaults:
+    class defaults(object):
         page_id_template = '{base-ext}.djvu'
         pages_per_dict = 1
         dpi = None

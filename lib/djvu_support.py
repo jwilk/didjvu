@@ -54,7 +54,7 @@ class Crcb(object):
     def __str__(self):
         return self._name
 
-class CRCB:
+class CRCB(object):
 
     values = [
         Crcb(3, 'full'),

@@ -28,7 +28,7 @@ def enhance_import_error(exception, package, debian_package, homepage):
         message += ' <{url}>'.format(url=homepage)
     exception.args = [message]
 
-class namespace():
+class namespace(object):
     pass
 
 class Proxy(object):
