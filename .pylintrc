@@ -19,6 +19,9 @@ reports = no
 score = no
 msg-template = {path}:{line}: {C}: {symbol} [{obj}] {msg}
 
+[SIMILARITIES]
+min-similarity-lines = 8
+
 [FORMAT]
 max-line-length = 140
 expected-line-ending-format = LF
