@@ -182,13 +182,21 @@ def generate_mask(filename, image, method, params):
     else:
         return gamera.load_image(filename)
 
-class main():
-
-    compression_info_template = (
+def format_compression_info(bytes_in, bytes_out, bits_per_pixel):
+    ratio = 1.0 * bytes_in / bytes_out
+    percent_saved = (1.0 * bytes_in - bytes_out) * 100 / bytes_in
+    msg = (
         '{bits_per_pixel:.3f} bits/pixel; '
         '{ratio:.3f}:1, {percent_saved:.2f}% saved, '
         '{bytes_in} bytes in, {bytes_out} bytes out'
+    ).format(
+        bits_per_pixel=bits_per_pixel,
+        ratio=ratio, percent_saved=percent_saved,
+        bytes_in=bytes_in, bytes_out=bytes_out,
     )
+    return msg
+
+class main():
 
     def __init__(self):
         parser = cli.ArgumentParser(gamera.methods, default_method='djvu')
@@ -292,9 +300,7 @@ class main():
         finally:
             djvu_file.close()
         bits_per_pixel = 8.0 * bytes_out / (width * height)
-        ratio = 1.0 * bytes_in / bytes_out
-        percent_saved = (1.0 * bytes_in - bytes_out) * 100 / bytes_in
-        compression_info = self.compression_info_template.format(**locals())
+        compression_info = format_compression_info(bytes_in, bytes_out, bits_per_pixel)
         logger.info('- ' + compression_info)
         if xmp_output:
             logger.info('- saving XMP metadata')
@@ -384,9 +390,7 @@ class main():
             finally:
                 djvu_file.close()
         bits_per_pixel = float('nan')  # FIXME!
-        ratio = 1.0 * bytes_in / bytes_out
-        percent_saved = (1.0 * bytes_in - bytes_out) * 100 / bytes_in
-        compression_info = self.compression_info_template.format(**locals())
+        compression_info = format_compression_info(bytes_in, bytes_out, bits_per_pixel)
         logger.nosy(compression_info)
 
     def _bundle_complex_page(self, o, page, minidjvu_in_dir, image_filename, mask_filename, pixels):
@@ -471,9 +475,7 @@ class main():
                 finally:
                     djvu_file.close()
         bits_per_pixel = 8.0 * bytes_out / pixels
-        ratio = 1.0 * bytes_in / bytes_out
-        percent_saved = (1.0 * bytes_in - bytes_out) * 100 / bytes_in
-        compression_info = self.compression_info_template.format(**locals())
+        compression_info = format_compression_info(bytes_in, bytes_out, bits_per_pixel)
         logger.nosy(compression_info)
 
 __all__ = ['main']
