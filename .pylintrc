@@ -6,6 +6,7 @@ disable =
     bad-continuation,
     fixme,
     invalid-name,
+    logging-not-lazy,
     no-init,
     superfluous-parens,
     too-few-public-methods,
