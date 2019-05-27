@@ -342,7 +342,7 @@ class ArgumentParser(argparse.ArgumentParser):
         o.params = self._parse_params(o)
         try:
             if o.xmp and not xmp.backend:
-                raise xmp.import_error
+                raise xmp.import_error  # pylint: disable=raising-bad-type
         except AttributeError:
             pass
         return action(o)
