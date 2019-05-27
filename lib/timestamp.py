@@ -50,10 +50,13 @@ class Timestamp(object):
         tzdelta = self._tzdelta
         class tz(datetime.tzinfo):
             def utcoffset(self, dt):
+                del dt
                 return tzdelta
             def dst(self, dt):
+                del dt
                 return datetime.timedelta(0)
             def tzname(self, dt):
+                del dt
                 return
         return cls(*self._localtime[:6], tzinfo=tz())
 
