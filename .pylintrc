@@ -8,8 +8,8 @@ disable =
     invalid-name,
     superfluous-parens,
     too-few-public-methods,
-    too-many-locals,
     too-many-arguments,
+    too-many-locals,
 
 [BASIC]
 no-docstring-rgx = .*
