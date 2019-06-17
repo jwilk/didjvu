@@ -225,6 +225,10 @@ def init():
     result = _init()
     test_image = Image((0, 0), (5, 5), RGB)
     test_string = test_image._to_raw_string()
+    try:
+        sys.getrefcount
+    except AttributeError:
+        return result
     refcount = sys.getrefcount(test_string)
     if refcount >= 3:  # no coverage
         # See: https://groups.yahoo.com/neo/groups/gamera-devel/conversations/topics/2068
