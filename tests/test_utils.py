@@ -13,6 +13,7 @@
 # FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 # for more details.
 
+import gc
 import sys
 
 from .tools import (
@@ -87,6 +88,7 @@ def test_proxy():
     assert_equal(obj.x, 37)
     Del.ok = True
     del proxy
+    gc.collect()
     assert_false(Del.ok)
 
 # vim:ts=4 sts=4 sw=4 et
