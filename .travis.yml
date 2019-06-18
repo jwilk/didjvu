@@ -47,8 +47,8 @@ before_install:
   fi
 - gexiv2_version=$(dpkg-query -Wf '${source:Version}' gir1.2-gexiv2-0.10)
 - if [[ $gexiv2_version = 0.10.[3-9]* ]]; then if_pyexiv2=:; else if_gexiv2=:; fi
-install:
 - export PATH="/usr/lib/ccache:$PATH"
+install:
 - wget "$gamera_url" -O "gamera-${GAMERA_VERSION}.tar.gz"
 - tar -xvzf gamera-*.tar.gz
 - ( cd gamera-*/ && echo '__version__ = "0.0"' > wx.py)
