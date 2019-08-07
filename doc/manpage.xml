@@ -270,7 +270,7 @@ more details.
                     <varlistentry>
                         <term><literal>brink</literal></term>
                         <listitem><para>Brink and Pendock's minimum-cross entropy method</para>
-                            <note><para>this method requires Gamera ≥ 3.4.0</para></note>
+                            <para>This method requires Gamera ≥ 3.4.0.</para>
                         </listitem>
                     </varlistentry>
                     <varlistentry>
@@ -527,7 +527,7 @@ more details.
                 <para>
                     Create sidecar <ulink url='https://www.adobe.com/devnet/xmp.html'>XMP</ulink> metadata.
                 </para>
-                <note><para>This option is experimental!</para></note>
+                <para>This option is experimental!</para>
             </listitem>
         </varlistentry>
         </variablelist>
