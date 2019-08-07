@@ -9,11 +9,12 @@ didjvu (0.9) UNRELEASED; urgency=low
   * Reorganize and improve documentation.
     + Point to Python 2 documentation in the manual page.
       This is the version didjvu uses.
+    + Improve typography in the manual page.
   * Use HTTPS for gamera.informatik.hsnr.de URLs.
   * Update PyPI URLs.
   * Improve the test suite.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Sat, 02 Mar 2019 19:26:03 +0100
+ -- Jakub Wilk <jwilk@jwilk.net>  Wed, 07 Aug 2019 13:07:47 +0200
 
 didjvu (0.8.2) unstable; urgency=low
 
