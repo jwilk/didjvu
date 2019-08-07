@@ -27,6 +27,7 @@ all: didjvu.1
 didjvu.1: manpage.xml
 	$(xsltproc) $(xsl) $(<)
 	perl -pi -e 's#^(\\%https?://.*)#\\m[blue]\\fI$$1\\fR\\m[]#' $(@)
+	perl -pi -e 's/([a-z])\\[*][(]Aq([a-z])/$$1\x27$$2/g' $(@)  # prefer ' to \(aq when used as an apostrophe
 
 .PHONY: check
 check: check-changelog check-rst check-xml
