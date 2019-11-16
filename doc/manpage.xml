@@ -19,7 +19,7 @@ more details.
 
 <!DOCTYPE refentry PUBLIC '-//OASIS//DTD DocBook XML V4.5//EN' 'http://www.docbook.org/xml/4.5/docbookx.dtd'
 [
-    <!ENTITY version '0.9'>
+    <!ENTITY version '0.9.1'>
 ]>
 
 <refentry>
@@ -27,7 +27,7 @@ more details.
 <refentryinfo>
     <title>didjvu manual</title>
     <productname>didjvu</productname>
-    <date>2019-08-07</date>
+    <date>2019-11-16</date>
     <author>
         <firstname>Jakub</firstname> <surname>Wilk</surname>
         <email>jwilk@jwilk.net</email>

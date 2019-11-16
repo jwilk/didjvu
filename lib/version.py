@@ -22,7 +22,7 @@ from __future__ import print_function
 import argparse
 import sys
 
-__version__ = '0.9'
+__version__ = '0.9.1'
 
 def get_software_agent():
     import gamera
