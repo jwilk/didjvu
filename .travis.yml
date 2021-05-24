@@ -19,8 +19,10 @@ addons:
     - xsltproc
 jobs:
   include:
-  - python: "2.6"
-    env: GAMERA_VERSION=3.3.2
+  - python: "2.7"
+    env:
+    - GAMERA_VERSION=3.3.2
+    - PILLOW=3.4.2
     addons:
       apt:
         packages:
@@ -34,9 +36,6 @@ cache:
   directories:
   - $HOME/.ccache
 before_install:
-- if [[ $TRAVIS_PYTHON_VERSION = 2.6 ]]; then pillow_suffix===3.4.2; fi
-- pyflakes=pyflakes
-- if [[ $TRAVIS_PYTHON_VERSION = 2.6 ]]; then pyflakes='pyflakes<2'; fi
 - gamera_url="https://github.com/hsnr-gamera/gamera/releases/download/$GAMERA_VERSION/gamera-${GAMERA_VERSION}.tar.gz";
 - if [[ $GAMERA_VERSION = 3.3.2 ]]; then
     gamera_url="https://github.com/hsnr-gamera/gamera/archive/173cbefd7046a526c9238c337c15dc75bef42924.tar.gz";
@@ -52,13 +51,13 @@ install:
 - ( cd gamera-*/ && echo '__version__ = "0.0"' > wx.py)
 - ( cd gamera-*/ && python setup.py install )
 - rm -r gamera-*
-- pip install --verbose pillow${pillow_suffix}
+- pip install --verbose pillow${PILLOW:+==$PILLOW}
 - pip install python-xmp-toolkit
 - $if_pyexiv2 pip install --verbose git+https://github.com/escaped/pyexiv2
 - $if_gexiv2 cp -a /usr/lib/python2.7/dist-packages/gi $VIRTUAL_ENV/lib/python2.7/site-packages/
 - $if_gexiv2 mv -v $VIRTUAL_ENV/lib/python2.7/site-packages/gi/_gi{.x86_64-linux-gnu,}.so
 - pip install pydiatra
-- pip install $pyflakes
+- pip install pyflakes
 - pip install docutils pygments
 script:
 - make test
