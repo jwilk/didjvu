@@ -21,7 +21,7 @@ jobs:
   include:
   - python: "2.7"
     env:
-    - GAMERA_VERSION=3.3.2
+    - GAMERA=3.3.2
     - PILLOW=3.4.2
     addons:
       apt:
@@ -30,14 +30,14 @@ jobs:
         - g++-4.6
     dist: trusty
   - python: "2.7"
-    env: GAMERA_VERSION=3.4.3
+    env: GAMERA=3.4.3
 cache:
   pip: true
   directories:
   - $HOME/.ccache
 before_install:
-- gamera_url="https://github.com/hsnr-gamera/gamera/releases/download/$GAMERA_VERSION/gamera-${GAMERA_VERSION}.tar.gz";
-- if [[ $GAMERA_VERSION = 3.3.2 ]]; then
+- gamera_url="https://github.com/hsnr-gamera/gamera/releases/download/$GAMERA/gamera-${GAMERA}.tar.gz";
+- if [[ $GAMERA = 3.3.2 ]]; then
     gamera_url="https://github.com/hsnr-gamera/gamera/archive/173cbefd7046a526c9238c337c15dc75bef42924.tar.gz";
     export CC=gcc-4.6;
     export CXX=g++-4.6;
@@ -46,7 +46,7 @@ before_install:
 - if [[ $gexiv2_version = 0.10.[3-9]* ]]; then if_pyexiv2=:; else if_gexiv2=:; fi
 - export PATH="/usr/lib/ccache:$PATH"
 install:
-- wget "$gamera_url" -O "gamera-${GAMERA_VERSION}.tar.gz"
+- wget "$gamera_url" -O "gamera-${GAMERA}.tar.gz"
 - tar -xvzf gamera-*.tar.gz
 - ( cd gamera-*/ && echo '__version__ = "0.0"' > wx.py)
 - ( cd gamera-*/ && python setup.py install )
