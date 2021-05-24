@@ -1,8 +1,10 @@
 didjvu (0.9.1) UNRELEASED; urgency=low
 
-  * 
+  * Drop support for Python 2.6.
+  * Improve the test suite:
+    + Fix compatibility with Exiv2 ≥ 0.27.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Sat, 16 Nov 2019 18:40:26 +0100
+ -- Jakub Wilk <jwilk@jwilk.net>  Mon, 24 May 2021 13:34:47 +0200
 
 didjvu (0.9) unstable; urgency=low
 
