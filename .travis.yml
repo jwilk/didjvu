@@ -29,8 +29,6 @@ jobs:
     dist: trusty
   - python: "2.7"
     env: GAMERA_VERSION=3.4.3
-  - python: "2.7"
-    env: GAMERA_VERSION=3.4.3
 cache:
   pip: true
   directories:
