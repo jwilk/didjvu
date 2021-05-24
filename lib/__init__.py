@@ -19,8 +19,8 @@ didjvu's private modules
 
 import sys
 
-if sys.version_info < (2, 6):
-    raise RuntimeError('Python >= 2.6 is required')  # no coverage
+if sys.version_info < (2, 7):
+    raise RuntimeError('Python 2.7 is required')  # no coverage
 if sys.version_info >= (3, 0):
     raise RuntimeError('Python 2.X is required')  # no coverage
 

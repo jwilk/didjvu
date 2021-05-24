@@ -14,12 +14,11 @@ Prerequisites
 
 The following software is required:
 
-* Python_ (2.6 or 2.7)
+* Python_ 2.7
 * Gamera_ (≥ 3.3.2)
 * Pillow_
 * DjVuLibre_ (≥ 3.5.22)
 * minidjvu_ (≥ 0.8) for the ``--pages-per-dict``/``-p`` option
-* argparse_ (only for Python 2.6)
 
 Additionally, one of the following libraries is needed for the ``--xmp``
 option:
@@ -36,8 +35,6 @@ option:
    http://djvu.sourceforge.net/
 .. _minidjvu:
    http://minidjvu.sourceforge.net/
-.. _argparse:
-   https://pypi.org/project/argparse/
 .. _GExiv2:
    https://wiki.gnome.org/Projects/gexiv2
 .. _PyGI:

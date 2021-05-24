@@ -175,10 +175,7 @@ class test_argument_parser():
     )
     actions = MockActions()
 
-    if sys.version_info >= (2, 7):
-        anames = collections.OrderedDict()
-    else:
-        anames = {}
+    anames = collections.OrderedDict()
     anames['separate'] = 1
     anames['encode'] = 1
     anames['bundle'] = 1

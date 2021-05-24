@@ -13,10 +13,10 @@
 # FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 # for more details.
 
+import importlib
 import io
 import logging
 import os
-import sys
 import xml.etree.cElementTree as etree
 
 from .tools import (
@@ -35,16 +35,10 @@ from lib import temporary
 from lib import xmp
 from lib.xmp import namespaces as ns
 
-if sys.version_info >= (2, 7):
-    from importlib import import_module
-else:
-    def import_module(mod):
-        return __import__(mod, fromlist=[''], level=0)
-
 def import_backend(name):
     mod_name = 'lib.xmp.{0}_backend'.format(name)
     try:
-        backend = import_module(mod_name)
+        backend = importlib.import_module(mod_name)
     except ImportError as import_error:
         class backend:
             # dummy replacement
@@ -175,7 +169,6 @@ class test_metadata():
             logging.debug(repr(xml_meta))
             xml_meta = io.StringIO(xml_meta)
             iterator = etree.iterparse(xml_meta, events=('start', 'end'))
-            iterator = iter(iterator)  # odd, but needed for Python 2.6
             def pop():
                 return next(iterator)
             event, element = pop()
