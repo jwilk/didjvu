@@ -338,7 +338,7 @@ _page_id_chars = re.compile('^[A-Za-z0-9_+.-]*$').match
 def validate_page_id(page_id):
     if not _page_id_chars(page_id):
         raise ValueError('page identifier must consist only of lowercase ASCII letters, digits, _, +, - and dot')
-    if page_id[:1] in ('.', '+', '-'):
+    if page_id[:1] in {'.', '+', '-'}:
         raise ValueError('page identifier cannot start with +, - or a dot')
     if '..' in page_id:
         raise ValueError('page identifier cannot contain two consecutive dots')

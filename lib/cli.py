@@ -103,7 +103,7 @@ def _get_method_params_help(methods):
         result += ['  ' + name]
         for arg in method.args.itervalues():
             arg_help = arg.name
-            if arg.type in (int, float):
+            if arg.type in {int, float}:
                 arg_help += '=' + 'NX'[arg.type is float]
                 arg_help_paren = []
                 if (arg.min is None) != (arg.max is None):

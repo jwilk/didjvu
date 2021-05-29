@@ -86,11 +86,11 @@ def load_image(filename):
         image = _load_image(filename)
     except IOError:
         # Gamera supports importing only 8-bit and RGB from PIL:
-        if pil_image.mode[:2] in ('1', '1;', 'I', 'I;', 'L;'):
+        if pil_image.mode[:2] in {'1', '1;', 'I', 'I;', 'L;'}:
             pil_image = pil_image.convert('L')
-        elif pil_image.mode not in ('RGB', 'L'):
+        elif pil_image.mode not in {'RGB', 'L'}:
             pil_image = pil_image.convert('RGB')
-        assert pil_image.mode in ('RGB', 'L')
+        assert pil_image.mode in {'RGB', 'L'}
         try:
             # Gamera still uses tostring(), which was deprecated,
             # and finally removed in Pillow 3.0.0.
