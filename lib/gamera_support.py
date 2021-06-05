@@ -120,7 +120,7 @@ class Argument(object):
             raise NotImplementedError(
                 'argument {0}: unsupported type {1!r}'.format(self.name, arg)
             )  # no coverage
-        if self.type in (int, float):
+        if self.type in {int, float}:
             [self.min, self.max] = arg.rng
             if self.min == -gamera.args.DEFAULT_MAX_ARG_NUMBER:
                 self.min = None
