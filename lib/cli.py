@@ -204,13 +204,13 @@ class ArgumentParser(argparse.ArgumentParser):
                         def_slices = get_slice_repr(default.fg_slices)
                         p.add_argument(
                             '--fg-slices', type=slice_type(1), metavar='N',
-                            help='number of slices for background (default: {slices})'.format(slices=def_slices)
+                            help='number of slices for foreground (default: {slices})'.format(slices=def_slices)
                         )
                     else:
                         def_slices = get_slice_repr(default.bg_slices)
                         p.add_argument(
                             '--bg-slices', type=slice_type(), metavar='N+...+N',
-                            help='number of slices in each foreground chunk (default: {slices})'.format(slices=def_slices)
+                            help='number of slices in each background chunk (default: {slices})'.format(slices=def_slices)
                         )
                     default_crcb = getattr(default, '{lr}_crcb'.format(lr=layer))
                     p.add_argument(
