@@ -444,9 +444,10 @@ class main(object):
                     os.chdir(minidjvu_out_dir)
                 arguments = ['minidjvu',
                     '--indirect',
-                    '--aggression', str(o.loss_level),
                     '--pages-per-dict', str(o.pages_per_dict),
                 ]
+                if o.loss_level > 0:
+                    arguments += ['--aggression', str(o.loss_level)]
                 assert len(page_info) > 1  # minidjvu won't create single-page indirect documents
                 arguments += [page.sjbz_symlink for page in page_info]
                 index_filename = temporary.name(prefix='__index__.', suffix='.djvu', dir=minidjvu_out_dir)
