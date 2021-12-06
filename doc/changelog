@@ -1,10 +1,17 @@
 didjvu (0.9.1) UNRELEASED; urgency=low
 
+  * Fix -p/--pages-per-dict in lossless mode.
+    Thanks to Stephen Jones and @rmast for the bug reports.
+    https://github.com/jwilk/didjvu/issues/20
+    https://github.com/jwilk/didjvu/issues/10
+  * Fix help message for --fg-slices/--bg-slices.
+  * Drop support for Gamera < 3.4.
   * Drop support for Python 2.6.
   * Improve the test suite:
     + Fix compatibility with Exiv2 ≥ 0.27.
+    + Add code to help debugging image loading bugs.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Mon, 24 May 2021 13:34:47 +0200
+ -- Jakub Wilk <jwilk@jwilk.net>  Mon, 06 Dec 2021 22:41:55 +0100
 
 didjvu (0.9) unstable; urgency=low
 
