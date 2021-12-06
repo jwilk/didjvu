@@ -22,6 +22,7 @@ jobs:
           os: ubuntu-18.04
           cc: gcc-4.8
         - gamera: gamera-3.4.0
+          pyexiv2: pyexiv2
           os: ubuntu-18.04
           cc: gcc-4.8
           broken: broken
