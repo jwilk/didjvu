@@ -1,0 +1,180 @@
+name: CI
+on:
+- push
+- pull_request
+jobs:
+  main:
+    strategy:
+      matrix:
+        include:
+        - gamera: gamera-3.3.2
+          pillow: pillow-3.4.2
+          os: ubuntu-18.04
+          cc: gcc-4.8
+        - gamera: gamera-3.3.2
+          pillow: pillow-3.4.2
+          pyexiv2: pyexiv2
+          os: ubuntu-18.04
+          cc: gcc-4.8
+          broken: broken
+        - gamera: gamera-3.4.0
+          pillow: pillow-3.4.2
+          os: ubuntu-18.04
+          cc: gcc-4.8
+        - gamera: gamera-3.4.0
+          os: ubuntu-18.04
+          cc: gcc-4.8
+          broken: broken
+        - gamera: gamera-3.4.4
+          os: ubuntu-20.04
+    runs-on: ${{matrix.os}}
+    steps:
+    - uses: actions/checkout@v2
+    - name: set up Python 2.7
+      uses: actions/setup-python@v2
+      with:
+        python-version: 2.7
+    - name: apt update
+      run:
+        sudo apt-get update
+    - name: apt install deps
+      run:
+        sudo apt-get install
+          djvulibre-bin
+          docbook-xml
+          docbook-xsl
+          exiv2
+          gir1.2-gexiv2-0.10
+          libexempi[38]
+          libpng-dev
+          libtiff-dev
+          libxml2-utils
+          minidjvu
+          python-gi
+          xsltproc
+    - name: set up CC and CXX env variables
+      run: |
+        echo "cc=${CC}" >> $GITHUB_ENV
+        echo "cxx=${CC/cc/++}" >> $GITHUB_ENV
+      env:
+        CC: ${{matrix.cc || 'gcc'}}
+    - name: apt install GCC
+      run:
+        sudo apt-get install ${{env.cc}} ${{env.cxx}}
+      if: ${{matrix.cc}}
+    - name: install ccache
+      run: |
+        sudo apt-get install ccache
+        echo "/usr/lib/ccache:$PATH" >> $GITHUB_PATH
+    - name: check ccache setup
+      run: |
+        command -v ${{env.cc}} | grep /ccache/
+        command -v ${{env.cxx}} | grep /ccache/
+    - name: restore ccache data
+      uses: actions/cache@v2
+      with:
+        path: ~/.ccache
+        key:
+          ccache-${{matrix.os}}-${{env.cc}}-${{matrix.gamera}}-${{matrix.pyexiv2}}
+        restore-keys:
+          ccache-${{matrix.os}}-${{env.cc}}-${{matrix.gamera}}-
+    - name: download Gamera
+      run: |
+        gamera=${{matrix.gamera}}
+        revision=${gamera#gamera-}
+        if [[ $revision = 3.3.2 ]]; then
+          revision=173cbefd7046a526c9238c337c15dc75bef42924
+        fi
+        url="https://github.com/hsnr-gamera/gamera/archive/${revision}.tar.gz"
+        mkdir -p deps/
+        wget "$url" -O deps/${{matrix.gamera}}.tar.gz
+    - name: unpack Gamera
+      run: |
+        cd deps/
+        tar -xvzf gamera-*.tar.gz
+    - name: patch Gamera
+      run: |
+        cd deps/gamera-*/
+        echo '__version__ = "0.0"' > wx.py
+        sed -i -e 's/ int(gccv\[0\]) >= 4 and int(gccv\[1\]) >= 3:/ True:/' setup.py
+    - name: build Gamera
+      run: |
+        if [[ ${{matrix.gamera}} = gamera-3.3.2 ]]
+        then
+          CC+=' -std=gnu++98 -fpermissive'
+          CXX+=' -std=gnu++98 -fpermissive'
+        fi
+        cd deps/gamera-*/
+        python setup.py build
+      env:
+        CC: ${{env.cc}}
+        CXX: ${{env.cxx}}
+    - name: install Gamera
+      run: |
+        cd deps/gamera-*/
+        python setup.py install
+    - name: remove Gamra source
+      run:
+        rm -rf deps
+    - name: install Pillow
+      run: |
+        pillow=${{matrix.pillow || 'pillow'}}
+        python -m pip install ${pillow/-/==}
+    - name: install python-xml-toolkit
+      run:
+        python -m pip install python-xmp-toolkit
+    - name: install pyexiv2
+      run: |
+        sudo apt-get install libboost-python-dev libexiv2-dev
+        python -m pip install --verbose git+https://github.com/escaped/pyexiv2
+      if: ${{matrix.pyexiv2}}
+    - name: set up PyGI
+      run: |
+        cp -a /usr/lib/python2.7/dist-packages/gi ${{env.pythonLocation}}/lib/python2.7/site-packages/
+        mv -v ${{env.pythonLocation}}/lib/python2.7/site-packages/gi/_gi{.x86_64-linux-gnu,}.so
+    - name: install nose
+      run:
+        python -m pip install nose
+    - name: run tests
+      run:
+        make test
+      continue-on-error: ${{(matrix.broken && true) || false}}
+    - name: run pydiatra
+      run: |
+        python -m pip install pydiatra
+        python -m pydiatra --verbose .
+    - name: run pyflakes
+      run: |
+        python -m pip install pyflakes
+        python -m pyflakes .
+    - name: check docs
+      run: |
+        python -m pip install docutils pygments
+        make -C doc check
+    - name: build docs
+      run:
+        make -C doc all
+    - name: install
+      run:
+        make install PREFIX=$HOME/.local
+    - name: check whether the executable was installed correctly
+      run: |
+        cd /
+        didjvu --version
+        didjvu --help
+    - name: check whether the man page was installed correctly
+      env:
+        MANPATH: /home/runner/.local/share/man
+        MANWIDTH: 80
+      run: |
+        cd /
+        man 1 didjvu | grep -A 10 -w DIDJVU
+  pypi:
+    runs-on: ubuntu-latest
+    steps:
+    - name: check for namesquatting
+      run: |
+        set +e
+        curl -fsS https://pypi.org/simple/aalib/; [ $? -eq 22 ] || exit 1
+
+# vim:ts=2 sts=2 sw=2 et
