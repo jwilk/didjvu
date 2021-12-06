@@ -32,9 +32,6 @@ except ImportError as ex:  # no coverage
         'https://pypi.org/project/Pillow/'
     )
     raise
-else:
-    # Gamera (<< 3.4.0) still expects that PIL can be imported as Image
-    sys.modules['Image'] = PIL
 
 try:
     import gamera
@@ -185,12 +182,11 @@ def _load_methods():
         from gamera.plugins.threshold import threshold as global_threshold
         from gamera.plugins.threshold import tsai_moment_preserving_threshold as tsai
         # TODO: from gamera.plugins.binarization import gatos_threshold
+        from gamera.plugins.binarization import brink_threshold
         from gamera.plugins.binarization import niblack_threshold
         from gamera.plugins.binarization import sauvola_threshold
         from gamera.plugins.binarization import shading_subtraction
         from gamera.plugins.binarization import white_rohrer_threshold
-        if has_version(3, 4, 0):
-            from gamera.plugins.binarization import brink_threshold
     methods = {}
     for name, plugin in vars(_methods).items():
         if name.startswith('_'):
@@ -215,8 +211,8 @@ def to_pil_1bpp(image):
     return image.to_pil()
 
 def init():
-    if not has_version(3, 3, 2):
-        raise RuntimeError('Gamera >= 3.3.2 is required')
+    if not has_version(3, 4):
+        raise RuntimeError('Gamera >= 3.4 is required')
     sys.modules['numpy'] = None
     result = _init()
     test_image = Image((0, 0), (5, 5), RGB)
