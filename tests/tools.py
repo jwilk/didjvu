@@ -35,6 +35,8 @@ from nose.tools import (
     assert_true,
 )
 
+from lib import temporary
+
 type(assert_multi_line_equal.__self__).maxDiff = None
 
 def assert_image_sizes_equal(i1, i2):
@@ -43,11 +45,18 @@ def assert_image_sizes_equal(i1, i2):
 def assert_images_equal(i1, i2):
     assert_equal(i1.size, i2.size)
     assert_equal(i1.mode, i2.mode)
-    assert_true(
-        list(i1.getdata()) ==
-        list(i2.getdata()),
-        msg='images are not equal'
-    )
+    equal = list(i1.getdata()) == list(i2.getdata())
+    msg = None
+    if not equal:
+        with temporary.file(delete=False, suffix='.ppm') as file1:
+            i1.save(file1.name)
+        with temporary.file(delete=False, suffix='.ppm') as file2:
+            i2.save(file2.name)
+        msg = 'images are not equal: {path1} != {path2}'.format(
+            path1=file1.name,
+            path2=file2.name
+        )
+    assert_true(equal, msg=msg)
 
 def assert_rfc3339_timestamp(timestamp):
     return assert_regex(
