@@ -17,19 +17,8 @@
 didjvu's command-line interface
 '''
 
+import argparse
 import functools
-
-from . import utils
-
-try:
-    import argparse
-except ImportError as ex:  # no coverage
-    utils.enhance_import_error(ex,
-        'argparse',
-        'python-argparse',
-        'https://pypi.org/project/argparse/'
-    )
-    raise
 
 from . import djvu_support as djvu
 from . import version
