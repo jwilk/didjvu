@@ -25,8 +25,9 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 2.7
-    - name: apt update
-      run:
+    - name: set up APT
+      run: |
+        printf '\n\nPackage: *\nPin: release o=Ubuntu\nPin-Priority: 9999\n' | sudo tee -a /etc/apt/preferences
         sudo apt-get update
     - name: apt install deps
       run:
