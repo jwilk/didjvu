@@ -79,10 +79,10 @@ class MetadataBase(object):
             self['xmpMM.History[{i}]/stEvt:{key}'.format(i=index, key=key)] = value
 
     def append_to_history(self, event):
-        regex = re.compile(r'^Xmp[.]xmpMM[.]History\[([0-9]+)\]/')
+        regexp = re.compile(r'^Xmp[.]xmpMM[.]History\[([0-9]+)\]/')
         n = 0
         for key in self._meta.get_xmp_tags():
-            match = regex.match(key)
+            match = regexp.match(key)
             if match is None:
                 continue
             i = int(match.group(1))
