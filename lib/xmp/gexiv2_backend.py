@@ -1,6 +1,6 @@
 # encoding=UTF-8
 
-# Copyright © 2012-2016 Jakub Wilk <jwilk@jwilk.net>
+# Copyright © 2012-2022 Jakub Wilk <jwilk@jwilk.net>
 #
 # This file is part of didjvu.
 #
