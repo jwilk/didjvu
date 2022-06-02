@@ -34,11 +34,11 @@ if os.name == 'posix':
 
 def get_signal_names():
     signame_pattern = re.compile('^SIG[A-Z0-9]*$')
-    data = dict(
-        (name, getattr(signal, name))
+    data = {
+        name: getattr(signal, name)
         for name in dir(signal)
         if signame_pattern.match(name)
-    )
+    }
     try:
         if data['SIGABRT'] == data['SIGIOT']:
             del data['SIGIOT']
@@ -49,7 +49,7 @@ def get_signal_names():
             del data['SIGCLD']
     except KeyError:  # no coverage
         pass
-    return dict((no, name) for name, no in data.iteritems())
+    return {no: name for name, no in data.iteritems()}
 
 CalledProcessError = subprocess.CalledProcessError
 
@@ -81,11 +81,11 @@ class Subprocess(subprocess.Popen):
         # - preserve LC_CTYPE (which is required by some DjVuLibre tools),
         # - but reset all other locale settings (which tend to break things).
         lc_ctype = env.get('LC_ALL') or env.get('LC_CTYPE') or env.get('LANG')
-        env = dict(
-            (k, v)
+        env = {
+            k: v
             for k, v in env.iteritems()
             if not (k.startswith('LC_') or k in {'LANG', 'LANGUAGE'})
-        )
+        }
         if lc_ctype:
             env['LC_CTYPE'] = lc_ctype
         if override:

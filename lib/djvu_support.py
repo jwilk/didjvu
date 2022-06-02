@@ -128,7 +128,7 @@ def _chunk_order(key):
 class Multichunk(object):
 
     _chunk_names = 'Sjbz Smmr BG44 BGjp BG2k FGbz FG44 FGjp FG2k INCL Djbz'
-    _chunk_names = dict((x.lower(), x) for x in _chunk_names.split())
+    _chunk_names = {x.lower(): x for x in _chunk_names.split()}
     _info_re = re.compile(' ([0-9]+)x([0-9]+),.* ([0-9]+) dpi,').search
 
     def __init__(self, width=None, height=None, dpi=None, **chunks):
@@ -163,7 +163,7 @@ class Multichunk(object):
                     raise ValueError
         finally:
             dump.wait()
-        self._chunks = dict((key, None) for key in keys)
+        self._chunks = {key: None for key in keys}
         self._dirty.add(self._chunks)
         self._pristine = True
 

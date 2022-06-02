@@ -152,11 +152,11 @@ class Plugin(object):
             self.args[arg.name] = arg
 
     def __call__(self, image, **kwargs):
-        kwargs = dict(
-            (key.replace('-', '_'), value)
+        kwargs = {
+            key.replace('-', '_'): value
             for key, value
             in kwargs.iteritems()
-        )
+        }
         pixel_types = self._pixel_types
         if image.data.pixel_type not in pixel_types:
             if RGB in pixel_types:
