@@ -222,7 +222,7 @@ didjvu (0.2.2) unstable; urgency=low
   * Disable the Gatos et. al thresholding algorithm for the time being, as it
     didn't work anyway.
   * Optimize Gamera → PIL conversions.
-  * Prevent Numpy from being imported by Gamera (loading it takes noticeable
+  * Prevent NumPy from being imported by Gamera (loading it takes noticeable
     amount of time, even though it's never needed).
   * Remove LANGUAGE variable from environment when calling external processes.
   * Correct error message about writing binary data to a terminal.
