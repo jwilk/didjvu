@@ -213,8 +213,15 @@ def to_pil_1bpp(image):
 def init():
     if not has_version(3, 4):
         raise RuntimeError('Gamera >= 3.4 is required')
-    sys.modules['numpy'] = None
-    result = _init()
+    blocked_numpy = False
+    if 'numpy' not in sys.modules:
+        sys.modules['numpy'] = None
+        blocked_numpy = True
+    try:
+        result = _init()
+    finally:
+        if blocked_numpy:
+            del sys.modules['numpy']
     test_image = Image((0, 0), (5, 5), RGB)
     test_string = test_image._to_raw_string()
     try:
