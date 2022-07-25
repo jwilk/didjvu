@@ -96,6 +96,7 @@ def load_image(filename):
         except AttributeError:  # no coverage
             pass
         image = _from_pil(pil_image)
+    pil_image.close()
     image.dpi = dpi
     return image
 
