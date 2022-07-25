@@ -89,7 +89,7 @@ def load_image(filename):
             pil_image = pil_image.convert('RGB')
         assert pil_image.mode in {'RGB', 'L'}
         try:
-            # Gamera still uses tostring(), which was deprecated,
+            # Gamera < 3.4.3 uses tostring(), which was deprecated,
             # and finally removed in Pillow 3.0.0.
             # https://pillow.readthedocs.io/en/3.0.x/releasenotes/3.0.0.html#deprecated-methods
             pil_image.tostring = pil_image.tobytes
@@ -236,7 +236,7 @@ def init():
         assert refcount == 2
     try:
         PIL.fromstring = PIL.frombytes
-        # Gamera still uses fromstring(), which was deprecated,
+        # Gamera < 3.4.3 uses fromstring(), which was deprecated,
         # and finally removed in Pillow 3.0.0.
         # https://pillow.readthedocs.io/en/3.0.x/releasenotes/3.0.0.html#deprecated-methods
     except AttributeError:
