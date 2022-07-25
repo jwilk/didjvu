@@ -24,7 +24,7 @@ import sys
 from . import utils
 
 try:
-    from PIL import Image as PIL
+    import PIL.Image
 except ImportError as ex:  # no coverage
     utils.enhance_import_error(ex,
         'Pillow',
@@ -55,7 +55,7 @@ def has_version(*req_version):
     return tuple(map(int, version.split('.'))) >= req_version
 
 def load_image(filename):
-    pil_image = PIL.open(filename)
+    pil_image = PIL.Image.open(filename)
     [xdpi, ydpi] = pil_image.info.get('dpi', (0, 0))
     if xdpi <= 1 or ydpi <= 1:
         # not reliable
@@ -203,7 +203,7 @@ def to_pil_rgb(image):
     # About 20% faster than the standard .to_pil() method of Gamera 3.2.6.
     buffer = ctypes.create_string_buffer(3 * image.ncols * image.nrows)
     image.to_buffer(buffer)
-    return PIL.frombuffer('RGB', (image.ncols, image.nrows), buffer, 'raw', 'RGB', 0, 1)
+    return PIL.Image.frombuffer('RGB', (image.ncols, image.nrows), buffer, 'raw', 'RGB', 0, 1)
 
 def to_pil_1bpp(image):
     if image.data.pixel_type != GREYSCALE:
@@ -235,7 +235,7 @@ def init():
     else:
         assert refcount == 2
     try:
-        PIL.fromstring = PIL.frombytes
+        PIL.Image.fromstring = PIL.Image.frombytes
         # Gamera < 3.4.3 uses fromstring(), which was deprecated,
         # and finally removed in Pillow 3.0.0.
         # https://pillow.readthedocs.io/en/3.0.x/releasenotes/3.0.0.html#deprecated-methods
