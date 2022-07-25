@@ -78,7 +78,7 @@ def load_image(filename):
             gamera_modes = []
         if pil_image.mode not in gamera_modes:
             raise IOError
-        # Gamera supports more TIFF compression formats that PIL.
+        # Gamera supports more TIFF compression formats than PIL.
         # https://mail.python.org/pipermail/image-sig/2003-July/002354.html
         image = _load_image(filename)
     except IOError:
