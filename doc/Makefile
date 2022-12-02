@@ -38,7 +38,7 @@ check-changelog: changelog
 
 .PHONY: check-rst
 check-rst:
-	grep -rwl 'ft[=]rst' | xargs -t -I{} $(rst2xml) {} /dev/null
+	grep -rwl 'ft[=]rst' | xargs -t -I{} $(rst2xml) {} > /dev/null
 
 .PHONY: check-xml
 check-xml: manpage.xml
