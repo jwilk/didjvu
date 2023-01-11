@@ -565,7 +565,7 @@ more details.
             <term><option>-h</option></term>
             <term><option>--help</option></term>
             <listitem>
-                <para>Display help and exit.</para>
+                <para>Show the help message and exit.</para>
             </listitem>
         </varlistentry>
         </variablelist>
