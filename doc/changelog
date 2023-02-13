@@ -5,13 +5,17 @@ didjvu (0.9.1) UNRELEASED; urgency=low
     https://github.com/jwilk/didjvu/issues/20
     https://github.com/jwilk/didjvu/issues/10
   * Fix help message for --fg-slices/--bg-slices.
+  * Rephrase help message for --help.
   * Drop support for Gamera < 3.4.
   * Drop support for Python 2.6.
   * Improve the test suite:
     + Fix compatibility with Exiv2 ≥ 0.27.
     + Add code to help debugging image loading bugs.
+  * Improve documentation:
+    + Use HTTPS for minidjvu.sourceforge.net.
+    + Use HTTPS for djvu.sourceforge.net.
 
- -- Jakub Wilk <jwilk@jwilk.net>  Mon, 06 Dec 2021 22:41:55 +0100
+ -- Jakub Wilk <jwilk@jwilk.net>  Mon, 13 Feb 2023 15:16:10 +0100
 
 didjvu (0.9) unstable; urgency=low
 
