@@ -75,9 +75,6 @@ jobs:
       run: |
         gamera=${{matrix.gamera}}
         revision=${gamera#gamera-}
-        if [[ $revision = 3.3.2 ]]; then
-          revision=173cbefd7046a526c9238c337c15dc75bef42924
-        fi
         url="https://github.com/hsnr-gamera/gamera/archive/${revision}.tar.gz"
         mkdir -p deps/
         wget "$url" -O deps/${{matrix.gamera}}.tar.gz
@@ -92,11 +89,6 @@ jobs:
         sed -i -e 's/ int(gccv\[0\]) >= 4 and int(gccv\[1\]) >= 3:/ True:/' setup.py
     - name: build Gamera
       run: |
-        if [[ ${{matrix.gamera}} = gamera-3.3.2 ]]
-        then
-          CC+=' -std=gnu++98 -fpermissive'
-          CXX+=' -std=gnu++98 -fpermissive'
-        fi
         cd deps/gamera-*/
         python setup.py build
       env:
