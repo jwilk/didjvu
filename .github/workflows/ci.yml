@@ -7,14 +7,12 @@ jobs:
     strategy:
       matrix:
         include:
-        - gamera: gamera-3.4.0
+        - gamera: gamera-3.4.3
           pillow: pillow-3.4.2
-          os: ubuntu-18.04
-          cc: gcc-4.8
-        - gamera: gamera-3.4.0
+          os: ubuntu-20.04
+        - gamera: gamera-3.4.3
           pyexiv2: pyexiv2
-          os: ubuntu-18.04
-          cc: gcc-4.8
+          os: ubuntu-20.04
           broken: broken
         - gamera: gamera-3.4.4
           os: ubuntu-20.04
