@@ -272,7 +272,6 @@ more details.
                     <varlistentry>
                         <term><literal>brink</literal></term>
                         <listitem><para>Brink and Pendock's minimum-cross entropy method</para>
-                            <para>This method requires Gamera ≥ 3.4.0.</para>
                         </listitem>
                     </varlistentry>
                     <varlistentry>
