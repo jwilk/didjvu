@@ -162,12 +162,5 @@ jobs:
       run: |
         cd /
         man 1 didjvu | grep -A 10 -w DIDJVU
-  pypi:
-    runs-on: ubuntu-latest
-    steps:
-    - name: check for namesquatting
-      run: |
-        set +e
-        curl -fsS https://pypi.org/simple/didjvu/; [ $? -eq 22 ] || exit 1
 
 # vim:ts=2 sts=2 sw=2 et
