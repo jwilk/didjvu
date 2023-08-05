@@ -72,7 +72,7 @@ didjvu (0.7) unstable; urgency=low
   * Improve XMP support:
     + Add GExiv2 XMP backend.
     + Generate globally unique identifiers in the urn:uuid namespace.
-      https://tools.ietf.org/html/rfc4122#section-3
+      https://www.rfc-editor.org/rfc/rfc4122.html#section-3
     + Update the xmpMM:DocumentID property.
   * Improve the test suite.
 
