@@ -9,24 +9,24 @@ jobs:
         include:
         - gamera: gamera-3.4.3
           pillow: pillow-3.4.2
-          os: ubuntu-20.04
+          container: python:2.7
         - gamera: gamera-3.4.4
-          os: ubuntu-20.04
-    runs-on: ${{matrix.os}}
+          container: python:2.7
+    runs-on: ubuntu-latest
+    container: ${{matrix.container}}
+    defaults:
+      run:
+        shell: bash
     steps:
     - uses: actions/checkout@v3
-    - name: set up Python 2.7
-      uses: actions/setup-python@v4
-      with:
-        python-version: 2.7
     - name: set up APT
       run: |
-        printf '\n\nPackage: *\nPin: release o=Ubuntu\nPin-Priority: 9999\n' | sudo tee -a /etc/apt/preferences
-        printf 'Apt::Install-Recommends "false";\n' | sudo tee -a /etc/apt/apt.conf
-        sudo apt-get update
+        printf '\n\nPackage: *\nPin: release o=Ubuntu\nPin-Priority: 9999\n' | tee -a /etc/apt/preferences
+        printf 'Apt::Install-Recommends "false";\n' | tee -a /etc/apt/apt.conf
+        apt-get update
     - name: apt install deps
       run:
-        sudo apt-get install
+        apt-get install -y
           djvulibre-bin
           docbook-xml
           docbook-xsl
@@ -47,11 +47,11 @@ jobs:
         CC: ${{matrix.cc || 'gcc'}}
     - name: apt install GCC
       run:
-        sudo apt-get install ${{env.cc}} ${{env.cxx}}
+        apt-get install -y ${{env.cc}} ${{env.cxx}}
       if: ${{matrix.cc}}
     - name: install ccache
       run: |
-        sudo apt-get install ccache
+        apt-get install -y ccache
         echo "/usr/lib/ccache:$PATH" >> $GITHUB_PATH
     - name: check ccache setup
       run: |
@@ -62,9 +62,9 @@ jobs:
       with:
         path: ~/.ccache
         key:
-          ccache-${{matrix.os}}-${{env.cc}}-${{matrix.gamera}}-${{matrix.pyexiv2}}
+          ccache-${{matrix.container}}-${{env.cc}}-${{matrix.gamera}}-${{matrix.pyexiv2}}
         restore-keys:
-          ccache-${{matrix.os}}-${{env.cc}}-${{matrix.gamera}}-
+          ccache-${{matrix.container}}-${{env.cc}}-${{matrix.gamera}}-
     - name: download Gamera
       run: |
         gamera=${{matrix.gamera}}
@@ -104,19 +104,20 @@ jobs:
         python -m pip install python-xmp-toolkit
     - name: install pyexiv2
       run: |
-        sudo apt-get install libboost-python-dev libexiv2-dev
+        apt-get install -y libboost-python-dev libexiv2-dev
         python -m pip install --verbose git+https://github.com/escaped/pyexiv2
       if: ${{matrix.pyexiv2}}
     - name: set up PyGI
       run: |
-        cp -a /usr/lib/python2.7/dist-packages/gi ${{env.pythonLocation}}/lib/python2.7/site-packages/
-        mv -v ${{env.pythonLocation}}/lib/python2.7/site-packages/gi/_gi{.x86_64-linux-gnu,}.so
+        cp -a /usr/lib/python2.7/dist-packages/gi /usr/local/lib/python2.7/site-packages/
+        mv -v /usr/local/lib/python2.7/site-packages/gi/_gi{.x86_64-linux-gnu,}.so
     - name: install nose
       run:
         python -m pip install nose
     - name: run tests
       run:
-        make test
+        runuser -u nobody --
+          make test
       continue-on-error: ${{(matrix.broken && true) || false}}
     - name: run pydiatra
       run: |
@@ -135,15 +136,17 @@ jobs:
         make -C doc all
     - name: install
       run:
-        make install PREFIX=$HOME/.local
+        make install
     - name: check whether the executable was installed correctly
       run: |
         cd /
         didjvu --version
         didjvu --help
+    - name: APT install man-db
+      run: |
+        apt-get install -y man-db
     - name: check whether the man page was installed correctly
       env:
-        MANPATH: /home/runner/.local/share/man
         MANWIDTH: 80
       run: |
         cd /
