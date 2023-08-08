@@ -92,7 +92,7 @@ jobs:
       run: |
         cd deps/gamera-*/
         python setup.py install
-    - name: remove Gamra source
+    - name: remove Gamera source
       run:
         rm -rf deps
     - name: install Pillow
