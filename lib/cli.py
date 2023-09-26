@@ -166,7 +166,7 @@ class ArgumentParser(argparse.ArgumentParser):
             else:
                 p.add_argument(
                     '--output-template', metavar='TEMPLATE',
-                    help='naming scheme for output file (e.g. "{template}")'.format(template=default.page_id_template)
+                    help='naming scheme for output files (e.g. "{template}")'.format(template=default.page_id_template)
                 )
             p.add_argument('--losslevel', dest='loss_level', type=losslevel_type, help=argparse.SUPPRESS)
             p.add_argument(
