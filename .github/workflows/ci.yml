@@ -60,7 +60,7 @@ jobs:
         command -v ${{env.cc}} | grep /ccache/
         command -v ${{env.cxx}} | grep /ccache/
     - name: restore ccache data
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.ccache
         key:
