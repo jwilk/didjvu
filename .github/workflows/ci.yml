@@ -115,7 +115,6 @@ jobs:
     - name: run tests
       run:
         make test
-      continue-on-error: ${{(matrix.broken && true) || false}}
     - name: run pydiatra
       run: |
         python -m pip install pydiatra
