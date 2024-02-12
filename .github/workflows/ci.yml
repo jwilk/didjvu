@@ -138,6 +138,11 @@ jobs:
         cd /
         didjvu --version
         didjvu --help
+    - name: run post-install tests
+      run: |
+        rm didjvu
+        make test-installed
+        git restore didjvu
     - name: APT install man-db
       run: |
         sudo apt-get install -y man-db
