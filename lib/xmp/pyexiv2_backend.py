@@ -27,6 +27,13 @@ from .. import timestamp
 
 from . import namespaces as ns
 
+def _get_versions():
+    version = pyexiv2.__version__
+    yield 'pyexiv2 {0}'.format(version)
+    version = pyexiv2.__exiv2_version__
+    yield '+ Exiv2 {0}'.format(version)
+versions = list(_get_versions())
+
 def xmp_register_namespace(prefix, uri):
     # work-around for <https://bugs.debian.org/662878>
     class fool_pyexiv2(str):
@@ -178,6 +185,9 @@ class MetadataBase(object):
         fp.write(data)
         self._reload()
 
-__all__ = ['MetadataBase']
+__all__ = [
+    'MetadataBase',
+    'versions',
+]
 
 # vim:ts=4 sts=4 sw=4 et

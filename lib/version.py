@@ -58,6 +58,13 @@ class VersionAction(argparse.Action):
                 pil_name = 'PIL'
                 pil_version = gs.PIL.VERSION
         print('+ {PIL} {0}'.format(pil_version, PIL=pil_name))
+        from . import xmp
+        if xmp.backend:
+            for version in xmp.backend.versions:
+                prefix = '+'
+                if version[0] == '+':
+                    prefix = ' '
+                print(prefix, version)
         parser.exit()
 
 __all__ = [

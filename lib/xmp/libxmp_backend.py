@@ -21,6 +21,16 @@ from .. import timestamp
 
 from . import namespaces as ns
 
+def _get_version():
+    lib = 'python-xmp-toolkit'
+    try:
+        version = libxmp.__version__
+    except AttributeError:
+        return lib
+    return lib + ' ' + version
+
+versions = [_get_version()]
+
 class XmpError(RuntimeError):
     pass
 
@@ -101,6 +111,9 @@ class MetadataBase(object):
         xmp = file.read()
         backend.parse_from_str(xmp)
 
-__all__ = ['MetadataBase']
+__all__ = [
+    'MetadataBase',
+    'versions',
+]
 
 # vim:ts=4 sts=4 sw=4 et

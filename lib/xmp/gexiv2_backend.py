@@ -33,6 +33,15 @@ from . import namespaces as ns
 
 GExiv2.Metadata.register_xmp_namespace(ns.didjvu, 'didjvu')
 
+def _versions():
+    yield 'PyGI {0}'.format(gi.__version__)
+    v = GExiv2.get_version()
+    v1, v2 = divmod(v, 100)
+    v0, v1 = divmod(v1, 100)
+    yield 'GExiv2 {0}.{1}.{2}'.format(v0, v1, v2)
+
+versions = list(_versions())
+
 class XmpError(RuntimeError):
     pass
 
@@ -103,6 +112,9 @@ class MetadataBase(object):
         data = file.read()
         self._read_data(data)
 
-__all__ = ['MetadataBase']
+__all__ = [
+    'MetadataBase',
+    'versions',
+]
 
 # vim:ts=4 sts=4 sw=4 et
