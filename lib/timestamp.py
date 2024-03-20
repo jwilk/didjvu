@@ -17,8 +17,8 @@
 timestamps
 '''
 
-import time
 import datetime
+import time
 
 class Timestamp(object):
 
