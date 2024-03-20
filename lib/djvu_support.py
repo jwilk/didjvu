@@ -89,7 +89,7 @@ def photo_to_djvu(image, dpi=100, slices=IW44_SLICES_DEFAULT, gamma=2.2, mask_im
         args = [
             'c44',
             '-dpi', str(dpi),
-            '-slice', ','.join(map(str, slices)),
+            '-slice', str.join(',', map(str, slices)),
             '-gamma', '{0:.1f}'.format(gamma),
             '-crcb{0}'.format(crcb),
         ]

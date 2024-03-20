@@ -158,7 +158,7 @@ class test_environment():
                 if utf8_locale is None:
                     raise SkipTest(
                         'UTF-8 locale missing '
-                        '({0})'.format(' or '.join(utf8_locale_candidates))
+                        '({0})'.format(str.join(' or ', utf8_locale_candidates))
                     )
                 assert_equal(value, utf8_locale)
             elif key == 'LANG':

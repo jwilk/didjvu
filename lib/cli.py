@@ -73,7 +73,7 @@ def get_slice_repr(lst):
     def fold(lst, obj):
         return lst + [obj - sum(lst)]
     plus_lst = functools.reduce(fold, lst[1:], lst[:1])
-    return '+'.join(map(str, plus_lst))
+    return str.join('+', map(str, plus_lst))
 
 class intact(object):
 
@@ -344,11 +344,11 @@ def dump_options(o, multipage=False):
     method_name = o.method.name
     if o.params:
         method_name += ' '
-        method_name += ' '.join(
+        method_name += str.join(' ', (
             '{0}={1}'.format(pname, pvalue)
             for pname, pvalue
             in sorted(o.params.iteritems())
-        )
+        ))
     yield ('method', method_name)
     if multipage:
         yield ('pages-per-dict', o.pages_per_dict)

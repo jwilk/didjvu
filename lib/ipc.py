@@ -70,7 +70,7 @@ del get_signal_names
 # ==========
 
 def shell_escape(commandline):
-    return ' '.join(map(pipes.quote, commandline))
+    return str.join(' ', map(pipes.quote, commandline))
 
 class Subprocess(subprocess.Popen):
 

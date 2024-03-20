@@ -135,7 +135,7 @@ def fork_isolation(f):
             except Exception:
                 exctp, exc, tb = sys.exc_info()
                 s = traceback.format_exception(exctp, exc, tb, _n_relevant_tb_levels(tb))
-                s = ''.join(s)
+                s = str.join('', s)
                 del tb
                 with os.fdopen(writefd, 'wb') as fp:
                     fp.write(s)

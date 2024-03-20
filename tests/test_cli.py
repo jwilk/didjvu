@@ -193,7 +193,7 @@ class test_argument_parser():
         assert_multi_line_equal(
             stderr.getvalue(),
             'usage: didjvu [-h] [--version] {{{actions}}} ...\n'
-            'didjvu: error: too few arguments\n'.format(actions=','.join(self.anames))
+            'didjvu: error: too few arguments\n'.format(actions=str.join(',', self.anames))
         )
 
     def _test_action_no_args(self, action):
