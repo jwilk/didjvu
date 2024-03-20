@@ -151,6 +151,7 @@ class test_metadata():
 
     def _test_empty_exiv2(self, xmp_file, exception=None):
         def test(*dummy):
+            del dummy
             if exception is not None:
                 raise exception
             for line in run_exiv2(xmp_file.name, fail_ok=True):
@@ -159,6 +160,7 @@ class test_metadata():
 
     def _test_empty_libxmp(self, xmp_file, exception=None):
         def test(*dummy):
+            del dummy
             if exception is not None:
                 raise exception
             if libxmp is None:
@@ -218,6 +220,7 @@ class test_metadata():
 
     def _test_new_exiv2(self, xmp_file, exception=None):
         def test(*dummy):
+            del dummy
             if exception is not None:
                 raise exception
             output = run_exiv2(xmp_file.name)
@@ -270,6 +273,7 @@ class test_metadata():
 
     def _test_new_libxmp(self, xmp_file, exception=None):
         def test(*dummy):
+            del dummy
             if exception is not None:
                 raise exception
             if libxmp is None:
@@ -328,6 +332,7 @@ class test_metadata():
 
     def _test_updated_exiv2(self, xmp_file, exception=None):
         def test(*dummy):
+            del dummy
             if exception is not None:
                 raise exception
             output = run_exiv2(xmp_file.name)
@@ -399,6 +404,7 @@ class test_metadata():
 
     def _test_updated_libxmp(self, xmp_file, exception=None):
         def test(*dummy):
+            del dummy
             if exception is not None:
                 raise exception
             if libxmp is None:
@@ -449,6 +455,7 @@ class test_metadata():
 
     def test_io_error(self):
         def t(*dummy):
+            del dummy
             image_path = os.path.join(os.path.dirname(__file__), 'data', 'nonexistent.png')
             meta = xmp.metadata(backend=backend)
             meta.import_(image_path)
