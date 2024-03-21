@@ -19,7 +19,7 @@ filetype detection
 
 class generic(object):
 
-    def __new__(self, *args, **kwargs):
+    def __new__(cls, *args, **kwargs):
         raise NotImplementedError  # no coverage
 
     @classmethod
