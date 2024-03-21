@@ -31,7 +31,7 @@ from .tools import (
 
 from lib import cli
 
-class test_range_int():
+class test_range_int:
 
     def test_lt_min(self):
         t = cli.range_int(37, 42, 'eggs')
@@ -60,7 +60,7 @@ class test_range_int():
         with assert_raises(ValueError):
             t('ham')
 
-class test_slice_type():
+class test_slice_type:
 
     def test_non_int(self):
         t = cli.slice_type()
@@ -167,7 +167,7 @@ class MockMethod(object):
     def __init__(self):
         self.args = {}
 
-class test_argument_parser():
+class test_argument_parser:
 
     methods = dict(
         abutaleb=MockMethod(),

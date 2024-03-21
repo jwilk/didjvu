@@ -26,7 +26,7 @@ from .tools import (
 
 from lib import utils
 
-class test_enhance_import():
+class test_enhance_import:
 
     @classmethod
     def setup_class(cls):

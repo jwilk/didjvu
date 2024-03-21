@@ -133,7 +133,7 @@ def test_namespaces():
     assert_equal(libxmp.consts.XMP_NS_XMP, ns.xmp)
     assert_equal(libxmp.consts.XMP_NS_XMP_MM, ns.xmpmm)
 
-class test_metadata():
+class test_metadata:
 
     def test_empty(self):
         for backend in xmp_backends:

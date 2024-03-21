@@ -53,7 +53,7 @@ def test_load_image():
     for path in paths:
         yield t, path
 
-class test_methods():
+class test_methods:
 
     @fork_isolation
     def _test_one_method(self, path, method, args):
@@ -83,7 +83,7 @@ class test_methods():
         for x in self._test_methods('greyscale-packbits.tiff'):
             yield x
 
-class test_to_pil_rgb():
+class test_to_pil_rgb:
 
     @fork_isolation
     def _test(self, path):
@@ -103,7 +103,7 @@ class test_to_pil_rgb():
     def test_grey(self):
         self._test('greyscale-packbits.tiff')
 
-class test_to_pil_1bpp():
+class test_to_pil_1bpp:
 
     @fork_isolation
     def _test(self, path):

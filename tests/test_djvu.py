@@ -85,7 +85,7 @@ def test_djvu_iw44():
     out_data = out_djvu.read()
     assert_greater(len(in_data), len(out_data))
 
-class test_multichunk():
+class test_multichunk:
 
     def test_sjbz(self):
         path = os.path.join(datadir, 'onebit.bmp')
@@ -113,7 +113,7 @@ class test_multichunk():
             out_image = ddjvu(tmp_djvu_path, fmt='pbm')
             assert_images_equal(in_image, out_image)
 
-class test_validate_page_id():
+class test_validate_page_id:
 
     def test_empty(self):
         with assert_raises(ValueError) as ecm:
