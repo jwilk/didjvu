@@ -36,6 +36,7 @@ versions = list(_get_versions())
 
 def xmp_register_namespace(prefix, uri):
     # work-around for <https://bugs.debian.org/662878>
+    # ("pyexiv2.xmp.register_namespace() requires URI ending with /")
     class fool_pyexiv2(str):
         def endswith(self, suffix, *args, **kwargs):
             return True
