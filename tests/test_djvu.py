@@ -25,7 +25,7 @@ from .tools import (
     assert_raises,
 )
 
-from PIL import Image as pil
+import PIL.Image
 
 from lib import djvu_support as djvu
 from lib import ipc
@@ -54,18 +54,18 @@ def ddjvu(djvu_file, fmt='ppm'):
     if stderr != '':
         raise RuntimeError('ddjvu stderr: ' + stderr)
     out_file = io.BytesIO(stdout)
-    return pil.open(out_file)
+    return PIL.Image.open(out_file)
 
 def test_bitonal_to_djvu():
     path = os.path.join(datadir, 'onebit.bmp')
-    with pil.open(path) as in_image:
+    with PIL.Image.open(path) as in_image:
         djvu_file = djvu.bitonal_to_djvu(in_image)
         with ddjvu(djvu_file, fmt='pbm') as out_image:
             assert_images_equal(in_image, out_image)
 
 def test_photo_to_djvu():
     path = os.path.join(datadir, 'ycbcr-jpeg.tiff')
-    with pil.open(path) as in_image:
+    with PIL.Image.open(path) as in_image:
         in_image = in_image.convert('RGB')
         mask_image = in_image.convert('1')
         djvu_file = djvu.photo_to_djvu(in_image, mask_image=mask_image)
@@ -89,7 +89,7 @@ class test_multichunk:
 
     def test_sjbz(self):
         path = os.path.join(datadir, 'onebit.bmp')
-        with pil.open(path) as in_image:
+        with PIL.Image.open(path) as in_image:
             [width, height] = in_image.size
             sjbz_path = os.path.join(datadir, 'onebit.djvu')
             multichunk = djvu.Multichunk(width, height, 100, sjbz=sjbz_path)
@@ -99,7 +99,7 @@ class test_multichunk:
 
     def test_incl(self):
         path = os.path.join(datadir, 'onebit.bmp')
-        with pil.open(path) as in_image:
+        with PIL.Image.open(path) as in_image:
             [width, height] = in_image.size
             sjbz_path = os.path.join(datadir, 'onebit.djvu')
             incl_path = os.path.join(datadir, 'shared_anno.iff')

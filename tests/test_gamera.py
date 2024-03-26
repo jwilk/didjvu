@@ -25,7 +25,7 @@ from .tools import (
     fork_isolation,
 )
 
-from PIL import Image as pil
+import PIL.Image
 
 from lib import gamera_support as gamera
 
@@ -88,7 +88,7 @@ class test_to_pil_rgb:
     @fork_isolation
     def _test(self, path):
         path = os.path.join(datadir, path)
-        with pil.open(path) as in_image:
+        with PIL.Image.open(path) as in_image:
             if in_image.mode != 'RGB':
                 in_image = in_image.convert('RGB')
             assert_equal(in_image.mode, 'RGB')
@@ -108,7 +108,7 @@ class test_to_pil_1bpp:
     @fork_isolation
     def _test(self, path):
         path = os.path.join(datadir, path)
-        with pil.open(path) as in_image:
+        with PIL.Image.open(path) as in_image:
             if in_image.mode != '1':
                 in_image = in_image.convert('1')
             assert_equal(in_image.mode, '1')
