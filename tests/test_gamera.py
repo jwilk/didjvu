@@ -88,14 +88,14 @@ class test_to_pil_rgb:
     @fork_isolation
     def _test(self, path):
         path = os.path.join(datadir, path)
-        in_image = pil.open(path)
-        if in_image.mode != 'RGB':
-            in_image = in_image.convert('RGB')
-        assert_equal(in_image.mode, 'RGB')
-        gamera.init()
-        gamera_image = gamera.load_image(path)
-        out_image = gamera.to_pil_rgb(gamera_image)
-        assert_images_equal(in_image, out_image)
+        with pil.open(path) as in_image:
+            if in_image.mode != 'RGB':
+                in_image = in_image.convert('RGB')
+            assert_equal(in_image.mode, 'RGB')
+            gamera.init()
+            gamera_image = gamera.load_image(path)
+            with gamera.to_pil_rgb(gamera_image) as out_image:
+                assert_images_equal(in_image, out_image)
 
     def test_color(self):
         self._test('ycbcr-jpeg.tiff')
@@ -108,15 +108,15 @@ class test_to_pil_1bpp:
     @fork_isolation
     def _test(self, path):
         path = os.path.join(datadir, path)
-        in_image = pil.open(path)
-        if in_image.mode != '1':
-            in_image = in_image.convert('1')
-        assert_equal(in_image.mode, '1')
-        gamera.init()
-        gamera_image = gamera.load_image(path)
-        out_image = gamera.to_pil_1bpp(gamera_image)
-        out_image = out_image.convert('1')  # FIXME?
-        assert_images_equal(in_image, out_image)
+        with pil.open(path) as in_image:
+            if in_image.mode != '1':
+                in_image = in_image.convert('1')
+            assert_equal(in_image.mode, '1')
+            gamera.init()
+            gamera_image = gamera.load_image(path)
+            with gamera.to_pil_1bpp(gamera_image) as out_image:
+                out_image = out_image.convert('1')  # FIXME?
+                assert_images_equal(in_image, out_image)
 
     def test_grey(self):
         self._test('greyscale-packbits.tiff')

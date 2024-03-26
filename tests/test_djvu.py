@@ -58,60 +58,60 @@ def ddjvu(djvu_file, fmt='ppm'):
 
 def test_bitonal_to_djvu():
     path = os.path.join(datadir, 'onebit.bmp')
-    in_image = pil.open(path)
-    djvu_file = djvu.bitonal_to_djvu(in_image)
-    out_image = ddjvu(djvu_file, fmt='pbm')
-    assert_images_equal(in_image, out_image)
+    with pil.open(path) as in_image:
+        djvu_file = djvu.bitonal_to_djvu(in_image)
+        with ddjvu(djvu_file, fmt='pbm') as out_image:
+            assert_images_equal(in_image, out_image)
 
 def test_photo_to_djvu():
     path = os.path.join(datadir, 'ycbcr-jpeg.tiff')
-    in_image = pil.open(path)
-    in_image = in_image.convert('RGB')
-    mask_image = in_image.convert('1')
-    djvu_file = djvu.photo_to_djvu(in_image, mask_image=mask_image)
-    out_image = ddjvu(djvu_file, fmt='ppm')
-    assert_image_sizes_equal(in_image, out_image)
+    with pil.open(path) as in_image:
+        in_image = in_image.convert('RGB')
+        mask_image = in_image.convert('1')
+        djvu_file = djvu.photo_to_djvu(in_image, mask_image=mask_image)
+        with ddjvu(djvu_file, fmt='ppm') as out_image:
+            assert_image_sizes_equal(in_image, out_image)
 
 def test_djvu_iw44():
     path = os.path.join(datadir, 'ycbcr.djvu')
-    in_djvu = open(path, 'rb')
-    out_djvu = djvu.djvu_to_iw44(in_djvu)
-    in_image = ddjvu(in_djvu, fmt='ppm')
-    out_image = ddjvu(out_djvu, fmt='ppm')
-    assert_image_sizes_equal(in_image, out_image)
-    in_djvu.seek(0)
-    in_data = in_djvu.read()
-    out_djvu.seek(0)
-    out_data = out_djvu.read()
+    with open(path, 'rb') as in_djvu:
+        out_djvu = djvu.djvu_to_iw44(in_djvu)
+        with ddjvu(in_djvu, fmt='ppm') as in_image:
+            with ddjvu(out_djvu, fmt='ppm') as out_image:
+                assert_image_sizes_equal(in_image, out_image)
+                in_djvu.seek(0)
+                in_data = in_djvu.read()
+                out_djvu.seek(0)
+                out_data = out_djvu.read()
     assert_greater(len(in_data), len(out_data))
 
 class test_multichunk:
 
     def test_sjbz(self):
         path = os.path.join(datadir, 'onebit.bmp')
-        in_image = pil.open(path)
-        [width, height] = in_image.size
-        sjbz_path = os.path.join(datadir, 'onebit.djvu')
-        multichunk = djvu.Multichunk(width, height, 100, sjbz=sjbz_path)
-        djvu_file = multichunk.save()
-        out_image = ddjvu(djvu_file, fmt='pbm')
-        assert_images_equal(in_image, out_image)
+        with pil.open(path) as in_image:
+            [width, height] = in_image.size
+            sjbz_path = os.path.join(datadir, 'onebit.djvu')
+            multichunk = djvu.Multichunk(width, height, 100, sjbz=sjbz_path)
+            djvu_file = multichunk.save()
+            with ddjvu(djvu_file, fmt='pbm') as out_image:
+                assert_images_equal(in_image, out_image)
 
     def test_incl(self):
         path = os.path.join(datadir, 'onebit.bmp')
-        in_image = pil.open(path)
-        [width, height] = in_image.size
-        sjbz_path = os.path.join(datadir, 'onebit.djvu')
-        incl_path = os.path.join(datadir, 'shared_anno.iff')
-        multichunk = djvu.Multichunk(width, height, 100, sjbz=sjbz_path, incl=incl_path)
-        djvu_file = multichunk.save()
-        with temporary.directory() as tmpdir:
-            tmp_djvu_path = os.path.join(tmpdir, 'index.djvu')
-            tmp_incl_path = os.path.join(tmpdir, 'shared_anno.iff')
-            os.link(djvu_file.name, tmp_djvu_path)
-            shutil.copyfile(incl_path, tmp_incl_path)
-            out_image = ddjvu(tmp_djvu_path, fmt='pbm')
-            assert_images_equal(in_image, out_image)
+        with pil.open(path) as in_image:
+            [width, height] = in_image.size
+            sjbz_path = os.path.join(datadir, 'onebit.djvu')
+            incl_path = os.path.join(datadir, 'shared_anno.iff')
+            multichunk = djvu.Multichunk(width, height, 100, sjbz=sjbz_path, incl=incl_path)
+            djvu_file = multichunk.save()
+            with temporary.directory() as tmpdir:
+                tmp_djvu_path = os.path.join(tmpdir, 'index.djvu')
+                tmp_incl_path = os.path.join(tmpdir, 'shared_anno.iff')
+                os.link(djvu_file.name, tmp_djvu_path)
+                shutil.copyfile(incl_path, tmp_incl_path)
+                with ddjvu(tmp_djvu_path, fmt='pbm') as out_image:
+                    assert_images_equal(in_image, out_image)
 
 class test_validate_page_id:
 
