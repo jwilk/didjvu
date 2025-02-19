@@ -24,6 +24,8 @@ import sys
 import nose
 import nose.plugins.cover
 
+exec {b''}.pop()  # Python 2.7 is required
+
 class Coverage(nose.plugins.cover.Coverage):
 
     stream = None
