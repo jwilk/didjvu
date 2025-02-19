@@ -232,7 +232,7 @@ didjvu (0.2.2) unstable; urgency=low
     TIFF images.
   * Check Python version in setup.py.
   * Let the setup.py script build the manual page.
-  * Disable the Gatos et. al thresholding algorithm for the time being, as it
+  * Disable the Gatos et al. thresholding algorithm for the time being, as it
     didn't work anyway.
   * Optimize Gamera → PIL conversions.
   * Prevent NumPy from being imported by Gamera (loading it takes noticeable
@@ -258,7 +258,7 @@ didjvu (0.2.1) unstable; urgency=low
 
 didjvu (0.2) unstable; urgency=low
 
-  * Python ≥ 2.6 in now required.
+  * Python ≥ 2.6 is now required.
   * Implement a new command-line interface. Three subcommands are available:
     + separate — generate masks for images;
     + encode — convert images to single-page DjVu documents;
