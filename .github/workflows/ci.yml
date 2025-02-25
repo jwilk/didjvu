@@ -9,32 +9,36 @@ jobs:
         include:
         - gamera: gamera-3.4.3
           pillow: pillow-3.4.2
-          os: ubuntu-20.04
+          os: ubuntu-22.04
         - gamera: gamera-3.4.4
-          os: ubuntu-20.04
+          os: ubuntu-22.04
     runs-on: ${{matrix.os}}
     steps:
     - uses: actions/checkout@v4
     - name: set up APT
       run: |
+        printf 'deb http://azure.archive.ubuntu.com/ubuntu/ focal%s main universe\n' '' '-updates' '-security' | sudo tee -a /etc/apt/sources.list
         printf '\n\nPackage: *\nPin: release o=Ubuntu\nPin-Priority: 9999\n' | sudo tee -a /etc/apt/preferences
         printf 'Apt::Install-Recommends "false";\n' | sudo tee -a /etc/apt/apt.conf
         sudo apt-get update
     - name: set up Python 2.7
       run: |
-        sudo apt-get install -f python-is-python2 python2-dev
+        sudo apt-get install -f python2-dev
+        sudo ln -sf python2 /usr/bin/python
         wget https://bootstrap.pypa.io/pip/2.7/get-pip.py
         sudo python get-pip.py
         rm get-pip.py
     - name: apt install deps
       run:
-        sudo apt-get install -y
+        sudo apt-get install -y --allow-downgrades
           djvulibre-bin
           docbook-xml
           docbook-xsl
           exiv2
-          gir1.2-gexiv2-0.10
+          gir1.2-gexiv2-0.10/focal
+          gir1.2-glib-2.0/focal
           libexempi[38]
+          libgirepository-1.0-1/focal
           libpng-dev
           libtiff-dev
           libxml2-utils
