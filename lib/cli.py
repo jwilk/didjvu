@@ -106,7 +106,7 @@ def _get_method_params_help(methods):
                 if arg.default is not None:
                     arg_help_paren += ['default: {0}'.format(arg.default)]
                 if arg_help_paren:
-                    arg_help += ' ({0})'.format(', '.join(arg_help_paren))
+                    arg_help += ' ({0})'.format(str.join(', ', arg_help_paren))
             elif arg.type is bool:
                 if arg.default is not False:
                     message = 'unexpected default value for {method}.{arg}: {default}'.format(
@@ -118,7 +118,7 @@ def _get_method_params_help(methods):
                 message = 'unexpected type for {method}.{arg}: {tp}'.format(method=name, arg=arg.name, tp=arg.type.__name__)
                 raise NotImplementedError(message)
             result += ['  - ' + arg_help]
-    return '\n'.join(result)
+    return str.join('\n', result)
 
 class TestAction(argparse.Action):
 
@@ -261,7 +261,7 @@ class ArgumentParser(argparse.ArgumentParser):
                 xmp=False,
             )
             p.epilog = _get_method_params_help(methods)
-        self.epilog = 'more help:\n  ' + '\n  '.join(epilog)
+        self.epilog = 'more help:\n  ' + str.join('\n  ', epilog)
         self.__methods = methods
 
     def add_subparser(self, name, **kwargs):

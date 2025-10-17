@@ -226,8 +226,8 @@ class test_argument_parser:
             assert_equal(ecm.exception.args, (2,))
         assert_multi_line_equal(
             stderr.getvalue(),
-            'usage: didjvu [-h] [--version] {{{actions}}} ...\n'.format(actions=','.join(self.anames)) +
-            "didjvu: error: invalid choice: 'eggs' (choose from {actions})\n".format(actions=', '.join(map(repr, self.anames)))
+            'usage: didjvu [-h] [--version] {{{actions}}} ...\n'.format(actions=str.join(',', self.anames)) +
+            "didjvu: error: invalid choice: 'eggs' (choose from {actions})\n".format(actions=str.join(', ', map(repr, self.anames)))
         )
 
     def _test_action(self, action, *args):
